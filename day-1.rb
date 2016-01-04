@@ -1,5 +1,6 @@
 def process(input)
-  input.strip.chars.inject(0) do |sum,ch|
+  sum = 0
+  input.strip.chars.each do |ch|
     sum += case ch
     when '('
       1
@@ -7,6 +8,7 @@ def process(input)
       -1
     end
   end
+  sum
 end
 
 STDERR.puts process <<-EOF
