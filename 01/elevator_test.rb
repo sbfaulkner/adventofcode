@@ -20,7 +20,7 @@ class TestElevator < Minitest::Test
   end
 
   def test_unknown
-    assert_equal(0, Elevator.direction('?'))
+    assert_equal(nil, Elevator.direction('?'))
   end
 
   def test_floor_0
@@ -57,5 +57,17 @@ class TestElevator < Minitest::Test
 
   def test_also_subfloor_3
     assert_floor(-3, ')())())')
+  end
+
+  def test_find_basement_in_1_instruction
+    assert_equal(1, @elevator.follow(')'))
+  end
+
+  def test_find_basement_in_5_instructions
+    assert_equal(5, @elevator.follow('()())'))
+  end
+
+  def test_does_not_count_invalid_instructions
+    assert_equal(5, @elevator.follow('  ()())'))
   end
 end
