@@ -32,6 +32,7 @@
 # ribbon for the bow, for a total of 14 feet.
 # How many total feet of ribbon should they order?
 
+require 'benchmark'
 require_relative 'present'
 
 DIMENSIONS = %w(
@@ -1038,6 +1039,16 @@ DIMENSIONS = %w(
 )
 
 presents = DIMENSIONS.map { |dimensions| Present.new(dimensions) }
+answer = nil
 
-STDERR.puts presents.reduce(0) { |total, present| total + present.paper_required }
-STDERR.puts presents.reduce(0) { |total, present| total + present.ribbon_required }
+time = Benchmark.realtime do
+  answer = presents.reduce(0) { |total, present| total + present.paper_required }
+end
+
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+
+time = Benchmark.realtime do
+  answer = presents.reduce(0) { |total, present| total + present.ribbon_required }
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000

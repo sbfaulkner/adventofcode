@@ -37,6 +37,7 @@
 # ()()) causes him to enter the basement at character position 5.
 # What is the position of the character that causes Santa to first enter the basement?
 
+require 'benchmark'
 require_relative 'elevator'
 
 instructions = <<-EOF
@@ -102,9 +103,19 @@ instructions = <<-EOF
   ((())(((()()))(((())(())()))(((((((())(())())()(())(((((()))()((()))()(()()((()()()()()())(((((((
 EOF
 
-elevator_a = Elevator.new
-elevator_a.follow(instructions)
-STDERR.puts elevator_a.floor
+answer = nil
 
-elevator_b = Elevator.new
-STDERR.puts elevator_b.follow(instructions, -1)
+time = Benchmark.realtime do
+  elevator_a = Elevator.new
+  elevator_a.follow(instructions)
+  answer = elevator_a.floor
+end
+
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+
+time = Benchmark.realtime do
+  elevator_b = Elevator.new
+  answer = elevator_b.follow(instructions, -1)
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000

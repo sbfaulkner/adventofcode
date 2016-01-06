@@ -31,6 +31,7 @@
 # ^>v< now delivers presents to 3 houses, and Santa and Robo-Santa end up back where they started.
 # ^v^v^v^v^v now delivers presents to 11 houses, with Santa going one direction and Robo-Santa going the other.
 
+require 'benchmark'
 require_relative 'route'
 
 INPUT = <<-INPUT
@@ -107,8 +108,18 @@ INPUT = <<-INPUT
   v^
 INPUT
 
-route = Route.new
-STDERR.puts route.deliver(INPUT)
+answer = nil
 
-route = Route.new(2)
-STDERR.puts route.deliver(INPUT)
+time = Benchmark.realtime do
+  route = Route.new
+  answer = route.deliver(INPUT)
+end
+
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+
+time = Benchmark.realtime do
+  route = Route.new(2)
+  answer = route.deliver(INPUT)
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000

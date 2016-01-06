@@ -19,14 +19,22 @@
 # Now find one that starts with six zeroes.
 #
 
+require 'benchmark'
 require_relative 'mine'
 
 SECRET_KEY = 'yzbqklnj'
+answer = nil
 
-mine = Mine.new(SECRET_KEY)
+time = Benchmark.realtime do
+  mine = Mine.new(SECRET_KEY)
+  answer = mine.first
+end
 
-STDERR.puts mine.first
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-mine = Mine.new(SECRET_KEY, '000000')
+time = Benchmark.realtime do
+  mine = Mine.new(SECRET_KEY, '000000')
+  answer = mine.first
+end
 
-STDERR.puts mine.first
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
