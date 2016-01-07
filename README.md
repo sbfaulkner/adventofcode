@@ -21,3 +21,7 @@ Quite happy with how succinct the approach used here is, although performance mi
 ## Day 5: Doesn't He Have Intern-Elves For This?
 
 The two independent versions muddy this solution somewhat, but I think this is reasonable.
+
+## Day 6: Probably a Fire Hazard
+
+The parsing/processing is pretty ugly... can definitely be cleaned up.
