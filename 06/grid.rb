@@ -2,7 +2,7 @@ require_relative 'light'
 
 class Grid
   def initialize
-    @lights = Array.new(1000) { Array.new(1000, Light.new) }
+    @lights = Array.new(1000) { Array.new(1000) { Light.new } }
   end
 
   def configure(instructions)

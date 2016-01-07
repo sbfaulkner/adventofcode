@@ -12,9 +12,8 @@ class GridTest < Minitest::Test
   end
 
   def test_toggle_1000
-    @grid.configure('turn on 0,0 through 999,999')
     @grid.configure('toggle 0,0 through 999,0')
-    assert_equal(999_000, @grid.count)
+    assert_equal(1_000, @grid.count)
   end
 
   def test_turn_off_4
