@@ -1,9 +1,10 @@
 require 'minitest/autorun'
 require_relative '../grid'
+require_relative '../light'
 
 class GridTest < Minitest::Test
   def setup
-    @grid = Grid.new
+    @grid = Grid.new(Light)
   end
 
   def test_turn_on_all

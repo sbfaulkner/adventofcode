@@ -327,11 +327,12 @@ INSTRUCTIONS
 
 require 'benchmark'
 require_relative 'grid'
+require_relative 'light'
 
 answer = nil
 
 time = Benchmark.realtime do
-  grid = Grid.new
+  grid = Grid.new(Light)
   grid.configure(instructions)
   answer = grid.count
 end
