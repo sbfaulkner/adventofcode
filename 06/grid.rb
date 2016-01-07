@@ -14,8 +14,12 @@ class Grid
     end
   end
 
+  def brightness
+    @lights.flatten.map(&:brightness).reduce(&:+)
+  end
+
   def count
-    @lights.flatten.count(&:value)
+    @lights.flatten.count(&:on?)
   end
 
   private

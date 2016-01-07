@@ -1,8 +1,14 @@
 class Light
-  attr_accessor :value
-
   def initialize
     @value = false
+  end
+
+  def off?
+    !@value
+  end
+
+  def on?
+    @value
   end
 
   def toggle

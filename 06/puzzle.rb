@@ -21,6 +21,27 @@
 # the ones that were off.
 # turn off 499,499 through 500,500 would turn off (or leave off) the middle four lights.
 # After following the instructions, how many lights are lit?
+#
+# --- Part Two ---
+#
+# You just finish implementing your winning light pattern when you realize you mistranslated Santa's message from
+# Ancient Nordic Elvish.
+#
+# The light grid you bought actually has individual brightness controls; each light can have a brightness of zero or
+# more. The lights all start at zero.
+#
+# The phrase turn on actually means that you should increase the brightness of those lights by 1.
+#
+# The phrase turn off actually means that you should decrease the brightness of those lights by 1, to a minimum of zero.
+#
+# The phrase toggle actually means that you should increase the brightness of those lights by 2.
+#
+# What is the total brightness of all lights combined after following Santa's instructions?
+#
+# For example:
+#
+# turn on 0,0 through 0,0 would increase the total brightness by 1.
+# toggle 0,0 through 999,999 would increase the total brightness by 2000000.
 
 instructions = <<-INSTRUCTIONS
   turn on 887,9 through 959,629
@@ -328,6 +349,7 @@ INSTRUCTIONS
 require 'benchmark'
 require_relative 'grid'
 require_relative 'light'
+require_relative 'variable_light'
 
 answer = nil
 
@@ -339,10 +361,10 @@ end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-# time = Benchmark.realtime do
-#   grid = Grid.new
-#   grid.configure(instructions)
-#   answer = grid.count
-# end
-#
-# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+time = Benchmark.realtime do
+  grid = Grid.new(VariableLight)
+  grid.configure(instructions)
+  answer = grid.brightness
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
