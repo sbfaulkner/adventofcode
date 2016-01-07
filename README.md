@@ -24,4 +24,4 @@ The two independent versions muddy this solution somewhat, but I think this is r
 
 ## Day 6: Probably a Fire Hazard
 
-The parsing/processing is pretty ugly... can definitely be cleaned up.
+Decent solution, class naming could be better.
