@@ -9,3 +9,6 @@ Metrics/LineLength:
 
 Style/SingleLineBlockParams:
   Enabled: false
+
+Style/SignalException:
+  Enabled: false
