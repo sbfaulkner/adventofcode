@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'present'
+require_relative '../present'
 
 class PresentTest < Minitest::Test
   def test_2x3x4_paper_required

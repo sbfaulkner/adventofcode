@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'elevator'
+require_relative '../elevator'
 
 class TestElevator < Minitest::Test
   def assert_floor(floor, instructions)

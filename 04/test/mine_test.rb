@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'mine'
+require_relative '../mine'
 
 class MineTest < Minitest::Test
   def test_abcdef

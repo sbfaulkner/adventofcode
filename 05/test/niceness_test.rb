@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'niceness'
+require_relative '../niceness'
 
 class NicenessTest < Minitest::Test
   def test_ugknbfddgicrmopn_nice_v1

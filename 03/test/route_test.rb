@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'route'
+require_relative '../route'
 
 class RouteTest < Minitest::Test
   def setup

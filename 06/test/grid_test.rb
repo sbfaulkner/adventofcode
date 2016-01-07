@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require_relative 'grid'
+require_relative '../grid'
 
 class GridTest < Minitest::Test
   def setup
