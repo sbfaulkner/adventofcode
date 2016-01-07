@@ -17,3 +17,7 @@ Better than Day 1, but nothing special.
 ## Day 4: The Ideal Stocking Stuffer
 
 Quite happy with how succinct the approach used here is, although performance might be a bit lacking.
+
+## Day 5: Doesn't He Have Intern-Elves For This?
+
+The two independent versions muddy this solution somewhat, but I think this is reasonable.
