@@ -29,3 +29,4 @@ Decent solution, class naming could be better.
 ## Day 7: Some Assembly Required
 
 A slightly awkward solution, but a proper lexer/parser seems like overkill.
+Also, calculating the signal effectively destroys the circuit (as it caches values).
