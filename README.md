@@ -25,3 +25,7 @@ The two independent versions muddy this solution somewhat, but I think this is r
 ## Day 6: Probably a Fire Hazard
 
 Decent solution, class naming could be better.
+
+## Day 7: Some Assembly Required
+
+A slightly awkward solution, but a proper lexer/parser seems like overkill.
