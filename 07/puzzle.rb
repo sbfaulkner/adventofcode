@@ -44,6 +44,11 @@
 # In little Bobby's kit's instructions booklet (provided as your puzzle input), what signal is ultimately provided
 # to wire a?
 #
+# --- Part Two ---
+#
+# Now, take the signal you got on wire a, override wire b to that signal, and reset the other wires (including wire
+# a). What new signal is ultimately provided to wire a?
+#
 
 input = <<-INPUT
   lf AND lq -> ls
@@ -400,9 +405,11 @@ end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-# time = Benchmark.realtime do
-#   circuit = Circuit.new
-#   circuit.connect input
-# end
-#
-# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+time = Benchmark.realtime do
+  circuit = Circuit.new
+  circuit.connect(input)
+  circuit.connect("#{answer} -> b")
+  answer = circuit.signal('a')
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
