@@ -35,3 +35,8 @@ Also, calculating the signal effectively destroys the circuit (as it caches valu
 
 The lexer should be decoupled from the decode/encode action... but it works.
 Manually implementing the FSM was kind of fun. I should probably apply that technique more often.
+
+## Day 9: All in a Single Night
+
+Not the optimal solution (with larger datasets), and definitely considers twices as many routes as necessary.
+However, kind of a nice solution taking advantage of Rubyisms.
