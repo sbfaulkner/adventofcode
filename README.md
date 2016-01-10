@@ -48,3 +48,8 @@ Neat problem. I wonder what other approaches would yield for solutions.
 ## Day 11: Corporate Policy
 
 I think I'd prefer to separate the password validation from the incrementing/finding for better separation of concerns.
+
+## Day 12: JSAbacusFramework.io
+
+Decent solution. There may be some way to combine the Array and Hash value extraction.
+However, I suspect the requirement to ignore/skip properties prevents this generalization.
