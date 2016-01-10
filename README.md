@@ -40,3 +40,7 @@ Manually implementing the FSM was kind of fun. I should probably apply that tech
 
 Not the optimal solution (with larger datasets), and definitely considers twices as many routes as necessary.
 However, kind of a nice solution taking advantage of Rubyisms.
+
+## Day 10: Elves Look, Elves Say
+
+Neat problem. I wonder what other approaches would yield for solutions.
