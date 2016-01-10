@@ -30,3 +30,8 @@ Decent solution, class naming could be better.
 
 A slightly awkward solution, but a proper lexer/parser seems like overkill.
 Also, calculating the signal effectively destroys the circuit (as it caches values).
+
+## Day 8: Matchsticks
+
+The lexer should be decoupled from the decode/encode action... but it works.
+Manually implementing the FSM was kind of fun. I should probably apply that technique more often.
