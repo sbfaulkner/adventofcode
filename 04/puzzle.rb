@@ -22,7 +22,9 @@
 require 'benchmark'
 require_relative 'mine'
 
-SECRET_KEY = 'yzbqklnj'
+INPUT_PATH = File.expand_path('input', __dir__)
+SECRET_KEY = File.read(INPUT_PATH).strip
+
 answer = nil
 
 time = Benchmark.realtime do
