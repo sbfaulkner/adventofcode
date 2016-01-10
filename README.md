@@ -44,3 +44,7 @@ However, kind of a nice solution taking advantage of Rubyisms.
 ## Day 10: Elves Look, Elves Say
 
 Neat problem. I wonder what other approaches would yield for solutions.
+
+## Day 11: Corporate Policy
+
+I think I'd prefer to separate the password validation from the incrementing/finding for better separation of concerns.
