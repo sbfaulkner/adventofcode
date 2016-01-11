@@ -13,6 +13,8 @@ class Reindeer
     @velocity = velocity
     @stamina  = stamina
     @rest     = rest
+    @position = 0
+    @time     = 0
   end
 
   attr_reader :name, :rest, :stamina, :velocity
@@ -21,6 +23,8 @@ class Reindeer
     periods = time / (@stamina + @rest)
     remainder = time % (@stamina + @rest)
     periods += [remainder.to_f / @stamina, 1].min
-    periods * @stamina * velocity
+
+    @time += time
+    @position += periods * @stamina * velocity
   end
 end
