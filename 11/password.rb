@@ -20,7 +20,7 @@ class Password
   end
 
   def next
-    Password.new(@value).tap do |password|
+    self.class.new(@value).tap do |password|
       loop do
         password.increment
         break if password.valid?

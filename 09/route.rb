@@ -15,7 +15,7 @@ class Route
   end
 
   def self.all
-    @routes ||= @distances.keys.permutation.map { |cities| Route.new(cities) }.compact
+    @routes ||= @distances.keys.permutation.map { |cities| new(cities) }
   end
 
   def initialize(cities)
