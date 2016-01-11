@@ -6,7 +6,7 @@ class SeatingArrangement
   end
 
   def self.load(source)
-    @rules = Hash.new { |h, k| h[k] = {} }.tap do |rules|
+    @rules = Hash.new { |h, k| h[k] = Hash.new(0) }.tap do |rules|
       source.each_line.map do |rule|
         person, action, happiness, neighbour = rule.match(RULE_REGEX).captures
         rules[person][neighbour] = (action == 'gain' ? happiness : "-#{happiness}").to_i
@@ -14,20 +14,22 @@ class SeatingArrangement
     end
   end
 
-  def self.all
-    @rules.keys.permutation.map { |people| new(people) }
+  def self.all(including: nil)
+    people = @rules.keys
+    people += Array(including)
+    people.permutation.map { |assignments| new(assignments) }
   end
 
-  def initialize(people)
-    @people = people
-    @size   = @people.size
+  def initialize(assignments)
+    @assignments = assignments
+    @size        = @assignments.size
   end
 
   def happiness
-    @happiness ||= @people.each_with_index.map do |person, index|
-      happiness = self.class.rules[person]
-      left      = @people[(index - 1) % @size]
-      right     = @people[(index + 1) % @size]
+    @happiness ||= @assignments.each_with_index.map do |assignment, index|
+      happiness = self.class.rules[assignment]
+      left      = @assignments[(index - 1) % @size]
+      right     = @assignments[(index + 1) % @size]
       happiness[left] + happiness[right]
     end.reduce(&:+)
   end

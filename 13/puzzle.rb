@@ -57,10 +57,10 @@ end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-# time = Benchmark.realtime do
-#   SeatingArrangement.load(File.open(INPUT_PATH))
-#   arrangement = SeatingArrangement.all(include: 'me').max_by(&:happiness)
-#   answer = arrangement.happiness
-# end
-#
-# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+time = Benchmark.realtime do
+  SeatingArrangement.load(File.open(INPUT_PATH))
+  arrangement = SeatingArrangement.all(including: 'me').max_by(&:happiness)
+  answer = arrangement.happiness
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
