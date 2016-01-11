@@ -57,3 +57,7 @@ However, I suspect the requirement to ignore/skip properties prevents this gener
 ## Day 13: Knights of the Dinner Table
 
 Used same approach as day 9... however, we know that we consider (at least) twice as many routes as necessary on day 9 (ie. the distance is the same forwards an backwards). Here, we know it's even less optimal, since the permutations can now be both a) flipped (like day 9) and b) rotated, since the table is circular.
+
+## Day 14: Reindeer Olympics
+
+Used a mathematical approach for part 1, but may have to resort to simulating to deal with the part 2's scoring system.
