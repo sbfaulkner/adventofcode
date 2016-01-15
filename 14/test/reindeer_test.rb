@@ -3,10 +3,11 @@ require_relative '../reindeer'
 
 class ReindeerTest < Minitest::Test
   def setup
-    @comet, @dancer = Reindeer.load <<-INPUT
+    @reindeer = Reindeer.load <<-INPUT
       Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.
       Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.
     INPUT
+    @comet, @dancer = @reindeer
   end
 
   def test_comet
@@ -45,5 +46,47 @@ class ReindeerTest < Minitest::Test
     time = 1000
     assert_equal(1120, @comet.travel(time))
     assert_equal(1056, @dancer.travel(time))
+  end
+
+  def test_travel_accumulates
+    1000.times do
+      @comet.travel(1)
+      @dancer.travel(1)
+    end
+    assert_equal(1120, @comet.position)
+    assert_equal(1056, @dancer.position)
+  end
+
+  def test_award_1_point
+    assert_equal(1, @comet.award)
+  end
+
+  def test_award_2_points
+    @comet.award
+    assert_equal(2, @comet.award)
+  end
+
+  def test_award_5_points
+    5.times { @comet.award }
+    assert_equal(5, @comet.points)
+  end
+
+  def test_race_1s
+    Reindeer.race(@reindeer, duration: 1)
+    assert_equal(0, @comet.points)
+    assert_equal(1, @dancer.points)
+  end
+
+  def test_race_140s
+    Reindeer.race(@reindeer, duration: 140)
+    assert_equal(1, @comet.points)
+    assert_equal(139, @dancer.points)
+  end
+
+  def test_race_1000s
+    winner = Reindeer.race(@reindeer, duration: 1000)
+    assert_equal(312, @comet.points)
+    assert_equal(689, @dancer.points)
+    assert_equal([@dancer], winner)
   end
 end

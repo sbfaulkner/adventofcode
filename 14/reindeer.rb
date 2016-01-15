@@ -8,23 +8,38 @@ class Reindeer
     end
   end
 
+  def self.race(reindeer, duration: 2503)
+    duration.times do
+      position = reindeer.map { |r| r.travel(1) }.max
+      reindeer.each { |r| r.award if r.position == position }
+    end
+    points = reindeer.map(&:points).max
+    reindeer.select { |r| r.points == points }
+  end
+
   def initialize(name:, velocity:, stamina:, rest:)
     @name     = name
     @velocity = velocity
     @stamina  = stamina
     @rest     = rest
+    @points   = 0
     @position = 0
     @time     = 0
   end
 
-  attr_reader :name, :rest, :stamina, :velocity
+  attr_reader :name, :points, :position, :rest, :stamina, :velocity
+
+  def award
+    @points += 1
+  end
 
   def travel(time)
-    periods = time / (@stamina + @rest)
-    remainder = time % (@stamina + @rest)
+    @time += time
+
+    periods = @time / (@stamina + @rest)
+    remainder = @time % (@stamina + @rest)
     periods += [remainder.to_f / @stamina, 1].min
 
-    @time += time
-    @position += periods * @stamina * velocity
+    @position = periods * @stamina * velocity
   end
 end

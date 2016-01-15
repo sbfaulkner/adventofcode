@@ -56,9 +56,9 @@ end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-# time = Benchmark.realtime do
-#   reindeer = Reindeer.load(File.open(INPUT_PATH))
-#   answer = reindeer.map { |r| r.travel(2503) }.max
-# end
-#
-# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+time = Benchmark.realtime do
+  reindeer = Reindeer.load(File.open(INPUT_PATH))
+  answer = Reindeer.race(reindeer).first.points
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000

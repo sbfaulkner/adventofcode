@@ -60,4 +60,5 @@ Used same approach as day 9... however, we know that we consider (at least) twic
 
 ## Day 14: Reindeer Olympics
 
-Used a mathematical approach for part 1, but may have to resort to simulating to deal with the part 2's scoring system.
+Used a mathematical approach to calculate position based on elapsed time. It would be interested to attempt this again
+by tracking state and advancing reindeer based on velocity during simulation.
