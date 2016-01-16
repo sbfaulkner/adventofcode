@@ -68,3 +68,7 @@ by tracking state and advancing reindeer based on velocity during simulation.
 ## Day 15: Science for Hungry People
 
 This solution could do with some refactoring... and, I'm not sure I'm happy with the complexity of Recipe#combine.
+
+## Day 16: Aunt Sue
+
+Not the prettiest API, but it is a pretty reasonable solution.
