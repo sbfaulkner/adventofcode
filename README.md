@@ -72,3 +72,7 @@ This solution could do with some refactoring... and, I'm not sure I'm happy with
 ## Day 16: Aunt Sue
 
 Not the prettiest API, but it is a pretty reasonable solution.
+
+## Day 17: No Such Thing as Too Much
+
+No classes... just code. I will have to revisit this and come up with a testable approach.
