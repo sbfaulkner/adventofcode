@@ -119,4 +119,18 @@ class RecipeTest < Minitest::Test
 
     assert_equal(62_842_880, recipe.score)
   end
+
+  def test_combined_score_with_500_calories
+    butterscotch, cinnamon = Ingredient.load <<-INPUT
+      Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8
+      Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3
+    INPUT
+
+    recipe = Recipe.new
+    recipe.add(40, butterscotch)
+    recipe.add(60, cinnamon)
+
+    assert_equal(500, recipe.calories)
+    assert_equal(57_600_000, recipe.score)
+  end
 end

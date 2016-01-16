@@ -33,6 +33,10 @@ class Recipe
     [@ingredients.map { |a, i| a * i.capacity }.reduce(0, &:+), 0].max
   end
 
+  def calories
+    [@ingredients.map { |a, i| a * i.calories }.reduce(0, &:+), 0].max
+  end
+
   def durability
     [@ingredients.map { |a, i| a * i.durability }.reduce(0, &:+), 0].max
   end

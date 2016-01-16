@@ -64,3 +64,7 @@ now be both a) flipped (like day 9) and b) rotated, since the table is circular.
 
 Used a mathematical approach to calculate position based on elapsed time. It would be interested to attempt this again
 by tracking state and advancing reindeer based on velocity during simulation.
+
+## Day 15: Science for Hungry People
+
+This solution could do with some refactoring... and, I'm not sure I'm happy with the complexity of Recipe#combine.
