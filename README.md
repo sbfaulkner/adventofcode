@@ -76,3 +76,7 @@ Not the prettiest API, but it is a pretty reasonable solution.
 ## Day 17: No Such Thing as Too Much
 
 No classes... just code. I will have to revisit this and come up with a testable approach.
+
+## Day 18: Like a GIF For Your Yard
+
+Sounds like a variation on the game of life...
