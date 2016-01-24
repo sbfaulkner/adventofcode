@@ -10,12 +10,13 @@ class LightShow
 
   attr_reader :lights
 
+  def always_on?(r, c)
+    @always_on.include?([r, c])
+  end
+
   def on?(r, c)
-    return true if @always_on.include?([r, c])
-    return unless 0 <= r && r < @lights.size
-    row = @lights[r]
-    return unless 0 <= c && c < row.size
-    row[c]
+    return if r < 0 || c < 0 || r >= @lights.size
+    @lights[r][c] || always_on?(r, c)
   end
 
   def count
@@ -23,18 +24,17 @@ class LightShow
   end
 
   def neighbours(r, c)
-    [
-      on?(r - 1, c - 1), on?(r - 1, c), on?(r - 1, c + 1),
-      on?(r, c - 1), on?(r, c + 1),
-      on?(r + 1, c - 1), on?(r + 1, c), on?(r + 1, c + 1)
-    ].count(true)
+    rows = (r - 1)..(r + 1)
+    columns = (c - 1)..(c + 1)
+    rows.map { |rr| columns.map { |cc| on?(rr, cc) unless rr == r && cc == c }.count(true) }.reduce(&:+)
   end
 
   def step
     @lights = @lights.map.with_index do |row, r|
       row.map.with_index do |on, c|
+        next true if always_on?(r, c)
         count = neighbours(r, c)
-        on && count == 2 || count == 3 || @always_on.include?([r, c])
+        count == 3 || on && count == 2
       end
     end
   end
