@@ -74,13 +74,13 @@ class LightShowTest < Minitest::Test
   def test_edge_neighbours
     load_show_1
 
-    assert_equal 5, @show.neighbours(0, 1)
+    assert @show.neighbours?(0, 1, min: 5, max: 5)
   end
 
   def test_inner_neighbours
     load_show_1
 
-    assert_equal 8, @show.neighbours(4, 3)
+    assert @show.neighbours?(4, 3, min: 8, max: 8)
   end
 
   def test_to_s

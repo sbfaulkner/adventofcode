@@ -23,18 +23,32 @@ class LightShow
     @lights.map { |row| row.count(true) }.reduce(&:+)
   end
 
-  def neighbours(r, c)
+  def neighbours?(r, c, min:, max:)
+    count = 0
     rows = (r - 1)..(r + 1)
     columns = (c - 1)..(c + 1)
-    rows.map { |rr| columns.map { |cc| on?(rr, cc) unless rr == r && cc == c }.count(true) }.reduce(&:+)
+
+    rows.each do |rr|
+      columns.each do |cc|
+        next if rr == r && cc == c
+        count += 1 if on?(rr, cc)
+        break if count > max
+      end
+      break if count > max
+    end
+
+    count >= min && count <= max
   end
 
   def step
     @lights = @lights.map.with_index do |row, r|
       row.map.with_index do |on, c|
         next true if always_on?(r, c)
-        count = neighbours(r, c)
-        count == 3 || on && count == 2
+        if on
+          neighbours?(r, c, min: 2, max: 3)
+        else
+          neighbours?(r, c, min: 3, max: 3)
+        end
       end
     end
   end
