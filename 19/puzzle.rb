@@ -37,3 +37,31 @@
 # need to calibrate the machine. How many distinct molecules can be created after all the different ways you can do one
 # replacement on the medicine molecule?
 #
+
+INPUT_PATH = File.expand_path('input', __dir__)
+
+require 'benchmark'
+require_relative 'molecule'
+require_relative 'replacement'
+
+answer = nil
+
+time = Benchmark.realtime do
+  input = File.open(INPUT_PATH)
+  replacements = Replacement.load(input)
+  molecule = Molecule.load(input)
+  molecules = molecule.generate(replacements)
+  answer = molecules.size
+end
+
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+
+# time = Benchmark.realtime do
+#   input = File.open(INPUT_PATH)
+#   replacements = Replacement.load(input)
+#   molecule = Molecule.load(input)
+#   molecules = molecule.generate(replacements)
+#   answer = molecules.size
+# end
+#
+# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
