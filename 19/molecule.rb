@@ -9,8 +9,8 @@ class Molecule
     @structure = structure
   end
 
-  def eql?(molecule)
-    molecule.hash == hash
+  def eql?(other)
+    other.hash == hash
   end
 
   def generate(replacements)
