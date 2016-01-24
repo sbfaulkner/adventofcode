@@ -76,6 +76,64 @@
 #
 # In your grid of 100x100 lights, given your initial configuration, how many lights are on after 100 steps?
 #
+# --- Part Two ---
+#
+# You flip the instructions over; Santa goes on to point out that this is all just an implementation of Conway's Game of
+# Life. At least, it was, until you notice that something's wrong with the grid of lights you bought: four lights, one
+# in each corner, are stuck on and can't be turned off. The example above will actually run like this:
+#
+# Initial state:
+# ##.#.#
+# ...##.
+# #....#
+# ..#...
+# #.#..#
+# ####.#
+#
+# After 1 step:
+# #.##.#
+# ####.#
+# ...##.
+# ......
+# #...#.
+# #.####
+#
+# After 2 steps:
+# #..#.#
+# #....#
+# .#.##.
+# ...##.
+# .#..##
+# ##.###
+#
+# After 3 steps:
+# #...##
+# ####.#
+# ..##.#
+# ......
+# ##....
+# ####.#
+#
+# After 4 steps:
+# #.####
+# #....#
+# ...#..
+# .##...
+# #.....
+# #.#..#
+#
+# After 5 steps:
+# ##.###
+# .##..#
+# .##...
+# .##...
+# #.#...
+# ##...#
+# After 5 steps, this example now has 17 lights on.
+#
+# In your grid of 100x100 lights, given your initial configuration, but with the four corners always in the on state,
+# how many lights are on after 100 steps?
+#
 
 INPUT_PATH = File.expand_path('input', __dir__)
 
@@ -92,10 +150,10 @@ end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
-# time = Benchmark.realtime do
-#   show = LightShow.load(File.open(INPUT_PATH))
-#   100.times { show.step }
-#   answer = show.count
-# end
-#
-# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+time = Benchmark.realtime do
+  show = LightShow.load(File.open(INPUT_PATH), always_on: [[0, 0], [0, 99], [99, 0], [99, 99]])
+  100.times { show.step }
+  answer = show.count
+end
+
+STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
