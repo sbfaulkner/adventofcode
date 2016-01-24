@@ -76,3 +76,26 @@
 #
 # In your grid of 100x100 lights, given your initial configuration, how many lights are on after 100 steps?
 #
+
+INPUT_PATH = File.expand_path('input', __dir__)
+
+require 'benchmark'
+require_relative 'light_show'
+
+answer = nil
+
+time = Benchmark.realtime do
+  show = LightShow.load(File.open(INPUT_PATH))
+  100.times { show.step }
+  answer = show.count
+end
+
+STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
+
+# time = Benchmark.realtime do
+#   show = LightShow.load(File.open(INPUT_PATH))
+#   100.times { show.step }
+#   answer = show.count
+# end
+#
+# STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000

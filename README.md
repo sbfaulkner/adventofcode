@@ -79,4 +79,5 @@ No classes... just code. I will have to revisit this and come up with a testable
 
 ## Day 18: Like a GIF For Your Yard
 
-Sounds like a variation on the game of life...
+Sounds like a variation on the game of life... so, there's probably some good theoretical papers to read.
+The array indexing used here to test values and find neighbours feels clunky.
