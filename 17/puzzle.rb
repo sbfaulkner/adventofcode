@@ -29,7 +29,6 @@
 INPUT_PATH = File.expand_path('input', __dir__)
 
 require 'benchmark'
-# require_relative 'aunt'
 
 answer = nil
 
