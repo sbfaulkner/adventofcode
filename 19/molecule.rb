@@ -26,4 +26,8 @@ class Molecule
   def hash
     @structure.hash
   end
+
+  def to_s
+    @structure
+  end
 end

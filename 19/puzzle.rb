@@ -68,24 +68,20 @@ INPUT_PATH = File.expand_path('input', __dir__)
 
 require 'benchmark'
 require_relative 'machine'
-require_relative 'molecule'
-require_relative 'replacement'
 
 answer = nil
 
 time = Benchmark.realtime do
   machine = Machine.load(File.open(INPUT_PATH))
-  molecules = machine.generate
+  molecules = machine.calibrate
   answer = molecules.size
 end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
 # time = Benchmark.realtime do
-#   input = File.open(INPUT_PATH)
-#   replacements = Replacement.load(input)
-#   molecule = Molecule.load(input)
-#   molecules = molecule.generate(replacements)
+#   machine = Machine.load(File.open(INPUT_PATH))
+#   molecules = machine.generate
 #   answer = molecules.size
 # end
 #
