@@ -1,15 +1,9 @@
 require 'strscan'
 
 class Molecule
-  def self.load(source)
-    new(source.gets.strip)
-  end
-
   def initialize(structure)
     @structure = structure
   end
-
-  attr_reader :structure
 
   def eql?(other)
     other.hash == hash

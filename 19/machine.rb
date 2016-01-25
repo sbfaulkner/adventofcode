@@ -4,7 +4,7 @@ require_relative 'molecule'
 class Machine
   def self.load(source)
     replacements = Replacement.load(source)
-    molecule = Molecule.load(source)
+    molecule = Molecule.new(source.gets.strip)
 
     new(molecule, replacements)
   end
