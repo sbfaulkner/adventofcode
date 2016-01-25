@@ -84,4 +84,4 @@ The array indexing used here to test values and find neighbours feels clunky.
 
 ## Day 19: Medicine for Rudolph
 
-Molecule#generate feels a bit "clunky", but this is working reasonably well.
+Tests for Replacement class should be better isolated from Molecule.
