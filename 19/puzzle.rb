@@ -73,16 +73,14 @@ answer = nil
 
 time = Benchmark.realtime do
   machine = Machine.load(File.open(INPUT_PATH))
-  molecules = machine.calibrate
-  answer = molecules.size
+  answer = machine.calibrate
 end
 
 STDERR.printf "Part 1: answer=%d (%.3fms elapsed)\n", answer, time * 1000
 
 # time = Benchmark.realtime do
 #   machine = Machine.load(File.open(INPUT_PATH))
-#   molecules = machine.generate
-#   answer = molecules.size
+#   answer = machine.calibrate
 # end
 #
 # STDERR.printf "Part 2: answer=%d (%.3fms elapsed)\n", answer, time * 1000
