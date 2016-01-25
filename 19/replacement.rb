@@ -7,9 +7,11 @@ class Replacement
   end
 
   def initialize(pattern, replacement)
-    @pattern     = Regexp.new(pattern)
+    @pattern     = pattern
     @replacement = replacement
   end
 
-  attr_reader :pattern, :replacement
+  def each_molecule(molecule, &block)
+    molecule.each(@pattern, @replacement, &block)
+  end
 end
