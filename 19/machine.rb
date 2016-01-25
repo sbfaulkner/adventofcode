@@ -15,7 +15,7 @@ class Machine
   end
 
   def calibrate
-    generate.tap { |r| STDERR.puts "calibrating => #{r.inspect}" }.size
+    generate.size
   end
 
   def generate
