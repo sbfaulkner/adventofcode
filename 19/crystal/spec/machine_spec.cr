@@ -1,28 +1,8 @@
 require "./spec_helper"
 
-class MachineTest < Minitest::Test
-  def test_calibrate
-    assert_equal 4, simple_machine.calibrate
-  end
-
-  def test_generate_simple
-    molecules = %w(HHHH HOHO HOOH OHOH)
-
-    assert_equal molecules, simple_machine.generate.map(&:to_s).sort
-  end
-
-  def test_fabricate_hoh
-    assert_equal 3, fabrication_machine('HOH').fabricate
-  end
-
-  def test_fabricate_hohoho
-    assert_equal 6, fabrication_machine('HOHOHO').fabricate
-  end
-
-  private
-
-  def fabrication_machine(target)
-    machine(<<-INPUT)
+module MachineBuilder
+  def self.fabrication_machine(target)
+    machine <<-INPUT
       e => H
       e => O
       H => HO
@@ -33,8 +13,8 @@ class MachineTest < Minitest::Test
     INPUT
   end
 
-  def simple_machine
-    machine(<<-INPUT)
+  def self.simple_machine
+    machine <<-INPUT
       H => HO
       H => OH
       O => HH
@@ -43,7 +23,32 @@ class MachineTest < Minitest::Test
     INPUT
   end
 
-  def machine(source)
-    Machine.load(StringIO.new(source))
+  def self.machine(source)
+    Machine.load(MemoryIO.new(source))
+  end
+end
+
+describe Machine do
+  context "with a simple machine" do
+    it "calibrates" do
+      machine = MachineBuilder.simple_machine
+      machine.calibrate.should eq 4
+    end
+
+    it "generates molecules" do
+      molecules = %w(HHHH HOHO HOOH OHOH)
+      machine = MachineBuilder.simple_machine
+      machine.generate.map(&.to_s).sort.should eq molecules
+    end
+
+    it "fabricates HOH in 3 generations" do
+      machine = MachineBuilder.fabrication_machine("HOH")
+      machine.fabricate.should eq 3
+    end
+
+    it "fabricates HOHOHO in 6 generations" do
+      machine = MachineBuilder.fabrication_machine("HOHOHO")
+      machine.fabricate.should eq 6
+    end
   end
 end

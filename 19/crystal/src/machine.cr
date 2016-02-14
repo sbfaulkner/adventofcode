@@ -26,20 +26,20 @@ class Machine
       current   = molecules
       molecules = [] of Molecule
 
-      STDERR.puts "#{count}: #{current.size} molecule(s)"
-      STDERR.flush
-      STDERR.puts "[#{current.map { |m| m.to_s }.join(", ")}]"
-      STDERR.flush
+      # STDERR.puts "#{count}: #{current.size} molecule(s)"
+      # STDERR.flush
+      # STDERR.puts "[#{current.map(&.to_s).join(", ")}]"
+      # STDERR.flush
 
       current.any? do |molecule|
         results = generate(molecule) do |m|
           fabricated[m.to_s] = true unless fabricated[m]?
         end
 
-        STDERR.puts "results => #{results.map { |m| m.to_s }.join(", ")}"
+        # STDERR.puts "results => #{results.map(&.to_s).join(", ")}"
         molecules = molecules | results
-        STDERR.puts "molecules => #{molecules.map { |m| m.to_s }.join(", ")}"
-        results.any? { |m| @molecule.eql?(m) }
+        # STDERR.puts "molecules => #{molecules.map(&.to_s).join(", ")}"
+        results.any? { |m| @molecule == m }
       end
     end
   end
