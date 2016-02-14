@@ -18,11 +18,35 @@ class Machine
     generate.size
   end
 
-  def generate
-    result = []
-    @replacements.each do |replacement|
-      replacement.each_molecule(@molecule) { |m| result |= [m] }
+  def fabricate
+    fabricated = {}
+    molecules  = [Molecule.new]
+
+    (1..Float::INFINITY).find do |count|
+      current   = molecules
+      molecules = []
+
+      STDERR.puts "#{count}: #{current.size} molecule(s)"
+      STDERR.puts current.inspect
+
+      current.any? do |molecule|
+        results = generate(molecule) do |m|
+          fabricated[m.to_s] = true unless fabricated[m]
+        end
+
+        molecules |= results
+        results.any? { |m| @molecule.eql?(m) }
+      end
     end
-    result
+  end
+
+  def generate(molecule = @molecule)
+    result = {}
+    @replacements.each do |replacement|
+      replacement.each_molecule(molecule) do |m|
+        result[m.to_s] ||= m unless block_given? && !yield(m)
+      end
+    end
+    result.values
   end
 end

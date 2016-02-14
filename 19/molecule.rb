@@ -1,7 +1,5 @@
-require 'strscan'
-
 class Molecule
-  def initialize(structure)
+  def initialize(structure = 'e')
     @structure = structure
   end
 
@@ -19,6 +17,10 @@ class Molecule
 
   def hash
     @structure.hash
+  end
+
+  def inspect
+    to_s
   end
 
   def to_s
