@@ -20,6 +20,20 @@ class MachineTest < Minitest::Test
     assert_equal 6, fabrication_machine('HOHOHO').fabricate
   end
 
+  def test_deconstruct_hoh
+    assert_equal 3, fabrication_machine('HOH').deconstruct
+  end
+
+  def test_deconstruct_hohoho
+    assert_equal 6, fabrication_machine('HOHOHO').deconstruct
+  end
+
+  def test_degenerate_hohoho
+    molecules = %w(HHOHO HOHHO HOHOH HOHOHe HOHOeO HOHeHO HOeOHO HeHOHO eOHOHO)
+
+    assert_equal molecules, fabrication_machine('HOHOHO').degenerate.map(&:to_s).sort
+  end
+
   private
 
   def fabrication_machine(target)

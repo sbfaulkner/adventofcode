@@ -22,16 +22,18 @@ class Machine
     fabricated = {} of String => Bool
     molecules  = [Molecule.new]
 
-    (1..Int64::MAX).find do |count|
+    count = 1
+
+    loop do
       current   = molecules
       molecules = [] of Molecule
 
-      # STDERR.puts "#{count}: #{current.size} molecule(s)"
-      # STDERR.flush
+      STDERR.puts "#{count}: #{current.size} molecule(s)"
+      STDERR.flush
       # STDERR.puts "[#{current.map(&.to_s).join(", ")}]"
       # STDERR.flush
 
-      current.any? do |molecule|
+      current.each do |molecule|
         results = generate(molecule) do |m|
           fabricated[m.to_s] = true unless fabricated[m]?
         end
@@ -39,8 +41,12 @@ class Machine
         # STDERR.puts "results => #{results.map(&.to_s).join(", ")}"
         molecules = molecules | results
         # STDERR.puts "molecules => #{molecules.map(&.to_s).join(", ")}"
-        results.any? { |m| @molecule == m }
+        results.each do |m|
+          return count if @molecule == m
+        end
       end
+
+      count += 1
     end
   end
 

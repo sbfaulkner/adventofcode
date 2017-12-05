@@ -16,10 +16,18 @@ class ReplacementTest < Minitest::Test
     assert_instance_of Replacement, replacements.first
   end
 
-  def test_each_molecule
+  def test_devolve
+    molecules = %w(HHOHO HOHHO HOHOH).each
+
+    Replacement.new('H', 'HO').devolve(Molecule.new('HOHOHO')) do |m|
+      assert_equal molecules.next, m.to_s
+    end
+  end
+
+  def test_evolve
     molecules = %w(HOHH HHOH HHHO).each
 
-    Replacement.new('H', 'HO').each_molecule(Molecule.new('HHH')) do |m|
+    Replacement.new('H', 'HO').evolve(Molecule.new('HHH')) do |m|
       assert_equal molecules.next, m.to_s
     end
   end

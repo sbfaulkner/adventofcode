@@ -11,7 +11,13 @@ class Replacement
     @replacement = replacement
   end
 
-  def each_molecule(molecule, &block)
+  attr_reader :pattern, :replacement
+
+  def devolve(molecule, &block)
+    molecule.each(@replacement, @pattern, &block)
+  end
+
+  def evolve(molecule, &block)
     molecule.each(@pattern, @replacement, &block)
   end
 end
