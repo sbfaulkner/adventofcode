@@ -24,12 +24,28 @@ func abs(value int) int {
 type spiral struct {
 	last int
 	size int
+	grid [][]int
 }
 
 func newSpiral(last int) spiral {
 	size := int(math.Ceil(math.Sqrt(float64(last))))
 
-	return spiral{last: last, size: size}
+	s := spiral{last: last, size: size}
+
+	s.grid = make([][]int, size)
+
+	for i := range s.grid {
+		s.grid[i] = make([]int, size)
+	}
+
+	return s
+}
+
+func (s spiral) fill() {
+	for i := 1; i <= s.last; i++ {
+		x, y := s.position(i)
+		s.grid[y][x] = i
+	}
 }
 
 func (s spiral) middle() (x, y int) {
@@ -39,9 +55,9 @@ func (s spiral) middle() (x, y int) {
 	return
 }
 
-func (s spiral) position() (x, y int) {
+func (s spiral) position(value int) (x, y int) {
 	square := s.size * s.size
-	diff := square - s.last
+	diff := square - value
 
 	if s.size%2 == 1 {
 		x = s.size - 1
@@ -68,7 +84,7 @@ func (s spiral) position() (x, y int) {
 
 func (s spiral) distance() int {
 	x1, y1 := s.middle()
-	x2, y2 := s.position()
+	x2, y2 := s.position(s.last)
 
 	return abs(x2-x1) + abs(y2-y1)
 }
