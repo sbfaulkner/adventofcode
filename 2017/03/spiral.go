@@ -80,33 +80,26 @@ func (s *spiral) setNext() {
 	switch s.d {
 	case east:
 		s.x++
-	case north:
-		s.y--
-	case west:
-		s.x--
-	case south:
-		s.y++
-	}
-
-	switch s.d {
-	case east:
 		if s.x == len(s.grid[s.y]) {
 			s.addColumn()
 			s.d = north
 		}
 	case north:
+		s.y--
 		if s.y < 0 {
 			s.insertRow()
 			s.y++
 			s.d = west
 		}
 	case west:
+		s.x--
 		if s.x < 0 {
 			s.x++
 			s.insertColumn()
 			s.d = south
 		}
 	case south:
+		s.y++
 		if s.y == len(s.grid) {
 			s.addRow()
 			s.d = east
