@@ -78,4 +78,16 @@ func main() {
 		states[m.fingerprint()] = true
 		m.balance()
 	}
+
+	states = map[string]bool{}
+
+	for i := 0; ; i++ {
+		if _, ok := states[m.fingerprint()]; ok {
+			fmt.Println(i)
+			break
+		}
+
+		states[m.fingerprint()] = true
+		m.balance()
+	}
 }
