@@ -85,16 +85,16 @@ func (s *spiral) setNext() {
 			s.d = north
 		}
 	case north:
-		s.y--
-		if s.y < 0 {
+		if s.y > 0 {
+			s.y--
+		} else {
 			s.insertRow()
-			s.y++
 			s.d = west
 		}
 	case west:
-		s.x--
-		if s.x < 0 {
-			s.x++
+		if s.x > 0 {
+			s.x--
+		} else {
 			s.insertColumn()
 			s.d = south
 		}
