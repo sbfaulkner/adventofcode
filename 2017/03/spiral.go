@@ -38,9 +38,7 @@ type spiral struct {
 
 func newSpiral(last int) spiral {
 	s := spiral{d: east, last: last, grid: [][]int{[]int{1}}}
-
 	s.fill()
-
 	return s
 }
 
@@ -75,7 +73,7 @@ func (s *spiral) insertRow() {
 }
 
 func (s *spiral) setNext() {
-	v := s.value()
+	v := 0
 
 	switch s.d {
 	case east:
@@ -84,12 +82,26 @@ func (s *spiral) setNext() {
 			s.addColumn()
 			s.d = north
 		}
+		v = v + s.grid[s.y][s.x-1]
+		if s.y > 0 {
+			v = v + s.grid[s.y-1][s.x-1]
+			v = v + s.grid[s.y-1][s.x]
+			if s.x+1 < len(s.grid[s.y]) {
+				v = v + s.grid[s.y-1][s.x+1]
+			}
+		}
 	case north:
 		if s.y > 0 {
 			s.y--
 		} else {
 			s.insertRow()
 			s.d = west
+		}
+		v = v + s.grid[s.y+1][s.x]
+		v = v + s.grid[s.y+1][s.x-1]
+		v = v + s.grid[s.y][s.x-1]
+		if s.y > 0 {
+			v = v + s.grid[s.y-1][s.x-1]
 		}
 	case west:
 		if s.x > 0 {
@@ -98,15 +110,27 @@ func (s *spiral) setNext() {
 			s.insertColumn()
 			s.d = south
 		}
+		v = v + s.grid[s.y][s.x+1]
+		if s.y+1 < len(s.grid) {
+			if s.x > 0 {
+				v = v + s.grid[s.y+1][s.x-1]
+			}
+			v = v + s.grid[s.y+1][s.x]
+			v = v + s.grid[s.y+1][s.x+1]
+		}
 	case south:
 		s.y++
 		if s.y == len(s.grid) {
 			s.addRow()
 			s.d = east
 		}
+		v = v + s.grid[s.y-1][s.x]
+		v = v + s.grid[s.y-1][s.x+1]
+		v = v + s.grid[s.y][s.x+1]
+		if s.y+1 < len(s.grid) {
+			v = v + s.grid[s.y+1][s.x+1]
+		}
 	}
-
-	v++
 
 	s.grid[s.y][s.x] = v
 }
@@ -135,5 +159,5 @@ func main() {
 
 	s := newSpiral(input)
 
-	fmt.Println(s.distance())
+	fmt.Println(s.value())
 }
