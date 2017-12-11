@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 )
 
@@ -27,7 +28,9 @@ func main() {
 		m := map[string]bool{}
 
 		for _, word := range words {
-			m[word] = true
+			r := []rune(word)
+			sort.Slice(r, func(i, j int) bool { return r[i] < r[j] })
+			m[string(r)] = true
 		}
 
 		if len(m) == len(words) {
