@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"os"
 	"strconv"
 )
@@ -21,72 +20,115 @@ func abs(value int) int {
 	return value
 }
 
+type direction int
+
+const (
+	east direction = iota
+	north
+	west
+	south
+)
+
 type spiral struct {
 	last int
-	size int
+	x, y int
+	d    direction
 	grid [][]int
 }
 
 func newSpiral(last int) spiral {
-	size := int(math.Ceil(math.Sqrt(float64(last))))
+	s := spiral{d: east, last: last, grid: [][]int{[]int{1}}}
 
-	s := spiral{last: last, size: size}
-
-	s.grid = make([][]int, size)
-
-	for i := range s.grid {
-		s.grid[i] = make([]int, size)
-	}
+	s.fill()
 
 	return s
 }
 
-func (s spiral) fill() {
-	for i := 1; i <= s.last; i++ {
-		x, y := s.position(i)
-		s.grid[y][x] = i
+func (s spiral) value() int {
+	return s.grid[s.y][s.x]
+}
+
+func (s *spiral) fill() {
+	for s.value() < s.last {
+		s.setNext()
 	}
+}
+
+func (s *spiral) addColumn() {
+	for i := range s.grid {
+		s.grid[i] = append(s.grid[i], 0)
+	}
+}
+
+func (s *spiral) insertColumn() {
+	for i := range s.grid {
+		s.grid[i] = append([]int{0}, s.grid[i]...)
+	}
+}
+
+func (s *spiral) addRow() {
+	s.grid = append(s.grid, make([]int, len(s.grid[0])))
+}
+
+func (s *spiral) insertRow() {
+	s.grid = append([][]int{make([]int, len(s.grid[0]))}, s.grid...)
+}
+
+func (s *spiral) setNext() {
+	v := s.value()
+
+	switch s.d {
+	case east:
+		s.x++
+	case north:
+		s.y--
+	case west:
+		s.x--
+	case south:
+		s.y++
+	}
+
+	switch s.d {
+	case east:
+		if s.x == len(s.grid[s.y]) {
+			s.addColumn()
+			s.d = north
+		}
+	case north:
+		if s.y < 0 {
+			s.insertRow()
+			s.y++
+			s.d = west
+		}
+	case west:
+		if s.x < 0 {
+			s.x++
+			s.insertColumn()
+			s.d = south
+		}
+	case south:
+		if s.y == len(s.grid) {
+			s.addRow()
+			s.d = east
+		}
+	}
+
+	v++
+
+	s.grid[s.y][s.x] = v
 }
 
 func (s spiral) middle() (x, y int) {
-	x = (s.size - 1) / 2
-	y = s.size / 2
-
-	return
-}
-
-func (s spiral) position(value int) (x, y int) {
-	square := s.size * s.size
-	diff := square - value
-
-	if s.size%2 == 1 {
-		x = s.size - 1
-		y = s.size - 1
-
-		if diff >= s.size {
-			x = x - (s.size - 1)
-		}
-
-		y = y - diff%s.size
-	} else {
-		x = 0
-		y = 0
-
-		if diff >= s.size {
-			x = x + (s.size - 1)
-		}
-
-		y = y + diff%s.size
-	}
+	x = (len(s.grid[0]) - 1) / 2
+	y = len(s.grid) / 2
 
 	return
 }
 
 func (s spiral) distance() int {
-	x1, y1 := s.middle()
-	x2, y2 := s.position(s.last)
+	x, y := s.middle()
 
-	return abs(x2-x1) + abs(y2-y1)
+	return abs(s.x-x) + abs(s.y-y)
 }
 
 func main() {
