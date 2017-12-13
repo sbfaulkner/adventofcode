@@ -10,6 +10,7 @@ import (
 
 type cpu struct {
 	registers map[string]int
+	largest   int
 }
 
 func newCPU() *cpu {
@@ -63,6 +64,10 @@ func (cpu *cpu) perform(register, operator, operand string) {
 		panic("invalid operator")
 	}
 
+	if r > cpu.largest {
+		cpu.largest = r
+	}
+
 	cpu.registers[register] = r
 }
 
@@ -91,7 +96,7 @@ func main() {
 		cpu.execute(instruction)
 	}
 
-	fmt.Println(cpu.registers)
+	fmt.Println(cpu)
 	fmt.Println(cpu.max())
 }
 
