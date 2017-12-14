@@ -2,16 +2,17 @@ package main
 
 import (
 	"bufio"
+	"encoding/hex"
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
 )
 
 const knotSize = 256
 
+var finalLengths = []int{17, 31, 73, 47, 23}
+
 type knot struct {
-	list    [knotSize]int
+	list    []int
 	lengths []int
 	pos     int
 	skip    int
@@ -20,31 +21,44 @@ type knot struct {
 func newKnot(f *os.File) *knot {
 	k := knot{}
 
-	for i := 0; i < 256; i++ {
+	k.list = make([]int, knotSize)
+
+	for i := 0; i < knotSize; i++ {
 		k.list[i] = i
 	}
 
 	s := bufio.NewScanner(f)
 	s.Scan()
 
-	strings := strings.Split(s.Text(), ",")
-	k.lengths = make([]int, len(strings))
+	string := s.Text()
 
-	for i, str := range strings {
-		l, err := strconv.Atoi(str)
-		check(err)
-		k.lengths[i] = l
+	k.lengths = make([]int, len(string), len(string)+len(finalLengths))
+
+	for i, ch := range string {
+		k.lengths[i] = int(ch)
 	}
+
+	k.lengths = append(k.lengths, finalLengths...)
 
 	return &k
 }
 
-func (k *knot) tie() {
-	for _, l := range k.lengths {
-		k.reverse(l)
-		k.pos = k.pos + l + k.skip
-		k.skip++
+func (k *knot) hash() string {
+	for i := 0; i < 64; i++ {
+		for _, l := range k.lengths {
+			k.reverse(l)
+			k.pos = (k.pos + l + k.skip) % knotSize
+			k.skip++
+		}
 	}
+
+	d := make([]byte, knotSize/16)
+
+	for i := 0; i < knotSize; i++ {
+		d[i/16] = d[i/16] ^ byte(k.list[i])
+	}
+
+	return hex.EncodeToString(d)
 }
 
 func (k *knot) reverse(l int) {
@@ -62,9 +76,7 @@ func main() {
 
 	k := newKnot(f)
 
-	k.tie()
-
-	fmt.Println(k.list[0] * k.list[1])
+	fmt.Println(k.hash())
 }
 
 func check(e error) {
