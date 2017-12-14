@@ -13,6 +13,7 @@ type stream struct {
 	processor streamProcessor
 	group     int
 	score     int
+	garbage   int
 }
 
 func newStream(f *os.File) *stream {
@@ -44,6 +45,8 @@ func collectGarbage(s *stream, ch rune) streamProcessor {
 		return skipGarbage
 	case '>':
 		return findGroup
+	default:
+		s.garbage++
 	}
 
 	return collectGarbage
@@ -69,7 +72,7 @@ func main() {
 	s := newStream(f)
 	score := s.calculateScore()
 
-	fmt.Println(score)
+	fmt.Println(score, s.garbage)
 }
 
 func check(e error) {
