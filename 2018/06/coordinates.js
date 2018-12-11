@@ -21,7 +21,7 @@ class Grid {
     this.points = points;
   }
 
-  fill() {
+  calculateAreas() {
     this.grid.forEach((row, gy) => {
       row.forEach((_, gx) => {
         var shortestDistance = this.grid.length;
@@ -68,10 +68,26 @@ class Grid {
   maximumArea() {
     return Math.max(...this.points.filter((point) => point.area != Infinity).map((point) => point.area));
   }
+
+  proximalArea(within) {
+    var area = 0;
+
+    this.grid.forEach((row, gy) => {
+      row.forEach((_, gx) => {
+        var distance = this.points.map((point) => point.distanceFrom(gx, gy)).reduce((sum, d) => sum + d);
+        if (distance < within) {
+          area++;
+        }
+      });
+    });
+
+    return area;
+  }
 }
 
 function main(argv) {
   var inputPath = argv.length > 1 ? argv[1] : path.join(__dirname, 'input');
+  var within = argv.length > 2 ? parseInt(argv[2]) : 10000;
   var points = [];
   var instream = fs.createReadStream(inputPath);
   var outstream = new(stream)();
@@ -84,9 +100,10 @@ function main(argv) {
   rl.on('close', function () {
     var grid = new Grid(points);
 
-    grid.fill();
+    grid.calculateAreas();
 
     console.log("Maximum area:", grid.maximumArea());
+    console.log("Proximal area:", grid.proximalArea(within));
   });
 }
 
