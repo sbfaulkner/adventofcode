@@ -3,65 +3,60 @@ import java.util.*;
 public class Step {
   private ArrayList<Step> dependencies;
   private String id;
+  private int duration;
+  private int progress;
+  private Worker worker;
 
-  private static HashMap<String, Step> allSteps = new HashMap<String, Step>();
-
-  public static Collection<Step> all() {
-    return allSteps.values();
-  }
-
-  public static Step available() {
-    for (Step s : all()) {
-      if (s.isAvailable()) {
-        return s;
-      }
-    }
-
-    return null;
-  }
-
-  public static int count() {
-    return allSteps.size();
-  }
-
-  public static Step get(String id) {
-    return allSteps.get(id);
-  }
-
-  Step(String id) {
-    this.id = id;
-    this.dependencies = new ArrayList<Step>();
-
-    allSteps.put(id, this);
+  Step(String stepId) {
+    id = stepId;
+    dependencies = new ArrayList<Step>();
+    duration = 60 + id.charAt(0) - 'A' + 1;
+    progress = 0;
   }
 
   public boolean addDependency(Step step) {
     return dependencies.add(step);
   }
 
-  public String complete() {
-    for (Step s : all()) {
-      s.removeDependency(this);
-    }
-
-    allSteps.remove(this.id);
-
-    return this.id;
-  }
-
   public String getId() {
     return id;
   }
 
-  public boolean removeDependency(Step step) {
-    return dependencies.remove(step);
+  public boolean isAvailable() {
+    if (worker != null) {
+      return false;
+    }
+
+    for (Step d : dependencies) {
+      if (!d.isComplete()) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
-  public boolean isAvailable() {
-    return dependencies.isEmpty();
+  public boolean isComplete() {
+    return progress == duration;
+  }
+
+  public boolean perform() {
+    progress++;
+    return isComplete();
+  }
+
+  public void reset() {
+    progress = 0;
+    worker = null;
+  }
+
+  public Worker setWorker(Worker w) {
+    worker = w;
+
+    return w;
   }
 
   public String toString() {
-    return String.format("Step: %s <- %s", id, dependencies);
+    return String.format("Step %s", id);
   }
 }
