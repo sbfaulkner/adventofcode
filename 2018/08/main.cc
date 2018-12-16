@@ -14,13 +14,11 @@ int main() {
 
     Node node;
 
-    int sum = 0;
 
-    while (ifs >> node) {
-      sum += node.sum();
-    }
+    ifs >> node;
 
-    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Sum: " << node.sum() << std::endl;
+    std::cout << "Value: " << node.value() << std::endl;
 
     ifs.close();
   }

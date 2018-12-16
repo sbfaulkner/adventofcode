@@ -14,6 +14,32 @@ int Node::sum() {
     sum += children[c].sum();
   }
 
+  sum += metadata_sum();
+
+  return sum;
+}
+
+int Node::value() {
+  int value = 0;
+
+  if (num_children == 0) {
+    value += metadata_sum();
+  } else {
+    for (int m = 0; m < num_metadata; m++) {
+      int c = metadata[m] - 1;
+
+      if (c < num_children) {
+        value += children[c].value();
+      }
+    }
+  }
+
+  return value;
+}
+
+int Node::metadata_sum() {
+  int sum = 0;
+
   for (int m = 0; m < num_metadata; m++) {
     sum += metadata[m];
   }

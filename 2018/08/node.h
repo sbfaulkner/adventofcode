@@ -11,6 +11,10 @@ class Node {
     Node();
 
     int sum();
+    int value();
+
+  private:
+    int metadata_sum();
 };
 
 std::istream& operator>> (std::istream& is, Node& n);
