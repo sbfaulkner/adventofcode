@@ -17,8 +17,9 @@ type
         last: Integer;
     public
         procedure Evolve;
-        function GetString: String;
+        function Inspect: String;
         procedure Load(var tfInput: TextFile);
+        function Span: Integer;
         function Sum: Integer;
     private
         procedure LoadRules(var tfInput: TextFile);
@@ -29,18 +30,24 @@ procedure TPots.Evolve;
 var
     e: array of Boolean;
     f, i, l, p: Integer;
+    any: Boolean;
 begin
     setLength(e, last - first + 5);
 
     f := 0;
     i := 0;
     l := 0;
+    any := false;
 
     for p := first - 2 to last + 2 do
     begin
         if NextPot(p) then
         begin
-            if p < f then f := p;
+            if not any then
+            begin
+                f := p;
+                any := true;
+            end;
             e[i] := true;
             l := p;
         end;
@@ -58,22 +65,22 @@ begin
     last := l;
 end;
 
-function TPots.GetString: String;
+function TPots.Inspect: String;
 var
-    b: Boolean;
+    p: Integer;
     s: String;
 begin
-    s := '';
+    s := Concat(IntToStr(first), '..', IntToStr(last), ' [');
 
-    for b in pots do
+    for p := first to last do
     begin
-        if b then
+        if pots[p - first] then
             s := Concat(s, '#')
         else
             s := Concat(s, '.');
     end;
 
-    GetString := s;
+    Inspect := Concat(s, ']');
 end;
 
 procedure TPots.Load(var tfInput: TextFile);
@@ -101,6 +108,11 @@ begin
     readln(tfInput);
 
     LoadRules(tfInput);
+end;
+
+function TPots.Span:integer;
+begin
+    Span := last - first + 1;
 end;
 
 function TPots.Sum: Integer;
@@ -161,21 +173,27 @@ procedure process(var tfInput: TextFile);
 var
     pots: TPots;
     i: Integer;
+    sum: Int64;
 begin
     pots := TPots.Create;
 
     try
         pots.Load(tfInput);
 
-        writeln('0: ', pots.GetString);
+        writeln('0: ', pots.Inspect);
 
         for i := 1 to 20 do
-        begin
             pots.Evolve;
-            writeln(i, ': ', pots.GetString);
-        end;
 
-        writeln('Sum: ', pots.Sum);
+        writeln(i, ': ', pots.Inspect, ' -- Sum: ', pots.Sum, ' Span: ', pots.Span);
+
+        for i := 21 to 102 do
+            pots.Evolve;
+
+        sum := pots.Sum;
+        sum := sum + (50000000000 - 102) * 69;
+        writeln(50000000000, ': ', pots.Inspect, ' -- Sum: ', sum, ' Span: ', pots.Span);
+
     finally
         pots.Free;
     end;
