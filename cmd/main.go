@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/sbfaulkner/adventofcode/pkg/password"
 	"github.com/sbfaulkner/adventofcode/pkg/report"
 )
 
@@ -35,4 +36,13 @@ func main() {
 	log.Println("1-1: ", r.ProductOfCombinationWithSum(2020, 2))
 
 	log.Println("1-2: ", r.ProductOfCombinationWithSum(2020, 3))
+
+	db, err := password.NewDatabase(input(2))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("2-1: ", db.CountValid(password.SledPolicy))
+
+	log.Println("2-2: ", db.CountValid(password.TobogganPolicy))
 }
