@@ -14,27 +14,22 @@ type Report []int
 func ReadReport(rd io.Reader) (*Report, error) {
 	r := Report{}
 
-	err := r.read(rd)
-	if err != nil {
-		return nil, err
-	}
-
-	return &r, nil
-}
-
-func (r *Report) read(rd io.Reader) error {
 	s := bufio.NewScanner(rd)
 
 	for s.Scan() {
 		i, err := strconv.Atoi(s.Text())
 		if err != nil {
-			return err
+			return nil, err
 		}
 
-		*r = append(*r, i)
+		r = append(r, i)
 	}
 
-	return s.Err()
+	if err := s.Err(); err != nil {
+		return nil, err
+	}
+
+	return &r, nil
 }
 
 // Combinations gets the combinations of the specified size

@@ -62,5 +62,5 @@ func main() {
 		{DX: 1, DY: 2},
 	}
 
-	log.Println("4-1: ", m.ProductOfCounts(slopes))
+	log.Println("3-2: ", m.ProductOfCounts(slopes))
 }
