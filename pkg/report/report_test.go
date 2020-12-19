@@ -13,7 +13,7 @@ func TestCombinations(t *testing.T) {
 4
 `
 
-	r, err := NewReport(strings.NewReader(in))
+	r, err := ReadReport(strings.NewReader(in))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -53,7 +53,7 @@ func TestProductOfCombinationWithSum(t *testing.T) {
 1456
 `
 
-	r, err := NewReport(strings.NewReader(in))
+	r, err := ReadReport(strings.NewReader(in))
 	if err != nil {
 		t.Fatal(err)
 	}

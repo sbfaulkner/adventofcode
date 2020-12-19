@@ -10,8 +10,8 @@ import (
 // Report is an expense report
 type Report []int
 
-// NewReport creates a new Report loading it from a reader
-func NewReport(rd io.Reader) (*Report, error) {
+// ReadReport creates a new Report loading it from a reader
+func ReadReport(rd io.Reader) (*Report, error) {
 	r := Report{}
 
 	err := r.read(rd)

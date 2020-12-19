@@ -51,8 +51,8 @@ func TobogganPolicy(in string) bool {
 // Database is a collection of password policies and passwords
 type Database []string
 
-// NewDatabase reads a password policy database
-func NewDatabase(rd io.Reader) (*Database, error) {
+// ReadDatabase reads a password policy database
+func ReadDatabase(rd io.Reader) (*Database, error) {
 	d := make(Database, 0)
 
 	scanner := bufio.NewScanner(rd)

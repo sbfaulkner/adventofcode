@@ -28,7 +28,7 @@ func input(n int) *os.File {
 }
 
 func main() {
-	r, err := report.NewReport(input(1))
+	r, err := report.ReadReport(input(1))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func main() {
 
 	log.Println("1-2: ", r.ProductOfCombinationWithSum(2020, 3))
 
-	db, err := password.NewDatabase(input(2))
+	db, err := password.ReadDatabase(input(2))
 	if err != nil {
 		log.Fatal(err)
 	}

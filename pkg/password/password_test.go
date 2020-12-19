@@ -46,7 +46,7 @@ func TestCountValid(t *testing.T) {
 1-3 b: cdefg
 2-9 c: ccccccccc
 `
-	db, err := NewDatabase(strings.NewReader(in))
+	db, err := ReadDatabase(strings.NewReader(in))
 	if err != nil {
 		t.Fatal(err)
 	}
