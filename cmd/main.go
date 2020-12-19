@@ -10,6 +10,7 @@ import (
 
 	"github.com/sbfaulkner/adventofcode/pkg/password"
 	"github.com/sbfaulkner/adventofcode/pkg/report"
+	"github.com/sbfaulkner/adventofcode/pkg/tree"
 )
 
 func input(n int) *os.File {
@@ -45,4 +46,21 @@ func main() {
 	log.Println("2-1: ", db.CountValid(password.SledPolicy))
 
 	log.Println("2-2: ", db.CountValid(password.TobogganPolicy))
+
+	m, err := tree.ReadMap(input(3))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("3-1: ", m.Count(tree.Slope{DX: 3, DY: 1}))
+
+	slopes := []tree.Slope{
+		{DX: 1, DY: 1},
+		{DX: 3, DY: 1},
+		{DX: 5, DY: 1},
+		{DX: 7, DY: 1},
+		{DX: 1, DY: 2},
+	}
+
+	log.Println("4-1: ", m.ProductOfCounts(slopes))
 }
