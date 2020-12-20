@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
 	"github.com/sbfaulkner/adventofcode/pkg/report"
 	"github.com/sbfaulkner/adventofcode/pkg/tree"
@@ -28,31 +29,35 @@ func input(n int) *os.File {
 	return file
 }
 
-func main() {
+func day1() {
 	r, err := report.ReadReport(input(1))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("1-1: ", r.ProductOfCombinationWithSum(2020, 2))
+	log.Println("1-1:", r.ProductOfCombinationWithSum(2020, 2))
 
-	log.Println("1-2: ", r.ProductOfCombinationWithSum(2020, 3))
+	log.Println("1-2:", r.ProductOfCombinationWithSum(2020, 3))
+}
 
+func day2() {
 	db, err := password.ReadDatabase(input(2))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("2-1: ", db.CountValid(password.SledPolicy))
+	log.Println("2-1:", db.CountValid(password.SledPolicy))
 
-	log.Println("2-2: ", db.CountValid(password.TobogganPolicy))
+	log.Println("2-2:", db.CountValid(password.TobogganPolicy))
+}
 
+func day3() {
 	m, err := tree.ReadMap(input(3))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("3-1: ", m.Count(tree.Slope{DX: 3, DY: 1}))
+	log.Println("3-1:", m.Count(tree.Slope{DX: 3, DY: 1}))
 
 	slopes := []tree.Slope{
 		{DX: 1, DY: 1},
@@ -62,5 +67,24 @@ func main() {
 		{DX: 1, DY: 2},
 	}
 
-	log.Println("3-2: ", m.ProductOfCounts(slopes))
+	log.Println("3-2:", m.ProductOfCounts(slopes))
+}
+
+func day4() {
+	p, _ := passport.ReadPassports(input(4))
+
+	log.Println("4-1:", len(p))
+
+	// s := bufio.NewScanner(input(4))
+
+	// p, _ := readPassports(s, requiredFields)
+
+	// fmt.Fprintln(os.Stdout, "4-1:", len(p))
+}
+
+func main() {
+	day1()
+	day2()
+	day3()
+	day4()
 }
