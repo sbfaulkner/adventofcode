@@ -71,15 +71,13 @@ func day3() {
 }
 
 func day4() {
-	p, _ := passport.ReadPassports(input(4))
+	p1, _ := passport.ReadPassports(input(4), passport.RequireFields)
 
-	log.Println("4-1:", len(p))
+	log.Println("4-1:", len(p1))
 
-	// s := bufio.NewScanner(input(4))
+	p2, _ := passport.ReadPassports(input(4), passport.RequireValidFields)
 
-	// p, _ := readPassports(s, requiredFields)
-
-	// fmt.Fprintln(os.Stdout, "4-1:", len(p))
+	log.Println("4-2:", len(p2))
 }
 
 func main() {

@@ -3,63 +3,113 @@ package passport
 import (
 	"bufio"
 	"bytes"
+	"fmt"
 	"io"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
-// type field struct {
-// 	name     string
-// 	required bool
-// }
+// Validate is a password field validation function
+type Validate func(Passport) bool
 
-var requiredFields = []string{
-	"byr",
-	"iyr",
-	"eyr",
-	"hgt",
-	"hcl",
-	"ecl",
-	"pid",
+// Requirements is a collection of field validations
+type Requirements []Validate
+
+// RequirePresent determines if the specified field is present
+func RequirePresent(f string) Validate {
+	return func(p Passport) bool {
+		_, ok := p[f]
+		return ok
+	}
 }
 
-// // byr (Birth Year) - four digits; at least 1920 and at most 2002.
-// // iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-// // eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
-// // hgt (Height) - a number followed by either cm or in:
-// // If cm, the number must be at least 150 and at most 193.
-// // If in, the number must be at least 59 and at most 76.
-// // hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-// // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-// // pid (Passport ID) - a nine-digit number, including leading zeroes.
-// // cid (Country ID) - ignored, missing or not.
+// Range defines a min and max value
+type Range struct{ Min, Max int }
 
-// var validFields = []field{
-// 	{name: "byr", required: true},
-// 	{name: "iyr", required: true},
-// 	{name: "eyr", required: true},
-// 	{name: "hgt", required: true},
-// 	{name: "hcl", required: true},
-// 	{name: "ecl", required: true},
-// 	{name: "pid", required: true},
-// 	{name: "cid"},
-// }
+// RequireIntegerInRange determines if the specified field has a value within a range
+func RequireIntegerInRange(f string, r Range) Validate {
+	return func(p Passport) bool {
+		v, err := strconv.Atoi(p[f])
+		if err != nil {
+			return false
+		}
 
-// func (p passport) validate(fields []field) (bool, []error) {
-// 	valid := true
-// 	errors := []error{}
+		return r.Min <= v && v <= r.Max
+	}
+}
 
-// 	for _, f := range fields {
-// 		if f.required {
-// 			_, ok := p[f.name]
-// 			if !ok {
-// 				valid = false
-// 				errors = append(errors, fmt.Errorf("%s is required", f.name))
-// 			}
-// 		}
-// 	}
+// RequireMeasurementInRange determines if the specified field has a measurement within a set of ranges
+func RequireMeasurementInRange(f string, ranges map[string]Range) Validate {
+	return func(p Passport) bool {
+		var v int
+		var u string
 
-// 	return valid, errors
-// }
+		n, err := fmt.Sscanf(p[f], "%d%s", &v, &u)
+		if err != nil || n != 2 {
+			return false
+		}
+
+		r := ranges[u]
+
+		return r.Min <= v && v <= r.Max
+	}
+}
+
+var rgbRegexp = regexp.MustCompile(`\A#[0-9a-f]{6}\z`)
+
+// RequireMatch determines if the specified field matches the provided regular expression
+func RequireMatch(f string, str string) Validate {
+	re := regexp.MustCompile(str)
+	return func(p Passport) bool {
+		return re.MatchString(p[f])
+	}
+}
+
+// RequireOneOf determins if the specified field has one of the provided values
+func RequireOneOf(f string, values ...string) Validate {
+	return func(p Passport) bool {
+		for _, v := range values {
+			if p[f] == v {
+				return true
+			}
+		}
+
+		return false
+	}
+}
+
+// RequireFields is a simple set of required fields
+var RequireFields = Requirements{
+	RequirePresent("byr"),
+	RequirePresent("iyr"),
+	RequirePresent("eyr"),
+	RequirePresent("hgt"),
+	RequirePresent("hcl"),
+	RequirePresent("ecl"),
+	RequirePresent("pid"),
+}
+
+// RequireValidFields is a more complex set of field validations
+// byr (Birth Year) - four digits; at least 1920 and at most 2002.
+// iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+// eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+// hgt (Height) - a number followed by either cm or in:
+// If cm, the number must be at least 150 and at most 193.
+// If in, the number must be at least 59 and at most 76.
+// hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+// ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+// pid (Passport ID) - a nine-digit number, including leading zeroes.
+// cid (Country ID) - ignored, missing or not.
+var RequireValidFields = Requirements{
+	RequireIntegerInRange("byr", Range{Min: 1920, Max: 2002}),
+	RequireIntegerInRange("iyr", Range{Min: 2010, Max: 2020}),
+	RequireIntegerInRange("eyr", Range{Min: 2020, Max: 2030}),
+	RequireMeasurementInRange("hgt", map[string]Range{"cm": {Min: 150, Max: 193}, "in": {Min: 59, Max: 76}}),
+	RequireMatch("hcl", `\A#[0-9a-f]{6}\z`),
+	RequireOneOf("ecl", "amb", "blu", "brn", "gry", "grn", "hzl", "oth"),
+	RequireMatch("pid", `\A[0-9]{9}\z`),
+}
 
 // Passport holds sets of field-value pairs
 type Passport map[string]string
@@ -79,14 +129,14 @@ func NewPassport(data string) *Passport {
 }
 
 // ReadPassports reads all passports from a Reader
-func ReadPassports(rd io.Reader) ([]*Passport, error) {
+func ReadPassports(rd io.Reader, r Requirements) ([]*Passport, error) {
 	passports := []*Passport{}
 
 	s := NewScanner(rd)
 
 	for s.Scan() {
 		p := NewPassport(s.Text())
-		if p.Valid() {
+		if p.Valid(r) {
 			passports = append(passports, p)
 		}
 	}
@@ -99,12 +149,13 @@ func ReadPassports(rd io.Reader) ([]*Passport, error) {
 }
 
 // Valid determines if the passport is valid
-func (p Passport) Valid() bool {
-	for _, f := range requiredFields {
-		if _, bOk := p[f]; !bOk {
+func (p Passport) Valid(r Requirements) bool {
+	for _, v := range r {
+		if !v(p) {
 			return false
 		}
 	}
+
 	return true
 }
 
