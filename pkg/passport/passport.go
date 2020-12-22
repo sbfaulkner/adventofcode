@@ -129,16 +129,14 @@ func NewPassport(data string) *Passport {
 }
 
 // ReadPassports reads all passports from a Reader
-func ReadPassports(rd io.Reader, r Requirements) ([]*Passport, error) {
+func ReadPassports(rd io.Reader) ([]*Passport, error) {
 	passports := []*Passport{}
 
 	s := NewScanner(rd)
 
 	for s.Scan() {
 		p := NewPassport(s.Text())
-		if p.Valid(r) {
-			passports = append(passports, p)
-		}
+		passports = append(passports, p)
 	}
 
 	if err := s.Err(); err != nil {
@@ -146,6 +144,19 @@ func ReadPassports(rd io.Reader, r Requirements) ([]*Passport, error) {
 	}
 
 	return passports, nil
+}
+
+// ValidPassports counts the valid passports based on the provided requirements
+func ValidPassports(passports []*Passport, r Requirements) int {
+	v := 0
+
+	for _, p := range passports {
+		if p.Valid(r) {
+			v++
+		}
+	}
+
+	return v
 }
 
 // Valid determines if the passport is valid

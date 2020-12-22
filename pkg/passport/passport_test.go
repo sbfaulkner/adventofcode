@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func readPassports(t *testing.T) []*Passport {
+func TestPassport(t *testing.T) {
 	in := `ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
 byr:1937 iyr:2017 cid:147 hgt:183cm
 
@@ -21,23 +21,36 @@ hcl:#cfa07d eyr:2025 pid:166559648
 iyr:2011 ecl:brn hgt:59in
 `
 
-	p, err := ReadPassports(strings.NewReader(in), RequireFields)
+	p, err := ReadPassports(strings.NewReader(in))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	return p
-}
+	t.Run("ReadPassports", func(t *testing.T) {
+		got := len(p)
+		want := 4
 
-func TestReadPassports(t *testing.T) {
-	p := readPassports(t)
+		if got != want {
+			t.Errorf("ReadPassports: got %#v, want %#v", got, want)
+		}
+	})
 
-	got := len(p)
-	want := 2
+	t.Run("ValidPassports", func(t *testing.T) {
+		testCases := []struct {
+			requirements Requirements
+			want         int
+		}{
+			{RequireFields, 2},
+		}
 
-	if got != want {
-		t.Errorf("ReadPassports: got %#v, want %#v", got, want)
-	}
+		for _, tc := range testCases {
+			got := ValidPassports(p, tc.requirements)
+
+			if got != tc.want {
+				t.Errorf("%#v: got %#v, want %#v", tc.requirements, got, tc.want)
+			}
+		}
+	})
 }
 
 func TestValid(t *testing.T) {

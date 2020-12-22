@@ -71,13 +71,11 @@ func day3() {
 }
 
 func day4() {
-	p1, _ := passport.ReadPassports(input(4), passport.RequireFields)
+	p, _ := passport.ReadPassports(input(4))
 
-	log.Println("4-1:", len(p1))
+	log.Println("4-1:", passport.ValidPassports(p, passport.RequireFields))
 
-	p2, _ := passport.ReadPassports(input(4), passport.RequireValidFields)
-
-	log.Println("4-2:", len(p2))
+	log.Println("4-2:", passport.ValidPassports(p, passport.RequireValidFields))
 }
 
 func main() {
