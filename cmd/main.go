@@ -10,6 +10,7 @@ import (
 	"sort"
 
 	"github.com/sbfaulkner/adventofcode/pkg/airline"
+	"github.com/sbfaulkner/adventofcode/pkg/customs"
 	"github.com/sbfaulkner/adventofcode/pkg/expense"
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
@@ -98,10 +99,28 @@ func day5() {
 	}
 }
 
+func day6() {
+	groups, err := customs.ReadDeclarations(input(6))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var any, all int
+
+	for _, g := range groups {
+		any += g.Any()
+		all += g.All()
+	}
+
+	log.Println("6-1:", any)
+	log.Println("6-2:", all)
+}
+
 func main() {
 	day1()
 	day2()
 	day3()
 	day4()
 	day5()
+	day6()
 }
