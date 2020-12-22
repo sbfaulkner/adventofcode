@@ -1,4 +1,4 @@
-package report
+package expense
 
 import (
 	"reflect"

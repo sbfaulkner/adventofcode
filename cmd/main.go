@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/sbfaulkner/adventofcode/pkg/expense"
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
-	"github.com/sbfaulkner/adventofcode/pkg/report"
 	"github.com/sbfaulkner/adventofcode/pkg/tree"
 )
 
@@ -30,7 +30,7 @@ func input(n int) *os.File {
 }
 
 func day1() {
-	r, err := report.ReadReport(input(1))
+	r, err := expense.ReadReport(input(1))
 	if err != nil {
 		log.Fatal(err)
 	}
