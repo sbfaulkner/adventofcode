@@ -7,6 +7,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"sort"
 
 	"github.com/sbfaulkner/adventofcode/pkg/airline"
 	"github.com/sbfaulkner/adventofcode/pkg/expense"
@@ -80,20 +81,21 @@ func day4() {
 }
 
 func day5() {
-	boardingPasses, err := airline.ReadBoardingPasses(input(5))
+	seats, err := airline.ReadSeats(input(5))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	maxID := 0
+	sort.Slice(seats, func(i, j int) bool { return seats[i].ID < seats[j].ID })
 
-	for _, bp := range boardingPasses {
-		if bp.ID > maxID {
-			maxID = bp.ID
+	log.Println("5-1:", seats[len(seats)-1].ID)
+
+	for i, s := range seats[1:] {
+		if s.ID == (i + seats[0].ID + 2) {
+			log.Println("5-2:", i+seats[0].ID+1)
+			break
 		}
 	}
-
-	log.Println("5-1:", maxID)
 }
 
 func main() {
