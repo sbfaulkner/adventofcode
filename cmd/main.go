@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/sbfaulkner/adventofcode/pkg/airline"
 	"github.com/sbfaulkner/adventofcode/pkg/expense"
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
@@ -78,9 +79,27 @@ func day4() {
 	log.Println("4-2:", passport.ValidPassports(p, passport.RequireValidFields))
 }
 
+func day5() {
+	boardingPasses, err := airline.ReadBoardingPasses(input(5))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	maxID := 0
+
+	for _, bp := range boardingPasses {
+		if bp.ID > maxID {
+			maxID = bp.ID
+		}
+	}
+
+	log.Println("5-1:", maxID)
+}
+
 func main() {
 	day1()
 	day2()
 	day3()
 	day4()
+	day5()
 }
