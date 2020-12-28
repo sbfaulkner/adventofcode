@@ -10,6 +10,7 @@ import (
 	"sort"
 
 	"github.com/sbfaulkner/adventofcode/pkg/airline"
+	"github.com/sbfaulkner/adventofcode/pkg/bag"
 	"github.com/sbfaulkner/adventofcode/pkg/customs"
 	"github.com/sbfaulkner/adventofcode/pkg/expense"
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
@@ -116,6 +117,16 @@ func day6() {
 	log.Println("6-2:", all)
 }
 
+func day7() {
+	rules, err := bag.ReadRules(input(7))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c := rules.FindContaining("shiny gold")
+	log.Println("7-1:", len(c))
+}
+
 func main() {
 	day1()
 	day2()
@@ -123,4 +134,5 @@ func main() {
 	day4()
 	day5()
 	day6()
+	day7()
 }
