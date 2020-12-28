@@ -137,3 +137,24 @@ func TestParseRule(t *testing.T) {
 		})
 	}
 }
+
+func TestContentsOf(t *testing.T) {
+	in := `shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
+`
+
+	rules, err := ReadRules(strings.NewReader(in))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	contents := rules.ContentsOf("shiny gold")
+	if len(contents) != 126 {
+		t.Errorf("len: got %d, expected %d", len(contents), 126)
+	}
+}

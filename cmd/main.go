@@ -123,8 +123,11 @@ func day7() {
 		log.Fatal(err)
 	}
 
-	c := rules.FindContaining("shiny gold")
-	log.Println("7-1:", len(c))
+	containing := rules.FindContaining("shiny gold")
+	log.Println("7-1:", len(containing))
+
+	contents := rules.ContentsOf("shiny gold")
+	log.Println("7-2:", len(contents))
 }
 
 func main() {

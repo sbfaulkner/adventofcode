@@ -53,6 +53,22 @@ func ParseRule(rule string) (string, *Rule, error) {
 	return matches[1], &r, nil
 }
 
+// ContentsOf returns a list of the bags that woud be contained in the specified color of bag
+func (r Rules)ContentsOf(color string) []string {
+	contents := []string{}
+
+	for c, n := range *r[color] {
+		contained := r.ContentsOf(c)
+
+		for i := 0; i < n; i++ {
+			contents = append(contents, c)
+			contents = append(contents, contained...)
+		}
+	}
+
+	return contents
+}
+
 // FindContaining returns colors that can (eventually) contain another
 func (r Rules)FindContaining(color string) []string {
 	containing := []string{}
