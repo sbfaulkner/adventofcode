@@ -13,6 +13,7 @@ import (
 	"github.com/sbfaulkner/adventofcode/pkg/bag"
 	"github.com/sbfaulkner/adventofcode/pkg/customs"
 	"github.com/sbfaulkner/adventofcode/pkg/expense"
+	"github.com/sbfaulkner/adventofcode/pkg/handheld"
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
 	"github.com/sbfaulkner/adventofcode/pkg/tree"
@@ -130,6 +131,38 @@ func day7() {
 	log.Println("7-2:", len(contents))
 }
 
+func day8() {
+	p, err := handheld.LoadProgram(input(8))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cpu := &handheld.CPU{}
+
+	cpu.Execute(*p, cpu.DetectLoop())
+	log.Println("8-1:", cpu.ACC)
+
+	for ii, i := range *p {
+		switch i.Op {
+		case "jmp":
+			(*p)[ii].Op = "nop"
+		case "nop":
+			(*p)[ii].Op = "jmp"
+		default:
+			continue
+		}
+
+		cpu := &handheld.CPU{}
+
+		if cpu.Execute(*p, cpu.DetectLoop()) {
+			log.Println("8-2:", cpu.ACC)
+			break
+		}
+
+		(*p)[ii].Op = i.Op
+	}
+}
+
 func main() {
 	day1()
 	day2()
@@ -138,4 +171,5 @@ func main() {
 	day5()
 	day6()
 	day7()
+	day8()
 }

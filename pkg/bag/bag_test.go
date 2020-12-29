@@ -19,14 +19,14 @@ dotted black bags contain no other bags.
 `
 
 	want := Rules{
-		"light red": &Rule{"bright white": 1, "muted yellow": 2},
-		"dark orange": &Rule{"bright white": 3, "muted yellow": 4},
+		"light red":    &Rule{"bright white": 1, "muted yellow": 2},
+		"dark orange":  &Rule{"bright white": 3, "muted yellow": 4},
 		"bright white": &Rule{"shiny gold": 1},
 		"muted yellow": &Rule{"shiny gold": 2, "faded blue": 9},
-		"shiny gold": &Rule{"dark olive": 1, "vibrant plum": 2},
-		"dark olive": &Rule{"faded blue": 3, "dotted black": 4},
+		"shiny gold":   &Rule{"dark olive": 1, "vibrant plum": 2},
+		"dark olive":   &Rule{"faded blue": 3, "dotted black": 4},
 		"vibrant plum": &Rule{"faded blue": 5, "dotted black": 6},
-		"faded blue": &Rule{},
+		"faded blue":   &Rule{},
 		"dotted black": &Rule{},
 	}
 

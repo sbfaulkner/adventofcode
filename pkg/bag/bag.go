@@ -54,7 +54,7 @@ func ParseRule(rule string) (string, *Rule, error) {
 }
 
 // ContentsOf returns a list of the bags that woud be contained in the specified color of bag
-func (r Rules)ContentsOf(color string) []string {
+func (r Rules) ContentsOf(color string) []string {
 	contents := []string{}
 
 	for c, n := range *r[color] {
@@ -70,7 +70,7 @@ func (r Rules)ContentsOf(color string) []string {
 }
 
 // FindContaining returns colors that can (eventually) contain another
-func (r Rules)FindContaining(color string) []string {
+func (r Rules) FindContaining(color string) []string {
 	containing := []string{}
 
 	for c, rule := range r {
@@ -82,7 +82,7 @@ func (r Rules)FindContaining(color string) []string {
 	return containing
 }
 
-func (r Rule) contains(color string, rules* Rules) bool {
+func (r Rule) contains(color string, rules *Rules) bool {
 	_, bOK := r[color]
 	if bOK {
 		return true

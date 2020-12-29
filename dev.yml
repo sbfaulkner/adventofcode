@@ -4,7 +4,7 @@ type: go
 
 up:
   - go:
-      version: 1.15
+      version: 1.15.6
 
 # `dev run` runs `dev build` and then `dev run-built` if these are both defined.
 commands:
@@ -18,4 +18,4 @@ commands:
   test:
     run: go test ./...
   style:
-    run: 'golint ./... && errcheck ./...'
+    run: golint ./...
