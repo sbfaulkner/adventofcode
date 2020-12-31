@@ -17,6 +17,7 @@ import (
 	"github.com/sbfaulkner/adventofcode/pkg/passport"
 	"github.com/sbfaulkner/adventofcode/pkg/password"
 	"github.com/sbfaulkner/adventofcode/pkg/tree"
+	"github.com/sbfaulkner/adventofcode/pkg/xmas"
 )
 
 func input(n int) *os.File {
@@ -163,6 +164,20 @@ func day8() {
 	}
 }
 
+func day9() {
+	x, err := xmas.LoadXMAS(25, input(9))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	n := x.FindInvalid()
+
+	log.Println("9-1:", n)
+
+	min, max := x.FindRangeMinMax(n)
+	log.Println("9-2:", min+max)
+}
+
 func main() {
 	day1()
 	day2()
@@ -172,4 +187,5 @@ func main() {
 	day6()
 	day7()
 	day8()
+	day9()
 }
