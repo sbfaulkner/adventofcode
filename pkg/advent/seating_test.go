@@ -41,7 +41,7 @@ func TestEvolve(t *testing.T) {
 	}
 
 	want := []struct {
-		seating    Seating
+		seating  Seating
 		evolved  bool
 		occupied int
 	}{
@@ -178,7 +178,7 @@ func TestEnhancedEvolve(t *testing.T) {
 	}
 
 	want := []struct {
-		seating    Seating
+		seating  Seating
 		evolved  bool
 		occupied int
 	}{

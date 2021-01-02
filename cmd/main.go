@@ -213,6 +213,26 @@ func day11() {
 	log.Println("11-2:", occupied)
 }
 
+func day12() {
+	f := advent.NewFerry()
+
+	err := f.Navigate(input(12), advent.SimpleNavigator())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("12-1:", f.ManhattanDistance())
+
+	f = advent.NewFerry()
+
+	err = f.Navigate(input(12), advent.WaypointNavigator(10, 1))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("12-2:", f.ManhattanDistance())
+}
+
 func main() {
 	day1()
 	day2()
@@ -225,4 +245,5 @@ func main() {
 	day9()
 	day10()
 	day11()
+	day12()
 }
