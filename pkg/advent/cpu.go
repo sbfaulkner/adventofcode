@@ -1,7 +1,5 @@
 package advent
 
-import "fmt"
-
 // CPU for handheld game console
 type CPU struct {
 	ACC int
@@ -41,19 +39,6 @@ func (cpu *CPU) DetectLoop() Debugger {
 			return false
 		}
 		breakpoints[cpu.pc] = true
-		return true
-	}
-}
-
-// Trace currently executing program
-func (cpu *CPU) Trace(p Program, debug Debugger) Debugger {
-	return func() bool {
-		i := p[cpu.pc]
-		fmt.Printf("%04d: %s %+d [acc: %+d]\n", cpu.pc, i.Op, i.Arg, cpu.ACC)
-		if !debug() {
-			fmt.Println("BREAK")
-			return false
-		}
 		return true
 	}
 }

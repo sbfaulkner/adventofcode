@@ -25,7 +25,7 @@ acc +6
 	cpu := CPU{}
 
 	t.Run("failure", func(t *testing.T) {
-		got := cpu.Execute(*p, cpu.Trace(*p, cpu.DetectLoop()))
+		got := cpu.Execute(*p, cpu.DetectLoop())
 
 		if got != false {
 			t.Errorf("Execute: got %#v, want %#v", got, false)
