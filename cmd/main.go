@@ -185,6 +185,34 @@ func day10() {
 	log.Println("10-2:", n)
 }
 
+func day11() {
+	ferry, err := advent.ReadFerry(input(11))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var occupied int
+	var evolved bool
+
+	for f := ferry; ; {
+		f, occupied, evolved = f.Evolve(1, 4)
+		if !evolved {
+			break
+		}
+	}
+
+	log.Println("11-1:", occupied)
+
+	for f := ferry; ; {
+		f, occupied, evolved = f.Evolve(len(*ferry), 5)
+		if !evolved {
+			break
+		}
+	}
+
+	log.Println("11-2:", occupied)
+}
+
 func main() {
 	day1()
 	day2()
@@ -196,4 +224,5 @@ func main() {
 	day8()
 	day9()
 	day10()
+	day11()
 }

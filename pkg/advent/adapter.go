@@ -10,7 +10,7 @@ import (
 // Adapter represented as a joltage-rating
 type Adapter struct {
 	joltage int
-	chains int
+	chains  int
 }
 
 // Adapters is a chain of adapters
@@ -64,7 +64,7 @@ func (a *Adapter) CountChains(adapters Adapters) int {
 	}
 
 	for i, adapter := range adapters {
-		if adapter.joltage > a.joltage + 3 {
+		if adapter.joltage > a.joltage+3 {
 			break
 		}
 

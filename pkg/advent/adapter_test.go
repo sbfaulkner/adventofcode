@@ -26,17 +26,17 @@ func TestReadAdapters(t *testing.T) {
 	}
 
 	want := Adapters{
-		{joltage:1},
-		{joltage:4},
-		{joltage:5},
-		{joltage:6},
-		{joltage:7},
-		{joltage:10},
-		{joltage:11},
-		{joltage:12},
-		{joltage:15},
-		{joltage:16},
-		{joltage:19},
+		{joltage: 1},
+		{joltage: 4},
+		{joltage: 5},
+		{joltage: 6},
+		{joltage: 7},
+		{joltage: 10},
+		{joltage: 11},
+		{joltage: 12},
+		{joltage: 15},
+		{joltage: 16},
+		{joltage: 19},
 	}
 
 	if !reflect.DeepEqual(got, want) {
