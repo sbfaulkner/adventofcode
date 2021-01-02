@@ -6,17 +6,17 @@ import (
 	"testing"
 )
 
-func TestReadFerry(t *testing.T) {
+func TestReadSeating(t *testing.T) {
 	in := `L.
 .#
 `
 
-	got, err := ReadFerry(strings.NewReader(in))
+	got, err := ReadSeating(strings.NewReader(in))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	want := Ferry{
+	want := Seating{
 		[]rune("L."),
 		[]rune(".#"),
 	}
@@ -27,7 +27,7 @@ func TestReadFerry(t *testing.T) {
 }
 
 func TestEvolve(t *testing.T) {
-	ferry := &Ferry{
+	seating := &Seating{
 		[]rune("L.LL.LL.LL"),
 		[]rune("LLLLLLL.LL"),
 		[]rune("L.L.L..L.."),
@@ -41,12 +41,12 @@ func TestEvolve(t *testing.T) {
 	}
 
 	want := []struct {
-		ferry    Ferry
+		seating    Seating
 		evolved  bool
 		occupied int
 	}{
 		{
-			Ferry{
+			Seating{
 				[]rune("#.##.##.##"),
 				[]rune("#######.##"),
 				[]rune("#.#.#..#.."),
@@ -62,7 +62,7 @@ func TestEvolve(t *testing.T) {
 			71,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.LL.L#.##"),
 				[]rune("#LLLLLL.L#"),
 				[]rune("L.L.L..L.."),
@@ -78,7 +78,7 @@ func TestEvolve(t *testing.T) {
 			20,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.##.L#.##"),
 				[]rune("#L###LL.L#"),
 				[]rune("L.#.#..#.."),
@@ -94,7 +94,7 @@ func TestEvolve(t *testing.T) {
 			51,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.#L.L#.##"),
 				[]rune("#LLL#LL.L#"),
 				[]rune("L.L.L..#.."),
@@ -110,7 +110,7 @@ func TestEvolve(t *testing.T) {
 			30,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.#L.L#.##"),
 				[]rune("#LLL#LL.L#"),
 				[]rune("L.#.L..#.."),
@@ -126,7 +126,7 @@ func TestEvolve(t *testing.T) {
 			37,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.#L.L#.##"),
 				[]rune("#LLL#LL.L#"),
 				[]rune("L.#.L..#.."),
@@ -143,28 +143,28 @@ func TestEvolve(t *testing.T) {
 		},
 	}
 
-	for g, f := range want {
+	for g, w := range want {
 		var occupied int
 		var evolved bool
 
-		ferry, occupied, evolved = ferry.Evolve(1, 4)
+		seating, occupied, evolved = seating.Evolve(1, 4)
 
-		if !reflect.DeepEqual(*ferry, f.ferry) {
-			t.Errorf("Generation %d: got %s, want %s", g+2, *ferry, f.ferry)
+		if !reflect.DeepEqual(*seating, w.seating) {
+			t.Errorf("Generation %d: got %#v, want %#v", g+2, *seating, w.seating)
 		}
 
-		if evolved != f.evolved {
-			t.Errorf("Generation %d: evolved got %#v, want %#v", g+2, evolved, f.evolved)
+		if evolved != w.evolved {
+			t.Errorf("Generation %d: evolved got %#v, want %#v", g+2, evolved, w.evolved)
 		}
 
-		if occupied != f.occupied {
-			t.Errorf("Generation %d: occupied got %#v, want %#v", g+2, occupied, f.occupied)
+		if occupied != w.occupied {
+			t.Errorf("Generation %d: occupied got %#v, want %#v", g+2, occupied, w.occupied)
 		}
 	}
 }
 
 func TestEnhancedEvolve(t *testing.T) {
-	ferry := &Ferry{
+	seating := &Seating{
 		[]rune("L.LL.LL.LL"),
 		[]rune("LLLLLLL.LL"),
 		[]rune("L.L.L..L.."),
@@ -178,12 +178,12 @@ func TestEnhancedEvolve(t *testing.T) {
 	}
 
 	want := []struct {
-		ferry    Ferry
+		seating    Seating
 		evolved  bool
 		occupied int
 	}{
 		{
-			Ferry{
+			Seating{
 				[]rune("#.##.##.##"),
 				[]rune("#######.##"),
 				[]rune("#.#.#..#.."),
@@ -199,7 +199,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			71,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.LL.LL.L#"),
 				[]rune("#LLLLLL.LL"),
 				[]rune("L.L.L..L.."),
@@ -215,7 +215,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			7,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.L#.##.L#"),
 				[]rune("#L#####.LL"),
 				[]rune("L.#.#..#.."),
@@ -231,7 +231,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			53,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.L#.L#.L#"),
 				[]rune("#LLLLLL.LL"),
 				[]rune("L.L.L..#.."),
@@ -247,7 +247,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			18,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.L#.L#.L#"),
 				[]rune("#LLLLLL.LL"),
 				[]rune("L.L.L..#.."),
@@ -263,7 +263,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			31,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.L#.L#.L#"),
 				[]rune("#LLLLLL.LL"),
 				[]rune("L.L.L..#.."),
@@ -279,7 +279,7 @@ func TestEnhancedEvolve(t *testing.T) {
 			26,
 		},
 		{
-			Ferry{
+			Seating{
 				[]rune("#.L#.L#.L#"),
 				[]rune("#LLLLLL.LL"),
 				[]rune("L.L.L..#.."),
@@ -296,22 +296,22 @@ func TestEnhancedEvolve(t *testing.T) {
 		},
 	}
 
-	for g, f := range want {
+	for g, w := range want {
 		var occupied int
 		var evolved bool
 
-		ferry, occupied, evolved = ferry.Evolve(9, 5)
+		seating, occupied, evolved = seating.Evolve(9, 5)
 
-		if !reflect.DeepEqual(ferry, f.ferry) {
-			t.Errorf("Generation %d: got %s, want %s", g+2, ferry, f.ferry)
+		if !reflect.DeepEqual(*seating, w.seating) {
+			t.Errorf("Generation %d: got %#v, want %#v", g+2, *seating, w.seating)
 		}
 
-		if evolved != f.evolved {
-			t.Errorf("Generation %d: evolved got %#v, want %#v", g+2, evolved, f.evolved)
+		if evolved != w.evolved {
+			t.Errorf("Generation %d: evolved got %#v, want %#v", g+2, evolved, w.evolved)
 		}
 
-		if occupied != f.occupied {
-			t.Errorf("Generation %d: occupied got %#v, want %#v", g+2, occupied, f.occupied)
+		if occupied != w.occupied {
+			t.Errorf("Generation %d: occupied got %#v, want %#v", g+2, occupied, w.occupied)
 		}
 	}
 }

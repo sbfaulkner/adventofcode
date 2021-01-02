@@ -186,7 +186,7 @@ func day10() {
 }
 
 func day11() {
-	ferry, err := advent.ReadFerry(input(11))
+	seating, err := advent.ReadSeating(input(11))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -194,8 +194,8 @@ func day11() {
 	var occupied int
 	var evolved bool
 
-	for f := ferry; ; {
-		f, occupied, evolved = f.Evolve(1, 4)
+	for s := seating; ; {
+		s, occupied, evolved = s.Evolve(1, 4)
 		if !evolved {
 			break
 		}
@@ -203,8 +203,8 @@ func day11() {
 
 	log.Println("11-1:", occupied)
 
-	for f := ferry; ; {
-		f, occupied, evolved = f.Evolve(len(*ferry), 5)
+	for s := seating; ; {
+		s, occupied, evolved = s.Evolve(len(*seating), 5)
 		if !evolved {
 			break
 		}

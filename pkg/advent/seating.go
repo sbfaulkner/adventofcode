@@ -2,9 +2,7 @@ package advent
 
 import (
 	"bufio"
-	"fmt"
 	"io"
-	"strings"
 )
 
 const (
@@ -13,50 +11,40 @@ const (
 	occupiedSeat = '#'
 )
 
-// Ferry layout of seats (and floor)
-type Ferry [][]rune
+// Seating layout of seats (and floor)
+type Seating [][]rune
 
-// ReadFerry reads a ferry floorplan from the provided reader
-func ReadFerry(rd io.Reader) (*Ferry, error) {
-	ferry := Ferry{}
+// ReadSeating reads a ferry floorplan from the provided reader
+func ReadSeating(rd io.Reader) (*Seating, error) {
+	seating := Seating{}
 
 	s := bufio.NewScanner(rd)
 
 	for s.Scan() {
-		ferry = append(ferry, []rune(s.Text()))
+		seating = append(seating, []rune(s.Text()))
 	}
 
 	if err := s.Err(); err != nil {
 		return nil, err
 	}
 
-	return &ferry, nil
-}
-
-func (f Ferry) String() string {
-	s := make([]string, 0, len(f))
-
-	for _, r := range f {
-		s = append(s, fmt.Sprintf("%q", string(r)))
-	}
-
-	return strings.Join(s, ",")
+	return &seating, nil
 }
 
 // Evolve will update the ferry seating
-func (f Ferry) Evolve(distance int, tolerance int) (*Ferry, int, bool) {
-	e := make(Ferry, 0, len(f))
+func (s Seating) Evolve(distance int, tolerance int) (*Seating, int, bool) {
+	e := make(Seating, 0, len(s))
 
 	occupied := 0
 	evolved := false
 
-	for y, row := range f {
+	for y, row := range s {
 		er := make([]rune, 0, len(row))
 
 		for x, pos := range row {
 			switch pos {
 			case emptySeat:
-				if f.countVisibileFrom(x, y, distance) == 0 {
+				if s.countVisibileFrom(x, y, distance) == 0 {
 					er = append(er, occupiedSeat)
 					evolved = true
 					occupied++
@@ -64,7 +52,7 @@ func (f Ferry) Evolve(distance int, tolerance int) (*Ferry, int, bool) {
 					er = append(er, emptySeat)
 				}
 			case occupiedSeat:
-				if f.countVisibileFrom(x, y, distance) >= tolerance {
+				if s.countVisibileFrom(x, y, distance) >= tolerance {
 					er = append(er, emptySeat)
 					evolved = true
 				} else {
@@ -93,22 +81,22 @@ var vectors = []struct{ dx, dy int }{
 	{dx: +1, dy: +1},
 }
 
-func (f Ferry) countVisibileFrom(x, y int, distance int) int {
+func (s Seating) countVisibileFrom(x, y int, distance int) int {
 	n := 0
 
 	for _, v := range vectors {
 		for d := 1; d <= distance; d++ {
 			py := y + d*v.dy
-			if py < 0 || py >= len(f) {
+			if py < 0 || py >= len(s) {
 				break
 			}
 
 			px := x + d*v.dx
-			if px < 0 || px >= len(f[py]) {
+			if px < 0 || px >= len(s[py]) {
 				break
 			}
 
-			p := f[py][px]
+			p := s[py][px]
 			if p == emptySeat {
 				break
 			}
@@ -120,16 +108,4 @@ func (f Ferry) countVisibileFrom(x, y int, distance int) int {
 	}
 
 	return n
-}
-
-func (f Ferry) isOccupiedAt(x, y int) bool {
-	if y < 0 || y >= len(f) {
-		return false
-	}
-
-	if x < 0 || x >= len(f[y]) {
-		return false
-	}
-
-	return f[y][x] == occupiedSeat
 }
