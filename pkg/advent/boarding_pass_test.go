@@ -2,7 +2,7 @@ package advent
 
 import "testing"
 
-func TestSeat(t *testing.T) {
+func TestBoardingPass(t *testing.T) {
 	testCases := []struct {
 		input  string
 		row    int
@@ -16,23 +16,23 @@ func TestSeat(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		s := NewSeat(tc.input)
+		bp := NewBoardingPass(tc.input)
 
 		t.Run("row", func(t *testing.T) {
-			if s.Row != tc.row {
-				t.Fatalf("%v: got %#v, want %#v", tc.input, s.Row, tc.row)
+			if bp.Row != tc.row {
+				t.Fatalf("%v: got %#v, want %#v", tc.input, bp.Row, tc.row)
 			}
 		})
 
 		t.Run("column", func(t *testing.T) {
-			if s.Column != tc.column {
-				t.Fatalf("%v: got %#v, want %#v", tc.input, s.Column, tc.column)
+			if bp.Column != tc.column {
+				t.Fatalf("%v: got %#v, want %#v", tc.input, bp.Column, tc.column)
 			}
 		})
 
 		t.Run("id", func(t *testing.T) {
-			if s.ID != tc.id {
-				t.Fatalf("%v: got %#v, want %#v", tc.input, s.ID, tc.id)
+			if bp.ID != tc.id {
+				t.Fatalf("%v: got %#v, want %#v", tc.input, bp.ID, tc.id)
 			}
 		})
 	}

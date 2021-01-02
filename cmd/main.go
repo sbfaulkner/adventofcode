@@ -77,18 +77,18 @@ func day4() {
 }
 
 func day5() {
-	seats, err := advent.ReadSeats(input(5))
+	bps, err := advent.ReadBoardingPasses(input(5))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	sort.Slice(seats, func(i, j int) bool { return seats[i].ID < seats[j].ID })
+	sort.Slice(bps, func(i, j int) bool { return bps[i].ID < bps[j].ID })
 
-	log.Println("5-1:", seats[len(seats)-1].ID)
+	log.Println("5-1:", bps[len(bps)-1].ID)
 
-	for i, s := range seats[1:] {
-		if s.ID == (i + seats[0].ID + 2) {
-			log.Println("5-2:", i+seats[0].ID+1)
+	for i, bp := range bps[1:] {
+		if bp.ID == (i + bps[0].ID + 2) {
+			log.Println("5-2:", i+bps[0].ID+1)
 			break
 		}
 	}

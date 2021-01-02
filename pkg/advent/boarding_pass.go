@@ -5,15 +5,15 @@ import (
 	"io"
 )
 
-// Seat for airline
-type Seat struct {
+// BoardingPass for airline
+type BoardingPass struct {
 	Row    int
 	Column int
 	ID     int
 }
 
-// NewSeat creats a new Seat
-func NewSeat(input string) *Seat {
+// NewBoardingPass creats a new BoardingPass
+func NewBoardingPass(input string) *BoardingPass {
 	r := 0
 	rows := 128
 	c := 0
@@ -33,26 +33,26 @@ func NewSeat(input string) *Seat {
 		}
 	}
 
-	return &Seat{
+	return &BoardingPass{
 		Row:    r,
 		Column: c,
 		ID:     r*8 + c,
 	}
 }
 
-// ReadSeats reads all seat codes from the provided reader
-func ReadSeats(rd io.Reader) ([]*Seat, error) {
-	seats := []*Seat{}
+// ReadBoardingPasses reads all seat codes from the provided reader
+func ReadBoardingPasses(rd io.Reader) ([]*BoardingPass, error) {
+	bps := []*BoardingPass{}
 
 	s := bufio.NewScanner(rd)
 
 	for s.Scan() {
-		seats = append(seats, NewSeat(s.Text()))
+		bps = append(bps, NewBoardingPass(s.Text()))
 	}
 
 	if err := s.Err(); err != nil {
 		return nil, err
 	}
 
-	return seats, nil
+	return bps, nil
 }
