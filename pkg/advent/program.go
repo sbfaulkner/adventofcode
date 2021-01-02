@@ -1,4 +1,4 @@
-package handheld
+package advent
 
 import (
 	"bufio"

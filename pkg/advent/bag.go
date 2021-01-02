@@ -1,4 +1,4 @@
-package bag
+package advent
 
 import (
 	"bufio"

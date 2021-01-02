@@ -1,4 +1,4 @@
-package airline
+package advent
 
 import (
 	"bufio"

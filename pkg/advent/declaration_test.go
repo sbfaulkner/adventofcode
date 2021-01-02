@@ -1,4 +1,4 @@
-package customs
+package advent
 
 import (
 	"strings"

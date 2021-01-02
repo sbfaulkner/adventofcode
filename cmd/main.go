@@ -9,16 +9,7 @@ import (
 	"runtime"
 	"sort"
 
-	"github.com/sbfaulkner/adventofcode/pkg/adapter"
-	"github.com/sbfaulkner/adventofcode/pkg/airline"
-	"github.com/sbfaulkner/adventofcode/pkg/bag"
-	"github.com/sbfaulkner/adventofcode/pkg/customs"
-	"github.com/sbfaulkner/adventofcode/pkg/expense"
-	"github.com/sbfaulkner/adventofcode/pkg/handheld"
-	"github.com/sbfaulkner/adventofcode/pkg/passport"
-	"github.com/sbfaulkner/adventofcode/pkg/password"
-	"github.com/sbfaulkner/adventofcode/pkg/tree"
-	"github.com/sbfaulkner/adventofcode/pkg/xmas"
+	"github.com/sbfaulkner/adventofcode/pkg/advent"
 )
 
 func input(n int) *os.File {
@@ -37,7 +28,7 @@ func input(n int) *os.File {
 }
 
 func day1() {
-	r, err := expense.ReadReport(input(1))
+	r, err := advent.ReadReport(input(1))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,25 +39,25 @@ func day1() {
 }
 
 func day2() {
-	db, err := password.ReadDatabase(input(2))
+	db, err := advent.ReadDatabase(input(2))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("2-1:", db.CountValid(password.SledPolicy))
+	log.Println("2-1:", db.CountValid(advent.SledPolicy))
 
-	log.Println("2-2:", db.CountValid(password.TobogganPolicy))
+	log.Println("2-2:", db.CountValid(advent.TobogganPolicy))
 }
 
 func day3() {
-	m, err := tree.ReadMap(input(3))
+	m, err := advent.ReadMap(input(3))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Println("3-1:", m.Count(tree.Slope{DX: 3, DY: 1}))
+	log.Println("3-1:", m.Count(advent.Slope{DX: 3, DY: 1}))
 
-	slopes := []tree.Slope{
+	slopes := []advent.Slope{
 		{DX: 1, DY: 1},
 		{DX: 3, DY: 1},
 		{DX: 5, DY: 1},
@@ -78,15 +69,15 @@ func day3() {
 }
 
 func day4() {
-	p, _ := passport.ReadPassports(input(4))
+	p, _ := advent.ReadPassports(input(4))
 
-	log.Println("4-1:", passport.ValidPassports(p, passport.RequireFields))
+	log.Println("4-1:", advent.ValidPassports(p, advent.RequireFields))
 
-	log.Println("4-2:", passport.ValidPassports(p, passport.RequireValidFields))
+	log.Println("4-2:", advent.ValidPassports(p, advent.RequireValidFields))
 }
 
 func day5() {
-	seats, err := airline.ReadSeats(input(5))
+	seats, err := advent.ReadSeats(input(5))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -104,7 +95,7 @@ func day5() {
 }
 
 func day6() {
-	groups, err := customs.ReadDeclarations(input(6))
+	groups, err := advent.ReadDeclarations(input(6))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,7 +112,7 @@ func day6() {
 }
 
 func day7() {
-	rules, err := bag.ReadRules(input(7))
+	rules, err := advent.ReadRules(input(7))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -134,12 +125,12 @@ func day7() {
 }
 
 func day8() {
-	p, err := handheld.LoadProgram(input(8))
+	p, err := advent.LoadProgram(input(8))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	cpu := &handheld.CPU{}
+	cpu := &advent.CPU{}
 
 	cpu.Execute(*p, cpu.DetectLoop())
 	log.Println("8-1:", cpu.ACC)
@@ -154,7 +145,7 @@ func day8() {
 			continue
 		}
 
-		cpu := &handheld.CPU{}
+		cpu := &advent.CPU{}
 
 		if cpu.Execute(*p, cpu.DetectLoop()) {
 			log.Println("8-2:", cpu.ACC)
@@ -166,7 +157,7 @@ func day8() {
 }
 
 func day9() {
-	x, err := xmas.LoadXMAS(25, input(9))
+	x, err := advent.LoadXMAS(25, input(9))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -180,7 +171,7 @@ func day9() {
 }
 
 func day10() {
-	a, err := adapter.ReadAdapters(input(10))
+	a, err := advent.ReadAdapters(input(10))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -188,7 +179,7 @@ func day10() {
 	c := a.CountAdapters()
 	log.Println("10-1:", c[1]*c[3])
 
-	adapter := adapter.Adapter{}
+	adapter := advent.Adapter{}
 
 	n := adapter.CountChains(a)
 	log.Println("10-2:", n)

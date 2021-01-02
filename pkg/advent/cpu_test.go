@@ -1,4 +1,4 @@
-package handheld
+package advent
 
 import (
 	"strings"
@@ -23,16 +23,6 @@ acc +6
 	}
 
 	cpu := CPU{}
-
-	// 	// t.Run("success", func(t *testing.T) {
-	// 	// 	cpu.Patch(7, "nop")
-
-	// 	// 	got := cpu.Execute(cpu.DetectLoop())
-
-	// 	// 	if got != true {
-	// 	// 		t.Errorf("Execute: got %#v, want %#v", got, true)
-	// 	// 	}
-	// 	// })
 
 	t.Run("failure", func(t *testing.T) {
 		got := cpu.Execute(*p, cpu.Trace(*p, cpu.DetectLoop()))

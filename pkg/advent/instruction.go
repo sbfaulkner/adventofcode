@@ -1,4 +1,4 @@
-package handheld
+package advent
 
 // Instruction to be executed
 type Instruction struct {
