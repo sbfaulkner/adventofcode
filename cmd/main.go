@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"sort"
 
+	"github.com/sbfaulkner/adventofcode/pkg/adapter"
 	"github.com/sbfaulkner/adventofcode/pkg/airline"
 	"github.com/sbfaulkner/adventofcode/pkg/bag"
 	"github.com/sbfaulkner/adventofcode/pkg/customs"
@@ -178,6 +179,21 @@ func day9() {
 	log.Println("9-2:", min+max)
 }
 
+func day10() {
+	a, err := adapter.ReadAdapters(input(10))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c := a.CountAdapters()
+	log.Println("10-1:", c[1]*c[3])
+
+	adapter := adapter.Adapter{}
+
+	n := adapter.CountChains(a)
+	log.Println("10-2:", n)
+}
+
 func main() {
 	day1()
 	day2()
@@ -188,4 +204,5 @@ func main() {
 	day7()
 	day8()
 	day9()
+	day10()
 }
