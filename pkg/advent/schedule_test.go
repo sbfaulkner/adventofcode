@@ -51,3 +51,38 @@ func TestScheduleNotes(t *testing.T) {
 		}
 	})
 }
+
+func TestFindSyncTime(t *testing.T) {
+	testCases := []struct {
+		n    ScheduleNotes
+		want int64
+	}{
+		{
+			ScheduleNotes{schedule: Schedule{index: []int{0, 2, 3}, ids: map[int]int{0: 17, 2: 13, 3: 19}}},
+			3417,
+		},
+		{
+			ScheduleNotes{schedule: Schedule{index: []int{0, 1, 2, 3}, ids: map[int]int{0: 67, 1: 7, 2: 59, 3: 61}}},
+			754018,
+		},
+		{
+			ScheduleNotes{schedule: Schedule{index: []int{0, 2, 3, 4}, ids: map[int]int{0: 67, 2: 7, 3: 59, 4: 61}}},
+			779210,
+		},
+		{
+			ScheduleNotes{schedule: Schedule{index: []int{0, 1, 3, 4}, ids: map[int]int{0: 67, 1: 7, 3: 59, 4: 61}}},
+			1261476,
+		},
+		{
+			ScheduleNotes{schedule: Schedule{index: []int{0, 1, 2, 3}, ids: map[int]int{0: 1789, 1: 37, 2: 47, 3: 1889}}},
+			1202161486,
+		},
+	}
+
+	for _, tc := range testCases {
+		got := tc.n.FindSyncTime()
+		if got != tc.want {
+			t.Errorf("got %#v, want %#v", got, tc.want)
+		}
+	}
+}
