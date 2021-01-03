@@ -14,7 +14,7 @@ mem[7] = 101
 mem[8] = 0
 `
 
-	if err := dp.Initialize(strings.NewReader(in)); err != nil {
+	if err := dp.Initialize(strings.NewReader(in), &DecoderV1{}); err != nil {
 		t.Fatal(err)
 	}
 
