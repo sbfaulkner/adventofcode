@@ -247,6 +247,16 @@ func day13() {
 	log.Println("13-2:", n.FindSyncTime())
 }
 
+func day14() {
+	dp := advent.DockingProgram{}
+
+	if err := dp.Initialize(input(14)); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("14-1:", dp.CheckSum())
+}
+
 func main() {
 	day1()
 	day2()
@@ -261,4 +271,5 @@ func main() {
 	day11()
 	day12()
 	day13()
+	day14()
 }
