@@ -19,8 +19,11 @@ func TestScheduleNotes(t *testing.T) {
 
 	t.Run("Read", func(t *testing.T) {
 		want := ScheduleNotes{
-			ts:       939,
-			schedule: Schedule{7, 13, 0, 0, 59, 0, 31, 19},
+			ts: 939,
+			schedule: Schedule{
+				index: []int{0, 1, 4, 6, 7},
+				ids:   map[int]int{0: 7, 1: 13, 4: 59, 6: 31, 7: 19},
+			},
 		}
 
 		if !reflect.DeepEqual(n, want) {
@@ -37,6 +40,14 @@ func TestScheduleNotes(t *testing.T) {
 
 		if wait != 5 {
 			t.Errorf("wait: got %#v, want %#v", wait, 5)
+		}
+	})
+
+	t.Run("FindSyncTime", func(t *testing.T) {
+		got := n.FindSyncTime()
+
+		if got != 1068781 {
+			t.Errorf("got %#v, want %#v", got, 1068781)
 		}
 	})
 }

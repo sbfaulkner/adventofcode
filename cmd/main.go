@@ -244,7 +244,7 @@ func day13() {
 
 	log.Println("13-1:", id*wait)
 
-	// log.Println("13-2:", n)
+	log.Println("13-2:", n.FindSyncTime())
 }
 
 func main() {
