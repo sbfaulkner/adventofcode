@@ -7,35 +7,65 @@ import (
 	"strings"
 )
 
-// ReadSchedule reads the scheduled shuttles
-func ReadSchedule(rd io.Reader) (map[int]int, error) {
-	var ts int
+// ScheduleNotes for shuttles
+type ScheduleNotes struct {
+	ts       int
+	schedule Schedule
+}
+
+// Schedule for shuttles
+type Schedule []int
+
+// Read the shuttle schedule notes
+func (n *ScheduleNotes) Read(rd io.Reader) error {
+	if _, err := fmt.Fscanln(rd, &n.ts); err != nil {
+		return err
+	}
+
 	var s string
 
-	if _, err := fmt.Fscanln(rd, &ts); err != nil {
-		return nil, err
-	}
-
 	if _, err := fmt.Fscanln(rd, &s); err != nil && err != io.EOF {
-		return nil, err
+		return err
 	}
 
-	schedule := map[int]int{}
+	buses := strings.Split(s, ",")
 
-	for _, f := range strings.Split(s, ",") {
+	n.schedule = make(Schedule, len(buses))
+
+	for i, f := range buses {
 		if f == "x" {
 			continue
 		}
 
-		n, err := strconv.Atoi(f)
+		id, err := strconv.Atoi(f)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		schedule[n] = nextMultiple(ts, n) - ts
+		n.schedule[i] = id
 	}
 
-	return schedule, nil
+	return nil
+}
+
+// FindBus finds the first bus after the timestamp according to the schedule
+func (n ScheduleNotes) FindBus() (int, int) {
+	var id, wait int
+
+	for _, i := range n.schedule {
+		if i == 0 {
+			continue
+		}
+
+		w := nextMultiple(n.ts, i) - n.ts
+
+		if id == 0 || w < wait {
+			id = i
+			wait = w
+		}
+	}
+
+	return id, wait
 }
 
 func nextMultiple(i int, m int) int {

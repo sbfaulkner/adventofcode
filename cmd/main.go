@@ -234,21 +234,16 @@ func day12() {
 }
 
 func day13() {
-	s, err := advent.ReadSchedule(input(13))
-	if err != nil {
+	n := advent.ScheduleNotes{}
+
+	if err := n.Read(input(13)); err != nil {
 		log.Fatal(err)
 	}
 
-	var id, wait int
-
-	for i, w := range s {
-		if id == 0 || w < wait {
-			id = i
-			wait = w
-		}
-	}
+	id, wait := n.FindBus()
 
 	log.Println("13-1:", id*wait)
+
 	// log.Println("13-2:", n)
 }
 
