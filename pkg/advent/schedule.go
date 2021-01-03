@@ -87,19 +87,19 @@ func nextMultiple(i int, m int) int {
 }
 
 // FindSyncTime finds the time the schedule is in sync with the route order
-func (n ScheduleNotes) FindSyncTime() int {
+func (n ScheduleNotes) FindSyncTime() int64 {
 	return n.schedule.findSyncTime()
 }
 
-func (s Schedule) findSyncTime() int {
-	ts := 0
-	time := s.ids[s.index[0]]
+func (s Schedule) findSyncTime() int64 {
+	var ts int64
+	time := int64(s.ids[s.index[0]])
 
 TIME:
 	for ; ; ts += time {
 		for _, i := range s.index[1:] {
 			id := s.ids[i]
-			if (ts+i)%id != 0 {
+			if (ts+int64(i))%int64(id) != 0 {
 				continue TIME
 			}
 		}
