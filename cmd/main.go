@@ -233,6 +233,25 @@ func day12() {
 	log.Println("12-2:", f.ManhattanDistance())
 }
 
+func day13() {
+	s, err := advent.ReadSchedule(input(13))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var id, wait int
+
+	for i, w := range s {
+		if id == 0 || w < wait {
+			id = i
+			wait = w
+		}
+	}
+
+	log.Println("13-1:", id*wait)
+	// log.Println("13-2:", n)
+}
+
 func main() {
 	day1()
 	day2()
@@ -246,4 +265,5 @@ func main() {
 	day10()
 	day11()
 	day12()
+	day13()
 }
