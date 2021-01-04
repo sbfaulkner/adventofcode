@@ -1,3 +1,5 @@
 .byebug_history
 .vscode
 bin/
+*.test
+*.prof

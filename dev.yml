@@ -16,6 +16,8 @@ commands:
       `dev run` is a special command that will run `dev build` and then `dev run-built` if they are both defined.
     run: bin/adventofcode
   test:
-    run: go test ./...
+    run: go test -v ./pkg/advent
   style:
     run: golint ./...
+  profile:
+    run: go test -v ./pkg/advent -cpuprofile cpu.prof -memprofile mem.prof

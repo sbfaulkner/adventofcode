@@ -9,7 +9,7 @@ type MemoryGame struct {
 
 // NewMemoryGame starts a new game
 func NewMemoryGame(nums ...uint) *MemoryGame {
-	g := MemoryGame{index: map[uint]uint{}}
+	g := MemoryGame{index: make(map[uint]uint)}
 
 	for _, n := range nums {
 		g.add(n)
@@ -19,9 +19,7 @@ func NewMemoryGame(nums ...uint) *MemoryGame {
 }
 
 func (g *MemoryGame) add(n uint) {
-	if g.turns > 0 {
-		g.index[g.last] = g.turns
-	}
+	g.index[g.last] = g.turns
 	g.last = n
 	g.turns++
 }
