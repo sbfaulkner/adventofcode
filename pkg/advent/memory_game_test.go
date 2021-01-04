@@ -10,7 +10,7 @@ func TestMemoryGame(t *testing.T) {
 	turns := []uint{0, 3, 3, 1, 0, 4, 0}
 
 	for i, want := range turns {
-		got := game.Play(uint(game.turns+1))
+		got := game.Play(uint(game.turns + 1))
 		if got != want {
 			t.Errorf("Turn %d: got %d, want %d", i+4, got, want)
 		}
@@ -40,6 +40,10 @@ func TestMemoryGame2020(t *testing.T) {
 }
 
 func TestMemoryGame30000000(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping test in short mode.")
+	}
+
 	testCases := []struct {
 		game *MemoryGame
 		want uint
