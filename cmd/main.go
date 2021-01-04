@@ -250,11 +250,19 @@ func day13() {
 func day14() {
 	dp := advent.DockingProgram{}
 
-	if err := dp.Initialize(input(14)); err != nil {
+	if err := dp.Initialize(input(14), &advent.DecoderV1{}); err != nil {
 		log.Fatal(err)
 	}
 
 	log.Println("14-1:", dp.CheckSum())
+
+	dp = advent.DockingProgram{}
+
+	if err := dp.Initialize(input(14), &advent.DecoderV2{}); err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("14-2:", dp.CheckSum())
 }
 
 func main() {
