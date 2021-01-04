@@ -265,6 +265,14 @@ func day14() {
 	log.Println("14-2:", dp.CheckSum())
 }
 
+func day15() {
+	nums := []uint{0, 12, 6, 13, 20, 1, 17}
+	game := advent.NewMemoryGame(nums...)
+
+	log.Println("15-1:", game.Play(uint(2020-len(nums))))
+	log.Println("15-2:", game.Play(uint(30000000-len(nums))))
+}
+
 func main() {
 	day1()
 	day2()
@@ -280,4 +288,5 @@ func main() {
 	day12()
 	day13()
 	day14()
+	day15()
 }
