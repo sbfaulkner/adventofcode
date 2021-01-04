@@ -1,6 +1,8 @@
 package advent
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestMemoryGame(t *testing.T) {
 	game := NewMemoryGame(0, 3, 6)
@@ -8,7 +10,7 @@ func TestMemoryGame(t *testing.T) {
 	turns := []uint{0, 3, 3, 1, 0, 4, 0}
 
 	for i, want := range turns {
-		got := game.Play(1)
+		got := game.Play(uint(game.turns+1))
 		if got != want {
 			t.Errorf("Turn %d: got %d, want %d", i+4, got, want)
 		}
@@ -30,7 +32,7 @@ func TestMemoryGame2020(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		got := tc.game.Play(2020 - tc.game.turns)
+		got := tc.game.Play(2020)
 		if got != tc.want {
 			t.Errorf("Game %d: got %d, want %d", i+1, got, tc.want)
 		}
@@ -52,7 +54,7 @@ func TestMemoryGame30000000(t *testing.T) {
 	}
 
 	for i, tc := range testCases {
-		got := tc.game.Play(30000000 - tc.game.turns)
+		got := tc.game.Play(30000000)
 		if got != tc.want {
 			t.Errorf("Game %d: got %d, want %d", i+1, got, tc.want)
 		}
@@ -62,20 +64,20 @@ func TestMemoryGame30000000(t *testing.T) {
 func BenchmarkMemoryGame(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		game := NewMemoryGame(0, 3, 6)
-		game.Play(1)
+		game.Play(10)
 	}
 }
 
 func BenchmarkMemoryGame2020(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		game := NewMemoryGame(0, 3, 6)
-		game.Play(2020-3)
+		game.Play(2020)
 	}
 }
 
 func BenchmarkMemoryGame30000000(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		game := NewMemoryGame(0, 3, 6)
-		game.Play(30000000-3)
+		game.Play(30000000)
 	}
 }

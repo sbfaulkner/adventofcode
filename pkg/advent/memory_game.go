@@ -2,14 +2,14 @@ package advent
 
 // MemoryGame is the current state for the elves memory game
 type MemoryGame struct {
-	index map[uint]uint
+	index []uint
 	last  uint
 	turns uint
 }
 
 // NewMemoryGame starts a new game
 func NewMemoryGame(nums ...uint) *MemoryGame {
-	g := MemoryGame{index: make(map[uint]uint)}
+	g := MemoryGame{index: make([]uint, 30000000)}
 
 	for _, n := range nums {
 		g.add(n)
@@ -28,7 +28,7 @@ func (g *MemoryGame) add(n uint) {
 func (g *MemoryGame) Play(n uint) uint {
 	var p uint
 
-	for ; n > 0; n-- {
+	for g.turns < n {
 		p = g.play()
 	}
 

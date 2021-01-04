@@ -266,11 +266,10 @@ func day14() {
 }
 
 func day15() {
-	nums := []uint{0, 12, 6, 13, 20, 1, 17}
-	game := advent.NewMemoryGame(nums...)
+	game := advent.NewMemoryGame(0, 12, 6, 13, 20, 1, 17)
 
-	log.Println("15-1:", game.Play(uint(2020-len(nums))))
-	log.Println("15-2:", game.Play(uint(30000000-len(nums))))
+	log.Println("15-1:", game.Play(uint(2020)))
+	log.Println("15-2:", game.Play(uint(30000000)))
 }
 
 func main() {
