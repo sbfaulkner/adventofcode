@@ -24,9 +24,6 @@ func RequirePresent(f string) Validate {
 	}
 }
 
-// Range defines a min and max value
-type Range struct{ Min, Max int }
-
 // RequireIntegerInRange determines if the specified field has a value within a range
 func RequireIntegerInRange(f string, r Range) Validate {
 	return func(p Passport) bool {

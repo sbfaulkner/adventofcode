@@ -272,6 +272,17 @@ func day15() {
 	log.Println("15-2:", game.Play(uint(30000000)))
 }
 
+func day16() {
+	notes, err := advent.ReadTicketNotes(input(16))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("16-1:", notes.TicketScanningErrorRate())
+
+	log.Println("16-2:", notes.GetDepartureFieldCheckSum())
+}
+
 func main() {
 	day1()
 	day2()
@@ -288,4 +299,5 @@ func main() {
 	day13()
 	day14()
 	day15()
+	day16()
 }
