@@ -283,6 +283,32 @@ func day16() {
 	log.Println("16-2:", notes.GetDepartureFieldCheckSum())
 }
 
+func day17() {
+	var count int
+
+	d, err := advent.ReadPocketDimension(input(17))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < 6; i++ {
+		count = d.Cycle(3)
+	}
+
+	log.Println("17-1:", count)
+
+	d, err = advent.ReadPocketDimension(input(17))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < 6; i++ {
+		count = d.Cycle(4)
+	}
+
+	log.Println("17-2:", count)
+}
+
 func main() {
 	day1()
 	day2()
@@ -300,4 +326,5 @@ func main() {
 	day14()
 	day15()
 	day16()
+	day17()
 }
