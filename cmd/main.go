@@ -309,6 +309,25 @@ func day17() {
 	log.Println("17-2:", count)
 }
 
+func day18() {
+	h, err := advent.ReadMathHomework(input(18))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s := 0
+
+	for _, p := range h {
+		i, err := p.Evaluate()
+		if err != nil {
+			log.Fatal(err)
+		}
+		s += i
+	}
+
+	log.Println("18-1:", s)
+}
+
 func main() {
 	day1()
 	day2()
@@ -327,4 +346,5 @@ func main() {
 	day15()
 	day16()
 	day17()
+	day18()
 }
