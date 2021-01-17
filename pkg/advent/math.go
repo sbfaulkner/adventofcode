@@ -73,7 +73,7 @@ func (p *MathProblem) Evaluate(f OperatorPrecedence) (int, error) {
 		f:  f,
 	}
 
-	if err := e.evaluate(); err != nil {
+	if err := evaluateProblem(&e); err != nil {
 		return 0, err
 	}
 	return e.popInt(), nil
@@ -190,7 +190,7 @@ func (e *mathEvaluator) popString() string {
 	return e.popToken().s
 }
 
-func (e *mathEvaluator) evaluate() error {
+func evaluateProblem(e *mathEvaluator) error {
 	e.depth++
 	defer func() { e.depth-- }()
 
@@ -198,14 +198,14 @@ func (e *mathEvaluator) evaluate() error {
 		switch e.tok.t {
 		case intToken:
 			e.pushToken()
-			return e.evaluateLeft()
+			return evaluateLeft(e)
 
 		case lparenToken:
-			err := e.evaluate()
+			err := evaluateProblem(e)
 			if err != nil {
 				return err
 			}
-			return e.evaluateLeft()
+			return evaluateLeft(e)
 
 		default:
 			return fmt.Errorf("syntax error at %s (expected integer)", e.tok.s)
@@ -215,7 +215,7 @@ func (e *mathEvaluator) evaluate() error {
 	return e.err
 }
 
-func (e *mathEvaluator) evaluateLeft() error {
+func evaluateLeft(e *mathEvaluator) error {
 	if !e.getToken() {
 		return e.err
 	}
@@ -235,14 +235,14 @@ func (e *mathEvaluator) evaluateLeft() error {
 	}
 
 	e.pushToken()
-	if err := e.evaluateOp(); err != nil {
+	if err := evaluateOp(e); err != nil {
 		return err
 	}
 
-	return e.evaluateLeft()
+	return evaluateLeft(e)
 }
 
-func (e *mathEvaluator) evaluateOp() error {
+func evaluateOp(e *mathEvaluator) error {
 	if !e.getToken() {
 		return e.err
 	}
@@ -250,20 +250,20 @@ func (e *mathEvaluator) evaluateOp() error {
 	switch e.tok.t {
 	case intToken:
 		e.pushToken()
-		return e.evaluateExpression()
+		return evaluateExpression(e)
 
 	case lparenToken:
-		err := e.evaluate()
+		err := evaluateProblem(e)
 		if err != nil {
 			return err
 		}
-		return e.evaluateExpression()
+		return evaluateExpression(e)
 	}
 
 	return fmt.Errorf("syntax error at %s (expected rval)", e.tok.s)
 }
 
-func (e *mathEvaluator) evaluateExpression() error {
+func evaluateExpression(e *mathEvaluator) error {
 	l := e.popInt()
 	op := e.popString()
 	r := e.popInt()
