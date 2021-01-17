@@ -26,14 +26,6 @@ type token struct {
 // MathProblem is an expression to be solved
 type MathProblem string
 
-type mathEvaluator struct {
-	rd    *strings.Reader
-	err   error
-	depth int
-	tok   token
-	st    []token
-}
-
 // ReadMathHomework reads a series of math problems
 func ReadMathHomework(rd io.Reader) ([]*MathProblem, error) {
 	h := []*MathProblem{}
@@ -55,6 +47,45 @@ func ReadMathHomework(rd io.Reader) ([]*MathProblem, error) {
 func NewMathProblem(problem string) *MathProblem {
 	p := MathProblem(problem)
 	return &p
+}
+
+// OperatorPrecedence to use when evaluating an expression
+type OperatorPrecedence func(o1, o2 string) bool
+
+// LeftToRightPrecedence defines left-to-right operator precedence
+func LeftToRightPrecedence(o1, o2 string) bool {
+	return true
+}
+
+// AdvancedMathPrecedence defines plus-over-times operator precedence
+func AdvancedMathPrecedence(o1, o2 string) bool {
+	if o1 == o2 {
+		return true
+	}
+
+	return o1 == "+"
+}
+
+// Evaluate solves a math problem
+func (p *MathProblem) Evaluate(f OperatorPrecedence) (int, error) {
+	e := mathEvaluator{
+		rd: strings.NewReader(string(*p)),
+		f:  f,
+	}
+
+	if err := e.evaluate(); err != nil {
+		return 0, err
+	}
+	return e.popInt(), nil
+}
+
+type mathEvaluator struct {
+	rd    *strings.Reader
+	err   error
+	depth int
+	tok   token
+	st    []token
+	f     OperatorPrecedence
 }
 
 func (e *mathEvaluator) getToken() bool {
@@ -159,34 +190,7 @@ func (e *mathEvaluator) popString() string {
 	return e.popToken().s
 }
 
-// OperatorPrecedence to use when evaluating an expression
-type OperatorPrecedence func(o1, o2 string) bool
-
-// LeftToRightPrecedence defines left-to-right operator precedence
-func LeftToRightPrecedence(o1, o2 string) bool {
-	return true
-}
-
-// AdvancedMathPrecedence defines plus-over-times operator precedence
-func AdvancedMathPrecedence(o1, o2 string) bool {
-	if o1 == o2 {
-		return true
-	}
-
-	return o1 == "+"
-}
-
-// Evaluate solves a math problem
-func (p *MathProblem) Evaluate(f OperatorPrecedence) (int, error) {
-	e := mathEvaluator{rd: strings.NewReader(string(*p))}
-
-	if err := e.evaluate(f); err != nil {
-		return 0, err
-	}
-	return e.popInt(), nil
-}
-
-func (e *mathEvaluator) evaluate(f OperatorPrecedence) error {
+func (e *mathEvaluator) evaluate() error {
 	e.depth++
 	defer func() { e.depth-- }()
 
@@ -194,14 +198,14 @@ func (e *mathEvaluator) evaluate(f OperatorPrecedence) error {
 		switch e.tok.t {
 		case intToken:
 			e.pushToken()
-			return e.evaluateLeft(f)
+			return e.evaluateLeft()
 
 		case lparenToken:
-			err := e.evaluate(f)
+			err := e.evaluate()
 			if err != nil {
 				return err
 			}
-			return e.evaluateLeft(f)
+			return e.evaluateLeft()
 
 		default:
 			return fmt.Errorf("syntax error at %s (expected integer)", e.tok.s)
@@ -211,7 +215,7 @@ func (e *mathEvaluator) evaluate(f OperatorPrecedence) error {
 	return e.err
 }
 
-func (e *mathEvaluator) evaluateLeft(f OperatorPrecedence) error {
+func (e *mathEvaluator) evaluateLeft() error {
 	if !e.getToken() {
 		return e.err
 	}
@@ -231,14 +235,14 @@ func (e *mathEvaluator) evaluateLeft(f OperatorPrecedence) error {
 	}
 
 	e.pushToken()
-	if err := e.evaluateOp(f); err != nil {
+	if err := e.evaluateOp(); err != nil {
 		return err
 	}
 
-	return e.evaluateLeft(f)
+	return e.evaluateLeft()
 }
 
-func (e *mathEvaluator) evaluateOp(f OperatorPrecedence) error {
+func (e *mathEvaluator) evaluateOp() error {
 	if !e.getToken() {
 		return e.err
 	}
@@ -246,20 +250,20 @@ func (e *mathEvaluator) evaluateOp(f OperatorPrecedence) error {
 	switch e.tok.t {
 	case intToken:
 		e.pushToken()
-		return e.evaluateExpression(f)
+		return e.evaluateExpression()
 
 	case lparenToken:
-		err := e.evaluate(f)
+		err := e.evaluate()
 		if err != nil {
 			return err
 		}
-		return e.evaluateExpression(f)
+		return e.evaluateExpression()
 	}
 
 	return fmt.Errorf("syntax error at %s (expected rval)", e.tok.s)
 }
 
-func (e *mathEvaluator) evaluateExpression(f OperatorPrecedence) error {
+func (e *mathEvaluator) evaluateExpression() error {
 	l := e.popInt()
 	op := e.popString()
 	r := e.popInt()
