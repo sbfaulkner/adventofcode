@@ -24,7 +24,9 @@ type token struct {
 }
 
 // MathProblem is an expression to be solved
-type MathProblem struct {
+type MathProblem string
+
+type mathEvaluator struct {
 	rd    *strings.Reader
 	err   error
 	depth int
@@ -51,22 +53,20 @@ func ReadMathHomework(rd io.Reader) ([]*MathProblem, error) {
 
 // NewMathProblem creates a new math problem
 func NewMathProblem(problem string) *MathProblem {
-	p := MathProblem{
-		rd: strings.NewReader(problem),
-	}
+	p := MathProblem(problem)
 	return &p
 }
 
-func (p *MathProblem) getToken() bool {
+func (e *mathEvaluator) getToken() bool {
 	for {
-		ch, _, err := p.rd.ReadRune()
+		ch, _, err := e.rd.ReadRune()
 		if err == io.EOF {
-			p.tok.t = eofToken
+			e.tok.t = eofToken
 			return true
 		}
 
 		if err != nil {
-			p.err = err
+			e.err = err
 			return false
 		}
 
@@ -74,89 +74,89 @@ func (p *MathProblem) getToken() bool {
 			continue
 		}
 
-		p.tok.s = string(ch)
+		e.tok.s = string(ch)
 
 		switch {
 		case unicode.IsDigit(ch):
-			p.tok.t = intToken
-			return p.getNumber()
+			e.tok.t = intToken
+			return e.getNumber()
 
 		case strings.ContainsRune("+*", ch):
-			p.tok.t = opToken
+			e.tok.t = opToken
 			return true
 
 		case ch == '(':
-			p.tok.t = lparenToken
+			e.tok.t = lparenToken
 			return true
 
 		case ch == ')':
-			p.tok.t = rparenToken
+			e.tok.t = rparenToken
 			return true
 
 		default:
-			p.err = fmt.Errorf("syntax error at %c", ch)
+			e.err = fmt.Errorf("syntax error at %c", ch)
 			return false
 		}
 	}
 }
 
-func (p *MathProblem) getNumber() bool {
+func (e *mathEvaluator) getNumber() bool {
 	for {
-		ch, _, err := p.rd.ReadRune()
+		ch, _, err := e.rd.ReadRune()
 		if err == io.EOF {
 			break
 		}
 
 		if err != nil {
-			p.err = err
+			e.err = err
 			return false
 		}
 
 		if !unicode.IsDigit(ch) {
-			err = p.rd.UnreadRune()
+			err = e.rd.UnreadRune()
 			if err != nil {
-				p.err = err
+				e.err = err
 				return false
 			}
 			break
 		}
 
-		p.tok.s += string(ch)
+		e.tok.s += string(ch)
 	}
 
-	i, err := strconv.Atoi(p.tok.s)
+	i, err := strconv.Atoi(e.tok.s)
 	if err != nil {
-		p.err = err
+		e.err = err
 		return false
 	}
 
-	p.tok.i = i
+	e.tok.i = i
 
 	return true
 }
 
-func (p *MathProblem) pushToken() {
-	p.st = append(p.st, p.tok)
+func (e *mathEvaluator) pushToken() {
+	e.st = append(e.st, e.tok)
 }
 
-func (p *MathProblem) pushInt(i int) {
-	p.tok.t = intToken
-	p.tok.i = i
-	p.pushToken()
+func (e *mathEvaluator) pushInt(i int) {
+	e.tok.t = intToken
+	e.tok.i = i
+	e.pushToken()
 }
 
-func (p *MathProblem) popToken() token {
-	t := p.st[len(p.st)-1]
-	p.st = p.st[0 : len(p.st)-1]
+func (e *mathEvaluator) popToken() token {
+	t := e.st[len(e.st)-1]
+	e.st = e.st[0 : len(e.st)-1]
 	return t
 }
 
-func (p *MathProblem) popInt() int {
-	return p.popToken().i
+func (e *mathEvaluator) popInt() int {
+	return e.popToken().i
 }
 
-func (p *MathProblem) popString() string {
-	return p.popToken().s
+func (e *mathEvaluator) popString() string {
+	return e.popToken().s
 }
 
 // OperatorPrecedence to use when evaluating an expression
@@ -178,95 +178,97 @@ func AdvancedMathPrecedence(o1, o2 string) bool {
 
 // Evaluate solves a math problem
 func (p *MathProblem) Evaluate(f OperatorPrecedence) (int, error) {
-	if err := p.evaluate(f); err != nil {
+	e := mathEvaluator{rd: strings.NewReader(string(*p))}
+
+	if err := e.evaluate(f); err != nil {
 		return 0, err
 	}
-	return p.popInt(), nil
+	return e.popInt(), nil
 }
 
-func (p *MathProblem) evaluate(f OperatorPrecedence) error {
-	p.depth++
-	defer func() { p.depth-- }()
+func (e *mathEvaluator) evaluate(f OperatorPrecedence) error {
+	e.depth++
+	defer func() { e.depth-- }()
 
-	for p.getToken() {
-		switch p.tok.t {
+	for e.getToken() {
+		switch e.tok.t {
 		case intToken:
-			p.pushToken()
-			return p.evaluateLeft(f)
+			e.pushToken()
+			return e.evaluateLeft(f)
 
 		case lparenToken:
-			err := p.evaluate(f)
+			err := e.evaluate(f)
 			if err != nil {
 				return err
 			}
-			return p.evaluateLeft(f)
+			return e.evaluateLeft(f)
 
 		default:
-			return fmt.Errorf("syntax error at %s (expected integer)", p.tok.s)
+			return fmt.Errorf("syntax error at %s (expected integer)", e.tok.s)
 		}
 	}
 
-	return p.err
+	return e.err
 }
 
-func (p *MathProblem) evaluateLeft(f OperatorPrecedence) error {
-	if !p.getToken() {
-		return p.err
+func (e *mathEvaluator) evaluateLeft(f OperatorPrecedence) error {
+	if !e.getToken() {
+		return e.err
 	}
 
-	if p.depth > 1 {
-		if p.tok.t == rparenToken {
+	if e.depth > 1 {
+		if e.tok.t == rparenToken {
 			return nil
 		}
 	} else {
-		if p.tok.t == eofToken {
+		if e.tok.t == eofToken {
 			return nil
 		}
 	}
 
-	if p.tok.t != opToken {
-		return fmt.Errorf("syntax error at %s (expected operator)", p.tok.s)
+	if e.tok.t != opToken {
+		return fmt.Errorf("syntax error at %s (expected operator)", e.tok.s)
 	}
 
-	p.pushToken()
-	if err := p.evaluateOp(f); err != nil {
+	e.pushToken()
+	if err := e.evaluateOp(f); err != nil {
 		return err
 	}
 
-	return p.evaluateLeft(f)
+	return e.evaluateLeft(f)
 }
 
-func (p *MathProblem) evaluateOp(f OperatorPrecedence) error {
-	if !p.getToken() {
-		return p.err
+func (e *mathEvaluator) evaluateOp(f OperatorPrecedence) error {
+	if !e.getToken() {
+		return e.err
 	}
 
-	switch p.tok.t {
+	switch e.tok.t {
 	case intToken:
-		p.pushToken()
-		return p.evaluateExpression(f)
+		e.pushToken()
+		return e.evaluateExpression(f)
 
 	case lparenToken:
-		err := p.evaluate(f)
+		err := e.evaluate(f)
 		if err != nil {
 			return err
 		}
-		return p.evaluateExpression(f)
+		return e.evaluateExpression(f)
 	}
 
-	return fmt.Errorf("syntax error at %s (expected rval)", p.tok.s)
+	return fmt.Errorf("syntax error at %s (expected rval)", e.tok.s)
 }
 
-func (p *MathProblem) evaluateExpression(f OperatorPrecedence) error {
-	l := p.popInt()
-	op := p.popString()
-	r := p.popInt()
+func (e *mathEvaluator) evaluateExpression(f OperatorPrecedence) error {
+	l := e.popInt()
+	op := e.popString()
+	r := e.popInt()
 
 	switch op {
 	case "+":
-		p.pushInt(l + r)
+		e.pushInt(l + r)
 	case "*":
-		p.pushInt(l * r)
+		e.pushInt(l * r)
 	default:
 		return fmt.Errorf("unknown operator at %s", op)
 	}

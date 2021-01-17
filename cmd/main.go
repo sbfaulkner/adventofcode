@@ -318,7 +318,7 @@ func day18() {
 	s := 0
 
 	for _, p := range h {
-		i, err := p.Evaluate()
+		i, err := p.Evaluate(advent.LeftToRightPrecedence)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -326,25 +326,37 @@ func day18() {
 	}
 
 	log.Println("18-1:", s)
+
+	s = 0
+
+	for _, p := range h {
+		i, err := p.Evaluate(advent.AdvancedMathPrecedence)
+		if err != nil {
+			log.Fatal(err)
+		}
+		s += i
+	}
+
+	log.Println("18-2:", s)
 }
 
 func main() {
-	day1()
-	day2()
-	day3()
-	day4()
-	day5()
-	day6()
-	day7()
-	day8()
-	day9()
-	day10()
-	day11()
-	day12()
-	day13()
-	day14()
-	day15()
-	day16()
-	day17()
+	// day1()
+	// day2()
+	// day3()
+	// day4()
+	// day5()
+	// day6()
+	// day7()
+	// day8()
+	// day9()
+	// day10()
+	// day11()
+	// day12()
+	// day13()
+	// day14()
+	// day15()
+	// day16()
+	// day17()
 	day18()
 }
