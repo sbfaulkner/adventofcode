@@ -340,6 +340,11 @@ func day18() {
 	log.Println("18-2:", s)
 }
 
+func day19() {
+	r, m := advent.ReadMessages(input(19))
+	log.Println("19-1:", r.CountValid(m))
+}
+
 func main() {
 	// day1()
 	// day2()
@@ -358,5 +363,6 @@ func main() {
 	// day15()
 	// day16()
 	// day17()
-	day18()
+	// day18()
+	day19()
 }
