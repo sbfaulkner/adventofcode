@@ -80,6 +80,10 @@ Alternatives:
 		count := 0
 
 		for _, sub := range alt {
+			if len(m) <= count {
+				continue Alternatives
+			}
+
 			c := r.matchRule(sub, m[count:])
 			if c == 0 {
 				continue Alternatives
