@@ -77,6 +77,12 @@ func (r MessageRules) matchRule(id int, message string) int {
 		return 0
 	}
 
+	return r.matchAlternatives(id, message)
+}
+
+func (r MessageRules) matchAlternatives(id int, message string) int {
+	rule := r[id]
+
 Alternatives:
 	for _, alt := range rule.alternatives {
 		count := 0
