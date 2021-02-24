@@ -10,9 +10,9 @@ import (
 )
 
 type rule struct {
-	id       int
-	ch       rune
-	subrules [][]int
+	id           int
+	ch           rune
+	alternatives [][]int
 }
 
 // MessageRules is a collection of message validation rules
@@ -36,13 +36,13 @@ func parseRule(s string) *rule {
 		rule.ch = ch[0]
 	} else {
 		alternatives := strings.Split(rules, " | ")
-		rule.subrules = make([][]int, 0, len(alternatives))
+		rule.alternatives = make([][]int, 0, len(alternatives))
 		for ai, a := range alternatives {
 			subrules := strings.Split(a, " ")
-			rule.subrules = append(rule.subrules, make([]int, 0, len(subrules)))
+			rule.alternatives = append(rule.alternatives, make([]int, 0, len(subrules)))
 			for _, sr := range subrules {
 				sri, _ := strconv.Atoi(sr) // ignore error
-				rule.subrules[ai] = append(rule.subrules[ai], sri)
+				rule.alternatives[ai] = append(rule.alternatives[ai], sri)
 			}
 		}
 	}
@@ -66,25 +66,27 @@ func (r *MessageRules) scan(s *bufio.Scanner) {
 	}
 }
 
-func (r MessageRules) matchRule(id int, m string) int {
+func (r MessageRules) matchRule(id int, message string) int {
 	rule := r[id]
+
 	if rule.ch != 0 {
-		if rule.ch == []rune(m)[0] {
+		if rule.ch == []rune(message)[0] {
 			return 1
 		}
+
 		return 0
 	}
 
 Alternatives:
-	for _, alt := range rule.subrules {
+	for _, alt := range rule.alternatives {
 		count := 0
 
 		for _, sub := range alt {
-			if len(m) <= count {
+			if len(message) <= count {
 				continue Alternatives
 			}
 
-			c := r.matchRule(sub, m[count:])
+			c := r.matchRule(sub, message[count:])
 			if c == 0 {
 				continue Alternatives
 			}
@@ -105,11 +107,13 @@ func (r MessageRules) valid(m string) bool {
 // CountValid returns the number of valid messages
 func (r MessageRules) CountValid(messages []string) int {
 	count := 0
+
 	for _, m := range messages {
 		if r.valid(m) {
 			count++
 		}
 	}
+
 	return count
 }
 

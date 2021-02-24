@@ -104,8 +104,8 @@ aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba`
 		t.Errorf("original: got %d, want %d", got, 3)
 	}
 
-	r[8].subrules = [][]int{{42}, {42, 8}}
-	r[11].subrules = [][]int{{42, 31}, {42, 11, 31}}
+	r[8].alternatives = [][]int{{42}, {42, 8}}
+	r[11].alternatives = [][]int{{42, 31}, {42, 11, 31}}
 
 	got = r.CountValid(m)
 	if got != 12 {
