@@ -11,7 +11,7 @@ fn main() {
     });
 
     match config.day {
-        1 => day01::run(config),
+        1 => day01::run(config.input),
         _ => {
             eprintln!("Day {} not implemented yet", config.day);
             std::process::exit(1);

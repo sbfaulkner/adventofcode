@@ -1,11 +1,10 @@
 use std::io::BufRead;
 
-use super::Config;
-
-pub fn run(config: Config) {
+pub fn run(input: impl BufRead) {
     println!("Day 1");
-    let totals = total_calories(config.input);
-    println!("Part 1: {}", most_calories(&totals));
+    let totals = total_calories(input);
+    println!("* Part 1: {}", most_calories(&totals));
+    println!("* Part 2: {}", sum_of_top3_calories(&totals));
 }
 
 fn total_calories(input: impl BufRead) -> Vec<u32> {
@@ -24,6 +23,12 @@ fn total_calories(input: impl BufRead) -> Vec<u32> {
 
 fn most_calories(totals: &Vec<u32>) -> u32 {
     *totals.iter().max().expect("expected max")
+}
+
+fn sum_of_top3_calories(totals: &Vec<u32>) -> u32 {
+    let mut totals = totals.clone();
+    totals.sort_unstable();
+    totals.iter().rev().take(3).sum()
 }
 
 #[cfg(test)]
@@ -47,9 +52,16 @@ mod tests {
 ";
 
     #[test]
-    fn test_part1() {
+    fn test_most_calories() {
         let totals = total_calories(INPUT.as_bytes());
         let answer = most_calories(&totals);
         assert_eq!(answer, 24000);
+    }
+
+    #[test]
+    fn test_sum_of_top3_calories() {
+        let totals = total_calories(INPUT.as_bytes());
+        let answer = sum_of_top3_calories(&totals);
+        assert_eq!(answer, 45000);
     }
 }
