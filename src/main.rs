@@ -1,4 +1,5 @@
 use std::env;
+
 use adventofcode::Config;
 
 mod day01;

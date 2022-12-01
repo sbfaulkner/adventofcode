@@ -1,9 +1,13 @@
+use std::error::Error;
+use std::fs::File;
+
 pub struct Config {
     pub day: u8,
+    pub input: File,
 }
 
 impl Config {
-    pub fn new(mut args: std::env::Args) -> Result<Config, &'static str> {
+    pub fn new(mut args: std::env::Args) -> Result<Config, Box<dyn Error>> {
         // skip the first argument, which is the program name
         args.next();
 
@@ -12,6 +16,9 @@ impl Config {
             None => 1,
         };
 
-        Ok(Config { day })
+        let input = File::open(format!("input/day{:02}.txt", day))
+            .map_err(|err| format!("Problem opening the file: {}", err))?;
+
+        Ok(Config { day, input })
     }
 }
