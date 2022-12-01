@@ -1,34 +1,29 @@
-use std::error::Error;
 use std::io::BufRead;
 
 use super::Config;
 
-pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    println!("Day 01");
-
-    println!("Part 1: {}", part1(config.input)?);
-
-    Ok(())
+pub fn run(config: Config) {
+    println!("Day 1");
+    let totals = total_calories(config.input);
+    println!("Part 1: {}", most_calories(&totals));
 }
 
-fn part1(input: impl BufRead) -> Result<u32, Box<dyn Error>> {
-    let &max = input
-        .lines()
-        .fold(vec![0], |mut totals, line| {
-            let line = line.expect("expected line");
-            if line.is_empty() {
-                totals.push(0);
-            } else {
-                let calories = line.parse::<u32>().expect("expected number");
-                totals.last_mut().map(|last| *last += calories);
-            }
-            totals
-        })
-        .iter()
-        .max()
-        .expect("expected max");
+fn total_calories(input: impl BufRead) -> Vec<u32> {
+    let lines = input.lines().map(|line| line.expect("expected line"));
 
-    Ok(max)
+    lines.fold(vec![0], |mut totals, line| {
+        if line.is_empty() {
+            totals.push(0);
+        } else {
+            let calories = line.parse::<u32>().expect("expected number");
+            totals.last_mut().map(|last| *last += calories);
+        }
+        totals
+    })
+}
+
+fn most_calories(totals: &Vec<u32>) -> u32 {
+    *totals.iter().max().expect("expected max")
 }
 
 #[cfg(test)]
@@ -53,7 +48,8 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let answer = part1(INPUT.as_bytes()).expect("expected answer");
+        let totals = total_calories(INPUT.as_bytes());
+        let answer = most_calories(&totals);
         assert_eq!(answer, 24000);
     }
 }

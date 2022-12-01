@@ -10,16 +10,11 @@ fn main() {
         std::process::exit(1);
     });
 
-    let result = match config.day {
+    match config.day {
         1 => day01::run(config),
         _ => {
             eprintln!("Day {} not implemented yet", config.day);
             std::process::exit(1);
         }
-    };
-
-    if let Err(err) = result {
-        eprintln!("Application error: {}", err);
-        std::process::exit(1);
     }
 }
