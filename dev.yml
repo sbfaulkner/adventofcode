@@ -1,0 +1,20 @@
+up:
+  - rust:
+      version: stable
+
+commands:
+  build:
+    desc: Build the project
+    run: cargo build
+
+  run-built:
+    desc: Run the built project
+    run: target/debug/adventofcode
+
+  style:
+    desc: Run rustfmt
+    run: cargo fmt
+
+  test:
+    desc: Run tests
+    run: cargo test
