@@ -35,7 +35,7 @@ fn sum_of_top3_calories(totals: &Vec<u32>) -> u32 {
 mod tests {
     use super::*;
 
-    const INPUT: &str = "1000
+    const INPUT: &[u8] = b"1000
 2000
 3000
 
@@ -53,14 +53,14 @@ mod tests {
 
     #[test]
     fn test_most_calories() {
-        let totals = total_calories(INPUT.as_bytes());
+        let totals = total_calories(INPUT);
         let answer = most_calories(&totals);
         assert_eq!(answer, 24000);
     }
 
     #[test]
     fn test_sum_of_top3_calories() {
-        let totals = total_calories(INPUT.as_bytes());
+        let totals = total_calories(INPUT);
         let answer = sum_of_top3_calories(&totals);
         assert_eq!(answer, 45000);
     }
