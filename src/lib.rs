@@ -1,9 +1,10 @@
 use std::error::Error;
 use std::fs::File;
+use std::io::BufReader;
 
 pub struct Config {
     pub day: u8,
-    pub input: File,
+    pub input: BufReader<File>,
 }
 
 impl Config {
@@ -16,8 +17,10 @@ impl Config {
             None => 1,
         };
 
-        let input = File::open(format!("input/day{:02}.txt", day))
+        let f = File::open(format!("input/day{:02}.txt", day))
             .map_err(|err| format!("Problem opening the file: {}", err))?;
+
+        let input = BufReader::new(f);
 
         Ok(Config { day, input })
     }
