@@ -12,16 +12,21 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>> {
 }
 
 fn part1(input: impl BufRead) -> Result<u32, Box<dyn Error>> {
-    let &max = input.lines().fold(vec![0], |mut totals, line| {
-        let line = line.expect("expected line");
-        if line.is_empty() {
-            totals.push(0);
-        } else {
-            let calories = line.parse::<u32>().expect("expected number");
-            totals.last_mut().map(|last| *last += calories);
-        }
-        totals
-    }).iter().max().expect("expected max");
+    let &max = input
+        .lines()
+        .fold(vec![0], |mut totals, line| {
+            let line = line.expect("expected line");
+            if line.is_empty() {
+                totals.push(0);
+            } else {
+                let calories = line.parse::<u32>().expect("expected number");
+                totals.last_mut().map(|last| *last += calories);
+            }
+            totals
+        })
+        .iter()
+        .max()
+        .expect("expected max");
 
     Ok(max)
 }
