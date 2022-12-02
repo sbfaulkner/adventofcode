@@ -21,6 +21,15 @@ enum Throw {
 }
 
 impl Throw {
+    fn new(s: &str) -> Self {
+        match s {
+            "A" | "X" => Throw::Rock,
+            "B" | "Y" => Throw::Paper,
+            "C" | "Z" => Throw::Scissors,
+            _ => panic!("unknown throw: {}", s),
+        }
+    }
+
     fn score(&self) -> u32 {
         match self {
             Throw::Rock => 1,
@@ -63,18 +72,8 @@ struct Round {
 impl Round {
     fn new(line: &str) -> Round {
         let mut throws = line.split_whitespace();
-        let opponent = match throws.next() {
-            Some("A") => Throw::Rock,
-            Some("B") => Throw::Paper,
-            Some("C") => Throw::Scissors,
-            _ => panic!("expected throw"),
-        };
-        let throw = match throws.next() {
-            Some("X") => Throw::Rock,
-            Some("Y") => Throw::Paper,
-            Some("Z") => Throw::Scissors,
-            _ => panic!("expected throw"),
-        };
+        let opponent = Throw::new(throws.next().expect("expected opponent throw"));
+        let throw = Throw::new(throws.next().expect("expected throw"));
         Round { opponent, throw }
     }
 
