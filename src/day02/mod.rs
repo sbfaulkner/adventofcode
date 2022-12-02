@@ -13,7 +13,7 @@ fn total_score(input: impl BufRead) -> u32 {
         .sum()
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 enum Throw {
     Rock = 1,
     Paper = 2,
@@ -96,6 +96,16 @@ C Z
     #[test]
     fn test_total_score() {
         assert_eq!(total_score(INPUT), 15);
+    }
+
+    #[test]
+    fn test_throw_new() {
+        assert_eq!(Throw::new("A"), Throw::Rock);
+        assert_eq!(Throw::new("B"), Throw::Paper);
+        assert_eq!(Throw::new("C"), Throw::Scissors);
+        assert_eq!(Throw::new("X"), Throw::Rock);
+        assert_eq!(Throw::new("Y"), Throw::Paper);
+        assert_eq!(Throw::new("Z"), Throw::Scissors);
     }
 
     #[test]
