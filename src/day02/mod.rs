@@ -15,9 +15,9 @@ fn total_score(input: impl BufRead) -> u32 {
 
 #[derive(PartialEq)]
 enum Throw {
-    Rock,
-    Paper,
-    Scissors,
+    Rock = 1,
+    Paper = 2,
+    Scissors = 3,
 }
 
 impl Throw {
@@ -31,11 +31,7 @@ impl Throw {
     }
 
     fn score(&self) -> u32 {
-        match self {
-            Throw::Rock => 1,
-            Throw::Paper => 2,
-            Throw::Scissors => 3,
-        }
+        *self as u32
     }
 
     fn beats(&self, other: &Throw) -> bool {
@@ -49,18 +45,14 @@ impl Throw {
 
 #[derive(Debug, PartialEq)]
 enum Outcome {
-    Lose,
-    Draw,
-    Win,
+    Lose = 0,
+    Draw = 3,
+    Win = 6,
 }
 
 impl Outcome {
     fn score(&self) -> u32 {
-        match self {
-            Outcome::Lose => 0,
-            Outcome::Draw => 3,
-            Outcome::Win => 6,
-        }
+        *self as u32
     }
 }
 
