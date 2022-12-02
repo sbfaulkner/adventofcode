@@ -1,7 +1,6 @@
 use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
-    println!("Day 1");
     let totals = total_calories(input);
     println!("* Part 1: {}", most_calories(&totals));
     println!("* Part 2: {}", sum_of_top3_calories(&totals));

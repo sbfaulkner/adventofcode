@@ -14,7 +14,7 @@ impl Config {
 
         let day: u8 = match args.next() {
             Some(arg) => arg.parse().map_err(|_| "Day must be a number")?,
-            None => 1,
+            None => 2,
         };
 
         let f = File::open(format!("input/day{:02}.txt", day))
