@@ -14,15 +14,14 @@ fn total_priority(input: impl BufRead) -> Priority {
 }
 
 struct Rucksack {
-    first: Compartment,
-    second: Compartment,
+    compartments: [Compartment; 2],
 }
 
 impl Rucksack {
     fn priority(&self) -> Priority {
-        self.first
+        self.compartments[0]
             .contents
-            .intersection(&self.second.contents)
+            .intersection(&self.compartments[1].contents)
             .next()
             .expect("no intersection")
             .priority()
@@ -31,9 +30,11 @@ impl Rucksack {
 
 impl From<&str> for Rucksack {
     fn from(s: &str) -> Self {
-        let first = Compartment::from(&s[..s.len() / 2]);
-        let second = Compartment::from(&s[s.len() / 2..]);
-        Rucksack { first, second }
+        let compartments = [
+            Compartment::from(&s[..s.len() / 2]),
+            Compartment::from(&s[s.len() / 2..]),
+        ];
+        Rucksack { compartments }
     }
 }
 
