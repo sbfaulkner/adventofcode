@@ -1,10 +1,7 @@
 use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
-    let lines: Vec<String> = input
-        .lines()
-        .map(|line| line.expect("expected line"))
-        .collect();
+    let lines = read_lines(input);
 
     println!(
         "* Part 1: {}",
@@ -14,6 +11,13 @@ pub fn run(input: impl BufRead) {
         "* Part 2: {}",
         total_score(&lines, |line| Round::new_with_outcome(line))
     );
+}
+
+fn read_lines(input: impl BufRead) -> Vec<String> {
+    input
+        .lines()
+        .map(|line| line.expect("expected line"))
+        .collect()
 }
 
 fn total_score<F>(lines: &Vec<String>, parse: F) -> u32
@@ -141,11 +145,18 @@ C Z
 ";
 
     #[test]
+    fn test_read_lines() {
+        let lines = read_lines(INPUT);
+        assert_eq!(lines.len(), 3);
+        assert_eq!(lines[0], "A Y");
+        assert_eq!(lines[1], "B X");
+        assert_eq!(lines[2], "C Z");
+    }
+
+    #[test]
     fn test_total_score() {
-        let lines = INPUT
-            .lines()
-            .map(|l| l.expect("expected line").to_string())
-            .collect();
+        let lines = read_lines(INPUT);
+
         assert_eq!(total_score(&lines, |line| Round::new_with_throw(line)), 15);
         assert_eq!(
             total_score(&lines, |line| Round::new_with_outcome(line)),
