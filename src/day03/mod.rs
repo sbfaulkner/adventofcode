@@ -1,14 +1,21 @@
 use std::{collections::HashSet, io::BufRead};
 
 pub fn run(input: impl BufRead) {
-    println!("* Part 1: {}", total_priority(input));
+    let rucksacks: Vec<Rucksack> = read_rucksacks(input);
+    println!("* Part 1: {}", total_priority(&rucksacks));
 }
 
-fn total_priority(input: impl BufRead) -> Priority {
+fn read_rucksacks(input: impl BufRead) -> Vec<Rucksack> {
     input
         .lines()
-        .map(|l| l.expect("expected line"))
+        .map(|line| line.expect("expected line"))
         .map(|l| Rucksack::from(&l[..]))
+        .collect()
+}
+
+fn total_priority(rucksacks: &Vec<Rucksack>) -> Priority {
+    rucksacks
+        .iter()
         .map(|r| r.priority())
         .sum()
 }
@@ -84,24 +91,26 @@ CrZsJsPPZsGzwwsLwLmpwMDw
 ";
 
     #[test]
+    fn test_read_rucksacks() {
+        let rucksacks = read_rucksacks(INPUT);
+        assert_eq!(rucksacks.len(), 6);
+    }
+
+    #[test]
     fn test_total_priority() {
-        assert_eq!(total_priority(INPUT), 157);
+        let rucksacks = read_rucksacks(INPUT);
+        assert_eq!(total_priority(&rucksacks), 157);
     }
 
     #[test]
     fn test_rucksack_priority() {
-        assert_eq!(Rucksack::from("vJrwpWtwJgWrhcsFMMfFFhFp").priority(), 16);
-        assert_eq!(
-            Rucksack::from("jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL").priority(),
-            38
-        );
-        assert_eq!(Rucksack::from("PmmdzqPrVvPwwTWBwg").priority(), 42);
-        assert_eq!(
-            Rucksack::from("wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn").priority(),
-            22
-        );
-        assert_eq!(Rucksack::from("ttgJtRGJQctTZtZT").priority(), 20);
-        assert_eq!(Rucksack::from("CrZsJsPPZsGzwwsLwLmpwMDw").priority(), 19);
+        let rucksacks = read_rucksacks(INPUT);
+        assert_eq!(rucksacks[0].priority(), 16);
+        assert_eq!(rucksacks[1].priority(), 38);
+        assert_eq!(rucksacks[2].priority(), 42);
+        assert_eq!(rucksacks[3].priority(), 22);
+        assert_eq!(rucksacks[4].priority(), 20);
+        assert_eq!(rucksacks[5].priority(), 19);
     }
 
     #[test]
