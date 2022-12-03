@@ -142,9 +142,15 @@ C Z
 
     #[test]
     fn test_total_score() {
-        let lines = INPUT.lines().map(|l| l.expect("expected line").to_string()).collect();
+        let lines = INPUT
+            .lines()
+            .map(|l| l.expect("expected line").to_string())
+            .collect();
         assert_eq!(total_score(&lines, |line| Round::new_with_throw(line)), 15);
-        assert_eq!(total_score(&lines, |line| Round::new_with_outcome(line)), 12);
+        assert_eq!(
+            total_score(&lines, |line| Round::new_with_outcome(line)),
+            12
+        );
     }
 
     #[test]
