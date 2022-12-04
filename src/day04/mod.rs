@@ -3,18 +3,24 @@ use std::ops::RangeInclusive;
 
 pub fn run(input: impl BufRead) {
     let pairs = read_assignment_pairs(input);
-    println!("* Part 1: {}", count_contained(pairs));
+    println!("* Part 1: {}", count_containing(&pairs));
+    println!("* Part 2: {}", count_overlapping(&pairs));
 }
 
-fn read_assignment_pairs(input: impl BufRead) -> impl Iterator<Item = AssignmentPair> {
+fn read_assignment_pairs(input: impl BufRead) -> Vec<AssignmentPair> {
     input
         .lines()
         .map(|l| l.expect("expected line"))
         .map(|l| AssignmentPair::from(l.as_str()))
+        .collect()
 }
 
-fn count_contained(pairs: impl Iterator<Item = AssignmentPair>) -> usize {
-    pairs.filter(|p| p.0.contains(&p.1) || p.1.contains(&p.0)).count()
+fn count_containing(pairs: &Vec<AssignmentPair>) -> usize {
+    pairs.iter().filter(|p| p.0.contains(&p.1) || p.1.contains(&p.0)).count()
+}
+
+fn count_overlapping(pairs: &Vec<AssignmentPair>) -> usize {
+    pairs.iter().filter(|p| p.0.overlaps(&p.1) ).count()
 }
 
 struct AssignmentPair(Assignment, Assignment);
@@ -26,6 +32,10 @@ struct Assignment {
 impl Assignment {
     fn contains(&self, other: &Assignment) -> bool {
         self.range.start() <= other.range.start() && self.range.end() >= other.range.end()
+    }
+
+    fn overlaps(&self, other: &Assignment) -> bool {
+        self.range.start() <= other.range.end() && self.range.end() >= other.range.start()
     }
 }
 
@@ -90,7 +100,12 @@ mod tests {
     }
 
     #[test]
-    fn test_count_contained() {
-        assert_eq!(count_contained(read_assignment_pairs(INPUT)), 2);
+    fn test_count_containing() {
+        assert_eq!(count_containing(&read_assignment_pairs(INPUT)), 2);
+    }
+
+    #[test]
+    fn test_count_overlapping() {
+        assert_eq!(count_overlapping(&read_assignment_pairs(INPUT)), 4);
     }
 }
