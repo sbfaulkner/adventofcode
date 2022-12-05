@@ -69,7 +69,7 @@ mod tests {
 
     #[test]
     fn test_read_assignment_pairs() {
-        let pairs: Vec<AssignmentPair> = read_assignment_pairs(INPUT).collect();
+        let pairs: Vec<AssignmentPair> = read_assignment_pairs(INPUT);
         assert_eq!(pairs.len(), 6);
         assert_eq!(pairs[0].0.range, 2..=4);
         assert_eq!(pairs[0].1.range, 6..=8);
