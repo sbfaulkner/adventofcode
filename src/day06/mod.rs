@@ -54,7 +54,10 @@ mod tests {
         assert_eq!(find_start_of_packet("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), 7);
         assert_eq!(find_start_of_packet("bvwbjplbgvbhsrlpgdmjqwftvncz"), 5);
         assert_eq!(find_start_of_packet("nppdvjthqldpwncqszvftbrmjlhg"), 6);
-        assert_eq!(find_start_of_packet("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), 10);
+        assert_eq!(
+            find_start_of_packet("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"),
+            10
+        );
         assert_eq!(find_start_of_packet("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 11);
     }
 
@@ -63,7 +66,13 @@ mod tests {
         assert_eq!(find_start_of_message("mjqjpqmgbljsphdztnvjfqwrcgsmlb"), 19);
         assert_eq!(find_start_of_message("bvwbjplbgvbhsrlpgdmjqwftvncz"), 23);
         assert_eq!(find_start_of_message("nppdvjthqldpwncqszvftbrmjlhg"), 23);
-        assert_eq!(find_start_of_message("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"), 29);
-        assert_eq!(find_start_of_message("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"), 26);
+        assert_eq!(
+            find_start_of_message("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"),
+            29
+        );
+        assert_eq!(
+            find_start_of_message("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"),
+            26
+        );
     }
 }
