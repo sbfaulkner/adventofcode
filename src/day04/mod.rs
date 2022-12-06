@@ -16,11 +16,14 @@ fn read_assignment_pairs(input: impl BufRead) -> Vec<AssignmentPair> {
 }
 
 fn count_containing(pairs: &Vec<AssignmentPair>) -> usize {
-    pairs.iter().filter(|p| p.0.contains(&p.1) || p.1.contains(&p.0)).count()
+    pairs
+        .iter()
+        .filter(|p| p.0.contains(&p.1) || p.1.contains(&p.0))
+        .count()
 }
 
 fn count_overlapping(pairs: &Vec<AssignmentPair>) -> usize {
-    pairs.iter().filter(|p| p.0.overlaps(&p.1) ).count()
+    pairs.iter().filter(|p| p.0.overlaps(&p.1)).count()
 }
 
 struct AssignmentPair(Assignment, Assignment);
