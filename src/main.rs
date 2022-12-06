@@ -2,12 +2,13 @@ use std::env;
 
 use adventofcode::Config;
 
-mod measure;
 mod day01;
 mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
+mod measure;
 
 fn main() {
     let config = Config::new(env::args()).unwrap_or_else(|err| {
@@ -23,6 +24,7 @@ fn main() {
         3 => day03::run(config.input),
         4 => day04::run(config.input),
         5 => day05::run(config.input),
+        6 => day06::run(config.input),
         _ => {
             eprintln!("Day {} not implemented yet", config.day);
             std::process::exit(1);
