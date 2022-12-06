@@ -1,3 +1,5 @@
+use crate::measure;
+
 use std::fmt::Display;
 use std::io::BufRead;
 use std::iter;
@@ -5,12 +7,16 @@ use std::slice::Iter;
 
 pub fn run(input: impl BufRead) {
     let lines = read_input(input);
-    let (mut stacks, moves) = read_instructions(&lines);
-    rearrange_crates_single(&mut stacks, &moves);
-    println!("* Part 1: {}", top_crates(&stacks));
-    let (mut stacks, moves) = read_instructions(&lines);
-    rearrange_crates_multiple(&mut stacks, &moves);
-    println!("* Part 2: {}", top_crates(&stacks));
+    measure::duration(|| {
+        let (mut stacks, moves) = read_instructions(&lines);
+        rearrange_crates_single(&mut stacks, &moves);
+        println!("* Part 1: {}", top_crates(&stacks));
+    });
+    measure::duration(|| {
+        let (mut stacks, moves) = read_instructions(&lines);
+        rearrange_crates_multiple(&mut stacks, &moves);
+        println!("* Part 2: {}", top_crates(&stacks));
+    });
 }
 
 #[derive(Debug, PartialEq)]

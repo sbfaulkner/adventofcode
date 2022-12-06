@@ -2,6 +2,7 @@ use std::env;
 
 use adventofcode::Config;
 
+mod measure;
 mod day01;
 mod day02;
 mod day03;
