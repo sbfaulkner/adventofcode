@@ -8,6 +8,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 mod measure;
 
 fn main() {
@@ -25,6 +26,7 @@ fn main() {
         4 => day04::run(config.input),
         5 => day05::run(config.input),
         6 => day06::run(config.input),
+        7 => day07::run(config.input),
         _ => {
             eprintln!("Day {} not implemented yet", config.day);
             std::process::exit(1);
