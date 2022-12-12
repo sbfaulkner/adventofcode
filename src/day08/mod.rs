@@ -9,20 +9,54 @@ pub fn run(input: impl BufRead) {
     });
 
     // measure::duration(|| {
-    //     println!("* Part 2: {}", find_start_of_message(line.as_str()));
+    //     println!("* Part 2: {}", max_scenic_score(&trees));
     // });
 }
 
-fn read_trees(input: impl BufRead) -> Vec<Vec<u8>> {
+fn read_trees(input: impl BufRead) -> Vec<Vec<Tree>> {
     input
         .lines()
         .map(|l| l.expect("expected line"))
-        .map(|l| l.chars().map(|n| n as u8 - '0' as u8).collect())
+        .map(|l| l.chars().map(|h| Tree::from(h)).collect())
         .collect()
 }
 
-fn count_visible(trees: &Vec<Vec<u8>>) -> usize {
-    trees.len() * 2 + trees[0].len() * 2 - 4
+struct Tree {
+    height: u8,
+}
+
+impl From<char> for Tree {
+    fn from(h: char) -> Self {
+        Tree {
+            height: h as u8 - '0' as u8,
+        }
+    }
+}
+
+fn count_visible(trees: &Vec<Vec<Tree>>) -> usize {
+    trees.iter().enumerate().fold(0, |subtotal, (tr, row)| {
+        row.iter().enumerate().fold(subtotal, |total, (tc, tree)| {
+            if tr == 0 {
+                total + 1
+            } else if tc == 0 {
+                total + 1
+            } else if tr + 1 == trees.len() {
+                total + 1
+            } else if tc + 1 == row.len() {
+                total + 1
+            } else if (0..tr).rev().all(|r| trees[r][tc].height < tree.height) {
+                total + 1
+            } else if (0..tc).rev().all(|c| trees[tr][c].height < tree.height) {
+                total + 1
+            } else if (tr + 1..trees.len()).all(|r| trees[r][tc].height < tree.height) {
+                total + 1
+            } else if (tc + 1..row.len()).all(|c| trees[tr][c].height < tree.height) {
+                total + 1
+            } else {
+                total
+            }
+        })
+    })
 }
 
 #[cfg(test)]
@@ -39,6 +73,10 @@ mod tests {
     #[test]
     fn test_read_trees() {
         let trees = read_trees(INPUT);
+        let trees: Vec<Vec<u8>> = trees
+            .iter()
+            .map(|r| r.iter().map(|t| t.height).collect())
+            .collect();
         assert_eq!(
             trees,
             vec![
