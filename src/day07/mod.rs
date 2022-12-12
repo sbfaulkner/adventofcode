@@ -58,10 +58,7 @@ enum Node {
 
 impl Node {
     fn is_dir(&self) -> bool {
-        match self {
-            Node::Dir { .. } => true,
-            _ => false,
-        }
+        matches!(self, Node::Dir { .. })
     }
 
     fn name(&self) -> &String {
