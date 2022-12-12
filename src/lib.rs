@@ -33,9 +33,9 @@ impl Config {
             return Err("Day must be between 1 and 25".into());
         }
 
-        if day > current_day {
-            return Err(format!("Day {} is not yet implemented", day).into());
-        }
+        // if day > current_day {
+        //     return Err(format!("Day {} is not yet implemented", day).into());
+        // }
 
         let f = File::open(format!("input/day{:02}.txt", day))
             .map_err(|err| format!("Problem opening the file: {}", err))?;
