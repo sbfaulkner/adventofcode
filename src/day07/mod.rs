@@ -37,7 +37,10 @@ fn sum_of_small_dirs(fs: &Node) -> usize {
 fn size_to_delete(fs: &Node) -> usize {
     let required = fs.size() - 40_000_000;
     let dirs = fs.find_all(&|n| n.is_dir() && n.size() >= required);
-    dirs.iter().map(|d| d.size()).min().expect("expected minimum size")
+    dirs.iter()
+        .map(|d| d.size())
+        .min()
+        .expect("expected minimum size")
 }
 
 #[derive(Debug, PartialEq)]
@@ -115,7 +118,9 @@ impl Node {
     }
 
     fn find_all<F>(&self, f: &F) -> Vec<&Node>
-    where F: Fn(&Node) -> bool {
+    where
+        F: Fn(&Node) -> bool,
+    {
         let mut all = vec![];
 
         if let Node::Dir { nodes, .. } = self {
@@ -332,7 +337,10 @@ $ ls
         let fs = read_file_system(INPUT);
         let mut dirs = fs.find_all(&|n| n.is_dir() && n.size() <= 100_000);
         dirs.sort_by_key(|n| n.name());
-        assert_eq!(dirs.iter().map(|n| n.name()).collect::<Vec<&String>>(), ["a", "e"]);
+        assert_eq!(
+            dirs.iter().map(|n| n.name()).collect::<Vec<&String>>(),
+            ["a", "e"]
+        );
     }
 
     #[test]
