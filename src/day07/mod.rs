@@ -8,6 +8,10 @@ pub fn run(input: impl BufRead) {
     measure::duration(|| {
         println!("* Part 1: {}", sum_of_small_dirs(&fs));
     });
+
+    measure::duration(|| {
+        println!("* Part 2: {}", size_to_delete(&fs));
+    });
 }
 
 fn read_file_system(input: impl BufRead) -> Node {
@@ -24,10 +28,16 @@ fn read_file_system(input: impl BufRead) -> Node {
     root
 }
 
-fn sum_of_small_dirs(dir: &Node) -> usize {
-    let dirs = dir.find_all(&|n| n.is_dir() && n.size() <= 100_000);
+fn sum_of_small_dirs(fs: &Node) -> usize {
+    let dirs = fs.find_all(&|n| n.is_dir() && n.size() <= 100_000);
     let sum: usize = dirs.iter().map(|d| d.size()).sum();
     sum
+}
+
+fn size_to_delete(fs: &Node) -> usize {
+    let required = fs.size() - 40_000_000;
+    let dirs = fs.find_all(&|n| n.is_dir() && n.size() >= required);
+    dirs.iter().map(|d| d.size()).min().expect("expected minimum size")
 }
 
 #[derive(Debug, PartialEq)]
@@ -323,5 +333,11 @@ $ ls
         let mut dirs = fs.find_all(&|n| n.is_dir() && n.size() <= 100_000);
         dirs.sort_by_key(|n| n.name());
         assert_eq!(dirs.iter().map(|n| n.name()).collect::<Vec<&String>>(), ["a", "e"]);
+    }
+
+    #[test]
+    fn test_size_to_delete() {
+        let fs = read_file_system(INPUT);
+        assert_eq!(size_to_delete(&fs), 24_933_642);
     }
 }
