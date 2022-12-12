@@ -25,16 +25,8 @@ fn read_file_system(input: impl BufRead) -> Node {
 }
 
 fn sum_of_small_dirs(dir: &Node) -> usize {
-    let mut sum = dir
-        .nodes()
-        .filter(|n| n.is_dir())
-        .map(|n| sum_of_small_dirs(n))
-        .sum();
-
-    if dir.size() <= 100_000 {
-        sum += dir.size();
-    }
-
+    let dirs = dir.find_all(&|n| n.is_dir() && n.size() <= 100_000);
+    let sum: usize = dirs.iter().map(|d| d.size()).sum();
     sum
 }
 
@@ -52,13 +44,6 @@ enum Node {
 }
 
 impl Node {
-    fn nodes(&self) -> impl Iterator<Item = &Node> {
-        match self {
-            Node::Dir { nodes, .. } => nodes.values(),
-            _ => unimplemented!("{} is not a directory", self.name()),
-        }
-    }
-
     fn is_dir(&self) -> bool {
         match self {
             Node::Dir { .. } => true,
@@ -117,6 +102,24 @@ impl Node {
             Node::Dir { nodes, .. } => nodes.insert(name.to_string(), node),
             _ => unimplemented!("not a directory"),
         };
+    }
+
+    fn find_all<F>(&self, f: &F) -> Vec<&Node>
+    where F: Fn(&Node) -> bool {
+        let mut all = vec![];
+
+        if let Node::Dir { nodes, .. } = self {
+            for n in nodes.values() {
+                let mut children = n.find_all(f);
+                all.append(&mut children)
+            }
+        }
+
+        if f(self) {
+            all.push(self);
+        }
+
+        all
     }
 }
 
@@ -312,5 +315,13 @@ $ ls
     fn test_sum_of_small_dirs() {
         let fs = read_file_system(INPUT);
         assert_eq!(sum_of_small_dirs(&fs), 95437);
+    }
+
+    #[test]
+    fn test_find_all() {
+        let fs = read_file_system(INPUT);
+        let mut dirs = fs.find_all(&|n| n.is_dir() && n.size() <= 100_000);
+        dirs.sort_by_key(|n| n.name());
+        assert_eq!(dirs.iter().map(|n| n.name()).collect::<Vec<&String>>(), ["a", "e"]);
     }
 }
