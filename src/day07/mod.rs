@@ -13,7 +13,11 @@ pub fn run(input: impl BufRead) {
 fn read_file_system(input: impl BufRead) -> Node {
     let mut lines = input.lines().skip(2).map(|l| l.expect("expected line"));
 
-    let mut root = Node::Dir { name: "/".to_string(), size: 0, nodes: HashMap::new() };
+    let mut root = Node::Dir {
+        name: "/".to_string(),
+        size: 0,
+        nodes: HashMap::new(),
+    };
 
     root.ls(&mut lines);
 
@@ -21,7 +25,11 @@ fn read_file_system(input: impl BufRead) -> Node {
 }
 
 fn sum_of_small_dirs(dir: &Node) -> usize {
-    let mut sum = dir.nodes().filter(|n| n.is_dir()).map(|n| sum_of_small_dirs(n)).sum();
+    let mut sum = dir
+        .nodes()
+        .filter(|n| n.is_dir())
+        .map(|n| sum_of_small_dirs(n))
+        .sum();
 
     if dir.size() <= 100_000 {
         sum += dir.size();
@@ -32,8 +40,15 @@ fn sum_of_small_dirs(dir: &Node) -> usize {
 
 #[derive(Debug, PartialEq)]
 enum Node {
-    Dir { name: String, size: usize, nodes: HashMap<String, Node> },
-    File { name: String, size: usize },
+    Dir {
+        name: String,
+        size: usize,
+        nodes: HashMap<String, Node>,
+    },
+    File {
+        name: String,
+        size: usize,
+    },
 }
 
 impl Node {
@@ -84,16 +99,14 @@ impl Node {
                     } else {
                         self.chdir(dir, lines);
                     }
-                },
+                }
                 _ => self.add(Node::from(line.as_str())),
             }
         }
 
         match self {
-            Node::Dir { nodes, size, .. } => {
-                *size = nodes.values().map(|n| n.size()).sum()
-            },
-            _ => unimplemented!("not a directory")
+            Node::Dir { nodes, size, .. } => *size = nodes.values().map(|n| n.size()).sum(),
+            _ => unimplemented!("not a directory"),
         }
     }
 
@@ -113,14 +126,22 @@ impl From<&str> for Node {
             "dir " => {
                 let name = s[4..].to_string();
                 let nodes = HashMap::new();
-                Node::Dir { name, nodes, size: 0 }
-            },
+                Node::Dir {
+                    name,
+                    nodes,
+                    size: 0,
+                }
+            }
             _ => {
                 let mut parts = s.split(' ');
-                let size = parts.next().expect("expected size").parse().expect("expected number for size");
+                let size = parts
+                    .next()
+                    .expect("expected size")
+                    .parse()
+                    .expect("expected number for size");
                 let name = parts.next().expect("expected name").to_string();
                 Node::File { name, size }
-            },
+            }
         }
     }
 }
@@ -157,13 +178,26 @@ $ ls
     #[test]
     fn test_node_dir_from() {
         let d = Node::from("dir a");
-        assert_eq!(d, Node::Dir { name: "a".to_string(), size: 0, nodes: HashMap::new() });
+        assert_eq!(
+            d,
+            Node::Dir {
+                name: "a".to_string(),
+                size: 0,
+                nodes: HashMap::new()
+            }
+        );
     }
 
     #[test]
     fn test_node_file_from() {
         let f = Node::from("14848514 b.txt");
-        assert_eq!(f, Node::File { name: "b.txt".to_string(), size: 14848514 });
+        assert_eq!(
+            f,
+            Node::File {
+                name: "b.txt".to_string(),
+                size: 14848514
+            }
+        );
     }
 
     #[test]
@@ -185,15 +219,13 @@ $ ls
                                     Node::Dir {
                                         name: "e".to_string(),
                                         size: 584,
-                                        nodes: HashMap::from([
-                                            (
-                                                "i".to_string(),
-                                                Node::File {
-                                                    name: "i".to_string(),
-                                                    size: 584,
-                                                }
-                                            ),
-                                        ]),
+                                        nodes: HashMap::from([(
+                                            "i".to_string(),
+                                            Node::File {
+                                                name: "i".to_string(),
+                                                size: 584,
+                                            }
+                                        ),]),
                                     }
                                 ),
                                 (
