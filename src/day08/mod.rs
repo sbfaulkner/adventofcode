@@ -1,4 +1,5 @@
 use crate::measure;
+use std::cmp;
 use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
@@ -8,9 +9,9 @@ pub fn run(input: impl BufRead) {
         println!("* Part 1: {}", count_visible(&trees));
     });
 
-    // measure::duration(|| {
-    //     println!("* Part 2: {}", max_scenic_score(&trees));
-    // });
+    measure::duration(|| {
+        println!("* Part 2: {}", max_scenic_score(&trees));
+    });
 }
 
 fn read_trees(input: impl BufRead) -> Vec<Vec<Tree>> {
@@ -36,15 +37,7 @@ impl From<char> for Tree {
 fn count_visible(trees: &Vec<Vec<Tree>>) -> usize {
     trees.iter().enumerate().fold(0, |subtotal, (tr, row)| {
         row.iter().enumerate().fold(subtotal, |total, (tc, tree)| {
-            if tr == 0 {
-                total + 1
-            } else if tc == 0 {
-                total + 1
-            } else if tr + 1 == trees.len() {
-                total + 1
-            } else if tc + 1 == row.len() {
-                total + 1
-            } else if (0..tr).rev().all(|r| trees[r][tc].height < tree.height) {
+            if (0..tr).rev().all(|r| trees[r][tc].height < tree.height) {
                 total + 1
             } else if (0..tc).rev().all(|c| trees[tr][c].height < tree.height) {
                 total + 1
@@ -57,6 +50,25 @@ fn count_visible(trees: &Vec<Vec<Tree>>) -> usize {
             }
         })
     })
+}
+
+fn max_scenic_score(trees: &Vec<Vec<Tree>>) -> usize {
+    (0..trees.len()).fold(0, |score, tr| {
+        (0..trees[tr].len()).fold(score, |score, tc| {
+            cmp::max(score, scenic_score(trees, tr, tc))
+        })
+    })
+}
+
+fn scenic_score(trees: &Vec<Vec<Tree>>, tr: usize, tc: usize) -> usize {
+    let tree = &trees[tr][tc];
+
+    let n = cmp::min((0..tr).rev().take_while(|&r| trees[r][tc].height < tree.height).count() + 1, tr);
+    let w = cmp::min((0..tc).rev().take_while(|&c| trees[tr][c].height < tree.height).count() + 1, tc);
+    let s = cmp::min((tr + 1..trees.len()).take_while(|&r| trees[r][tc].height < tree.height).count() + 1, trees.len()-tr-1);
+    let e = cmp::min((tc + 1..trees[tr].len()).take_while(|&c| trees[tr][c].height < tree.height).count() + 1, trees[tr].len()-tc-1);
+
+    n * w * s * e
 }
 
 #[cfg(test)]
@@ -93,5 +105,19 @@ mod tests {
     fn test_count_visible() {
         let trees = read_trees(INPUT);
         assert_eq!(count_visible(&trees), 21);
+    }
+
+    #[test]
+    fn test_scenic_score() {
+        let trees = read_trees(INPUT);
+        assert_eq!(scenic_score(&trees, 1, 2), 4);
+        assert_eq!(scenic_score(&trees, 3, 2), 8);
+        assert_eq!(scenic_score(&trees, 0, 2), 0);
+    }
+
+    #[test]
+    fn test_max_scenic_score() {
+        let trees = read_trees(INPUT);
+        assert_eq!(max_scenic_score(&trees), 8);
     }
 }
