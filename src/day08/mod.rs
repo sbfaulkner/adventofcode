@@ -63,10 +63,36 @@ fn max_scenic_score(trees: &Vec<Vec<Tree>>) -> usize {
 fn scenic_score(trees: &Vec<Vec<Tree>>, tr: usize, tc: usize) -> usize {
     let tree = &trees[tr][tc];
 
-    let n = cmp::min((0..tr).rev().take_while(|&r| trees[r][tc].height < tree.height).count() + 1, tr);
-    let w = cmp::min((0..tc).rev().take_while(|&c| trees[tr][c].height < tree.height).count() + 1, tc);
-    let s = cmp::min((tr + 1..trees.len()).take_while(|&r| trees[r][tc].height < tree.height).count() + 1, trees.len()-tr-1);
-    let e = cmp::min((tc + 1..trees[tr].len()).take_while(|&c| trees[tr][c].height < tree.height).count() + 1, trees[tr].len()-tc-1);
+    let n = cmp::min(
+        (0..tr)
+            .rev()
+            .take_while(|&r| trees[r][tc].height < tree.height)
+            .count()
+            + 1,
+        tr,
+    );
+    let w = cmp::min(
+        (0..tc)
+            .rev()
+            .take_while(|&c| trees[tr][c].height < tree.height)
+            .count()
+            + 1,
+        tc,
+    );
+    let s = cmp::min(
+        (tr + 1..trees.len())
+            .take_while(|&r| trees[r][tc].height < tree.height)
+            .count()
+            + 1,
+        trees.len() - tr - 1,
+    );
+    let e = cmp::min(
+        (tc + 1..trees[tr].len())
+            .take_while(|&c| trees[tr][c].height < tree.height)
+            .count()
+            + 1,
+        trees[tr].len() - tc - 1,
+    );
 
     n * w * s * e
 }
