@@ -5,7 +5,7 @@ use std::io::BufRead;
 pub fn run(input: impl BufRead) {
     let moves = read_moves(input);
     measure::duration(|| {
-        let mut r = Rope::default();
+        let mut r = Rope::new();
         let trail = r.simulate(&moves);
         let visits: HashSet<&Position> = trail.iter().collect();
         println!("* Part 1: {}", visits.len());
@@ -67,22 +67,22 @@ impl Move {
         let mut trail = vec![];
 
         for _ in 0..self.steps {
-            r.0.x += self.direction.dx();
-            r.0.y += self.direction.dy();
+            r.knots[0].x += self.direction.dx();
+            r.knots[0].y += self.direction.dy();
 
-            trail.push(r.1);
+            trail.push(r.knots[1]);
 
             match self.direction {
                 Direction::Left | Direction::Right => {
-                    if (r.0.x - r.1.x).abs() == 2 {
-                        r.1.x += self.direction.dx();
-                        r.1.y = r.0.y;
+                    if (r.knots[0].x - r.knots[1].x).abs() == 2 {
+                        r.knots[1].x += self.direction.dx();
+                        r.knots[1].y = r.knots[0].y;
                     }
                 }
                 Direction::Up | Direction::Down => {
-                    if (r.0.y - r.1.y).abs() == 2 {
-                        r.1.y += self.direction.dy();
-                        r.1.x = r.0.x;
+                    if (r.knots[0].y - r.knots[1].y).abs() == 2 {
+                        r.knots[1].y += self.direction.dy();
+                        r.knots[1].x = r.knots[0].x;
                     }
                 }
             }
@@ -114,10 +114,16 @@ impl From<&str> for Move {
     }
 }
 
-#[derive(Debug, Default)]
-struct Rope(Position, Position);
+#[derive(Debug)]
+struct Rope {
+    knots: Vec<Position>,
+}
 
 impl Rope {
+    fn new() -> Self {
+        Rope { knots: vec![Position::default(); 2] }
+    }
+
     fn simulate(&mut self, moves: &Vec<Move>) -> Vec<Position> {
         let mut trail = vec![];
 
@@ -125,7 +131,8 @@ impl Rope {
             trail.append(&mut m.apply(self));
         }
 
-        trail.push(self.1);
+        let &tail = self.knots.last().expect("expected tail");
+        trail.push(tail);
 
         trail
     }
@@ -174,11 +181,11 @@ R 2
     #[test]
     fn test_move_apply() {
         let moves = read_moves(INPUT);
-        let mut r = Rope::default();
+        let mut r = Rope::new();
 
         let t = moves[0].apply(&mut r);
-        assert_eq!(r.0, Position::new(4, 0));
-        assert_eq!(r.1, Position::new(3, 0));
+        assert_eq!(r.knots[0], Position::new(4, 0));
+        assert_eq!(r.knots[1], Position::new(3, 0));
         assert_eq!(
             t,
             vec![
@@ -190,8 +197,8 @@ R 2
         );
 
         let t = moves[1].apply(&mut r);
-        assert_eq!(r.0, Position::new(4, 4));
-        assert_eq!(r.1, Position::new(4, 3));
+        assert_eq!(r.knots[0], Position::new(4, 4));
+        assert_eq!(r.knots[1], Position::new(4, 3));
         assert_eq!(
             t,
             vec![
@@ -203,8 +210,8 @@ R 2
         );
 
         let t = moves[2].apply(&mut r);
-        assert_eq!(r.0, Position::new(1, 4));
-        assert_eq!(r.1, Position::new(2, 4));
+        assert_eq!(r.knots[0], Position::new(1, 4));
+        assert_eq!(r.knots[1], Position::new(2, 4));
         assert_eq!(
             t,
             vec![
@@ -215,13 +222,13 @@ R 2
         );
 
         let t = moves[3].apply(&mut r);
-        assert_eq!(r.0, Position::new(1, 3));
-        assert_eq!(r.1, Position::new(2, 4));
+        assert_eq!(r.knots[0], Position::new(1, 3));
+        assert_eq!(r.knots[1], Position::new(2, 4));
         assert_eq!(t, vec![Position::new(2, 4)]);
 
         let t = moves[4].apply(&mut r);
-        assert_eq!(r.0, Position::new(5, 3));
-        assert_eq!(r.1, Position::new(4, 3));
+        assert_eq!(r.knots[0], Position::new(5, 3));
+        assert_eq!(r.knots[1], Position::new(4, 3));
         assert_eq!(
             t,
             vec![
@@ -233,13 +240,13 @@ R 2
         );
 
         let t = moves[5].apply(&mut r);
-        assert_eq!(r.0, Position::new(5, 2));
-        assert_eq!(r.1, Position::new(4, 3));
+        assert_eq!(r.knots[0], Position::new(5, 2));
+        assert_eq!(r.knots[1], Position::new(4, 3));
         assert_eq!(t, vec![Position::new(4, 3)]);
 
         let t = moves[6].apply(&mut r);
-        assert_eq!(r.0, Position::new(0, 2));
-        assert_eq!(r.1, Position::new(1, 2));
+        assert_eq!(r.knots[0], Position::new(0, 2));
+        assert_eq!(r.knots[1], Position::new(1, 2));
         assert_eq!(
             t,
             vec![
@@ -252,18 +259,18 @@ R 2
         );
 
         let t = moves[7].apply(&mut r);
-        assert_eq!(r.0, Position::new(2, 2));
-        assert_eq!(r.1, Position::new(1, 2));
+        assert_eq!(r.knots[0], Position::new(2, 2));
+        assert_eq!(r.knots[1], Position::new(1, 2));
         assert_eq!(t, vec![Position::new(1, 2), Position::new(1, 2)]);
     }
 
     #[test]
     fn test_rope_simulate() {
         let moves = read_moves(INPUT);
-        let mut r = Rope::default();
+        let mut r = Rope::new();
         let t = r.simulate(&moves);
-        assert_eq!(r.0, Position::new(2, 2));
-        assert_eq!(r.1, Position::new(1, 2));
+        assert_eq!(r.knots[0], Position::new(2, 2));
+        assert_eq!(r.knots[1], Position::new(1, 2));
         assert_eq!(
             t,
             vec![
