@@ -72,7 +72,7 @@ impl Move {
     }
 
     fn apply<const N: usize>(&self, r: &mut Rope<N>) -> Vec<Position> {
-        let mut trail = vec![];
+        let mut trail = Vec::with_capacity(self.steps);
 
         for _ in 0..self.steps {
             r.knots[0].x += self.direction.dx();
