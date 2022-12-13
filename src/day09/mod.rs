@@ -4,11 +4,19 @@ use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
     let moves = read_moves(input);
+
     measure::duration(|| {
-        let mut r = Rope::new();
+        let mut r: Rope<2> = Rope::new();
         let trail = r.simulate(&moves);
         let visits: HashSet<&Position> = trail.iter().collect();
         println!("* Part 1: {}", visits.len());
+    });
+
+    measure::duration(|| {
+        let mut r: Rope<10> = Rope::new();
+        let trail = r.simulate(&moves);
+        let visits: HashSet<&Position> = trail.iter().collect();
+        println!("* Part 2: {}", visits.len());
     });
 }
 
@@ -63,26 +71,30 @@ impl Move {
         Move { direction, steps }
     }
 
-    fn apply(&self, r: &mut Rope) -> Vec<Position> {
+    fn apply<const N: usize>(&self, r: &mut Rope<N>) -> Vec<Position> {
         let mut trail = vec![];
 
         for _ in 0..self.steps {
             r.knots[0].x += self.direction.dx();
             r.knots[0].y += self.direction.dy();
 
-            trail.push(r.knots[1]);
+            trail.push(r.knots[N-1]);
 
-            match self.direction {
-                Direction::Left | Direction::Right => {
-                    if (r.knots[0].x - r.knots[1].x).abs() == 2 {
-                        r.knots[1].x += self.direction.dx();
-                        r.knots[1].y = r.knots[0].y;
+            for k in 1..N {
+                let w = &mut r.knots[k-1..=k];
+
+                let dx = w[0].x - w[1].x;
+                let dy = w[0].y - w[1].y;
+
+                if dx.abs() == 2 {
+                    w[1].x += dx/2;
+                    if dy != 0 {
+                        w[1].y += dy / dy.abs();
                     }
-                }
-                Direction::Up | Direction::Down => {
-                    if (r.knots[0].y - r.knots[1].y).abs() == 2 {
-                        r.knots[1].y += self.direction.dy();
-                        r.knots[1].x = r.knots[0].x;
+                } else if dy.abs() == 2 {
+                    w[1].y += dy/2;
+                    if dx != 0 {
+                        w[1].x += dx / dx.abs();
                     }
                 }
             }
@@ -115,13 +127,13 @@ impl From<&str> for Move {
 }
 
 #[derive(Debug)]
-struct Rope {
-    knots: Vec<Position>,
+struct Rope<const N: usize> {
+    knots: [Position; N],
 }
 
-impl Rope {
+impl<const N: usize> Rope<N> {
     fn new() -> Self {
-        Rope { knots: vec![Position::default(); 2] }
+        Rope { knots: [Position::default(); N] }
     }
 
     fn simulate(&mut self, moves: &Vec<Move>) -> Vec<Position> {
@@ -181,7 +193,7 @@ R 2
     #[test]
     fn test_move_apply() {
         let moves = read_moves(INPUT);
-        let mut r = Rope::new();
+        let mut r: Rope<2> = Rope::new();
 
         let t = moves[0].apply(&mut r);
         assert_eq!(r.knots[0], Position::new(4, 0));
@@ -267,7 +279,7 @@ R 2
     #[test]
     fn test_rope_simulate() {
         let moves = read_moves(INPUT);
-        let mut r = Rope::new();
+        let mut r: Rope<2> = Rope::new();
         let t = r.simulate(&moves);
         assert_eq!(r.knots[0], Position::new(2, 2));
         assert_eq!(r.knots[1], Position::new(1, 2));
@@ -301,6 +313,5 @@ R 2
                 Position::new(1, 2),
             ]
         );
-
     }
 }
