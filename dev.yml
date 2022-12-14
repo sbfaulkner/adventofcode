@@ -2,6 +2,9 @@ up:
   - rust:
       version: stable
 
+env:
+  CARGO_PROFILE_RELEASE_DEBUG: "true"
+
 commands:
   build:
     desc: Build the project
@@ -18,3 +21,9 @@ commands:
   test:
     desc: Run tests
     run: cargo test
+
+  profile:
+    desc: Profile and produce flamegraph
+    run: |
+      cargo flamegraph --root --deterministic
+      open flamegraph.svg
