@@ -306,13 +306,20 @@ noop
         let mut cpu = Cpu::default();
         assert_eq!(cpu.state.x, 1);
 
-        assert!(Instruction::Noop.result(&mut cpu).is_none(), "did not expect result");
+        assert!(
+            Instruction::Noop.result(&mut cpu).is_none(),
+            "did not expect result"
+        );
         assert_eq!(cpu.state.x, 1);
 
-        cpu.state.x = Instruction::Addx(3).result(&mut cpu).expect("expected result");
+        cpu.state.x = Instruction::Addx(3)
+            .result(&mut cpu)
+            .expect("expected result");
         assert_eq!(cpu.state.x, 4);
 
-        cpu.state.x = Instruction::Addx(-5).result(&mut cpu).expect("expected result");
+        cpu.state.x = Instruction::Addx(-5)
+            .result(&mut cpu)
+            .expect("expected result");
         assert_eq!(cpu.state.x, -1);
     }
 
