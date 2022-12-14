@@ -9,14 +9,24 @@ where
     let elapsed = start.elapsed();
     if elapsed.as_secs() > 0 {
         println!(
-            "  Elapsed: {}.{:09}s",
+            "  Elapsed: {}.{:03}s",
             elapsed.as_secs(),
-            elapsed.subsec_nanos()
+            elapsed.subsec_millis()
+        );
+    } else if elapsed.subsec_millis() > 0 {
+        println!(
+            "  Elapsed: {:.3}ms",
+            elapsed.subsec_nanos() as f64 / 1_000_000.0
+        );
+    } else if elapsed.subsec_micros() > 0 {
+        println!(
+            "  Elapsed: {:.3}µs",
+            elapsed.subsec_nanos() as f64 / 1_000.0
         );
     } else {
         println!(
-            "  Elapsed: {:.6}ms",
-            elapsed.subsec_nanos() as f64 / 1_000_000.0
+            "  Elapsed: {}ns",
+            elapsed.subsec_nanos()
         );
     }
 }
