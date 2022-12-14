@@ -53,15 +53,9 @@ impl<'cpu> Cpu<'cpu> {
 
     /// Execute all instructions, returning sampled signal strengh values
     fn sample(&mut self, period: usize, offset: usize) -> Vec<i64> {
-        let mut samples = vec![];
-
-        while let Some(State { cycle, x }) = self.next() {
-            if cycle % period == offset {
-                samples.push(cycle as i64 * x as i64);
-            }
-        }
-
-        samples
+        self.filter(|state| state.cycle % period == offset)
+            .map(|state| state.cycle as i64 * state.x as i64)
+            .collect()
     }
 }
 
