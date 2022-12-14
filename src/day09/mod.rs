@@ -78,21 +78,21 @@ impl Move {
             r.knots[0].x += self.direction.dx();
             r.knots[0].y += self.direction.dy();
 
-            trail.push(r.knots[N-1]);
+            trail.push(r.knots[N - 1]);
 
             for k in 1..N {
-                let w = &mut r.knots[k-1..=k];
+                let w = &mut r.knots[k - 1..=k];
 
                 let dx = w[0].x - w[1].x;
                 let dy = w[0].y - w[1].y;
 
                 if dx.abs() == 2 {
-                    w[1].x += dx/2;
+                    w[1].x += dx / 2;
                     if dy != 0 {
                         w[1].y += dy / dy.abs();
                     }
                 } else if dy.abs() == 2 {
-                    w[1].y += dy/2;
+                    w[1].y += dy / 2;
                     if dx != 0 {
                         w[1].x += dx / dx.abs();
                     }
@@ -133,7 +133,9 @@ struct Rope<const N: usize> {
 
 impl<const N: usize> Rope<N> {
     fn new() -> Self {
-        Rope { knots: [Position::default(); N] }
+        Rope {
+            knots: [Position::default(); N],
+        }
     }
 
     fn simulate(&mut self, moves: &Vec<Move>) -> Vec<Position> {
