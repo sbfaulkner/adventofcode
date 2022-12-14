@@ -34,6 +34,7 @@ struct Cpu<'cpu> {
 }
 
 impl<'cpu> Cpu<'cpu> {
+    /// Initialize CPU
     fn default() -> Self {
         Cpu {
             state: State { x: 1, cycle: 0 },
@@ -42,6 +43,7 @@ impl<'cpu> Cpu<'cpu> {
         }
     }
 
+    /// Initialize CPU (and "load" a program)
     fn new(program: &'cpu Vec<Instruction>) -> Self {
         Cpu {
             i: program.iter(),
@@ -49,6 +51,7 @@ impl<'cpu> Cpu<'cpu> {
         }
     }
 
+    /// Execute all instructions, returning sampled signal strengh values
     fn sample(&mut self, period: usize, offset: usize) -> Vec<i64> {
         let mut samples = vec![];
 
@@ -60,14 +63,6 @@ impl<'cpu> Cpu<'cpu> {
 
         samples
     }
-
-    fn addx(&self, v: i8) -> Option<i8> {
-        Some(self.state.x + v)
-    }
-
-    fn noop(&self) -> Option<i8> {
-        None
-    }
 }
 
 impl<'cpu> Iterator for Cpu<'cpu> {
@@ -78,7 +73,7 @@ impl<'cpu> Iterator for Cpu<'cpu> {
         let state = self.state;
         self.result = match self.result {
             None => match self.i.next() {
-                Some(i) => i.execute(self),
+                Some(i) => i.result(self),
                 None => return None,
             },
             Some(r) => {
@@ -98,11 +93,11 @@ enum Instruction {
 }
 
 impl Instruction {
-    /// Execute a single instruction optionally returning a result
-    fn execute(&self, cpu: &mut Cpu) -> Option<i8> {
+    /// Get intermediate result of instruction
+    fn result(&self, cpu: &mut Cpu) -> Option<i8> {
         match self {
-            Instruction::Addx(v) => cpu.addx(*v),
-            Instruction::Noop => cpu.noop(),
+            Instruction::Addx(v) => Some(cpu.state.x + *v),
+            Instruction::Noop => None,
         }
     }
 }
@@ -307,17 +302,17 @@ noop
     }
 
     #[test]
-    fn test_cpu_instructions() {
+    fn test_instruction_execute() {
         let mut cpu = Cpu::default();
         assert_eq!(cpu.state.x, 1);
 
-        assert!(cpu.noop().is_none(), "did not expect result");
+        assert!(Instruction::Noop.result(&mut cpu).is_none(), "did not expect result");
         assert_eq!(cpu.state.x, 1);
 
-        cpu.state.x = cpu.addx(3).expect("expected result");
+        cpu.state.x = Instruction::Addx(3).result(&mut cpu).expect("expected result");
         assert_eq!(cpu.state.x, 4);
 
-        cpu.state.x = cpu.addx(-5).expect("expected result");
+        cpu.state.x = Instruction::Addx(-5).result(&mut cpu).expect("expected result");
         assert_eq!(cpu.state.x, -1);
     }
 
