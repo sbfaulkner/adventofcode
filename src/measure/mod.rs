@@ -24,9 +24,6 @@ where
             elapsed.subsec_nanos() as f64 / 1_000.0
         );
     } else {
-        println!(
-            "  Elapsed: {}ns",
-            elapsed.subsec_nanos()
-        );
+        println!("  Elapsed: {}ns", elapsed.subsec_nanos());
     }
 }
