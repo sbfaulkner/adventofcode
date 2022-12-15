@@ -12,12 +12,18 @@ pub fn run(input: impl BufRead) {
 
     measure::duration(|| {
         let mut monkeys = monkeys.clone();
-        println!("* Part 2: {}", play_keep_away(&mut monkeys, 10000, |w| w));
+        let lcm: u128 = monkeys.iter().map(|m| &m.test).map(|t| t.divisor).product();
+        println!(
+            "* Part 2: {}",
+            play_keep_away(&mut monkeys, 10000, |w| w % lcm)
+        );
     });
 }
 
 fn play_keep_away<W>(monkeys: &mut Vec<Monkey>, rounds: usize, worryfn: W) -> usize
-where W: Fn(u128) -> u128 {
+where
+    W: Fn(u128) -> u128,
+{
     for _ in 0..rounds {
         take_turns(monkeys, &worryfn);
     }
@@ -30,7 +36,9 @@ where W: Fn(u128) -> u128 {
 }
 
 fn take_turns<W>(monkeys: &mut Vec<Monkey>, worryfn: W)
-where W: Fn(u128) -> u128 {
+where
+    W: Fn(u128) -> u128,
+{
     for m in 0..monkeys.len() {
         while let Some((item, catcher)) = monkeys[m].throw(&worryfn) {
             monkeys[catcher].catch(item);
@@ -179,7 +187,9 @@ impl Monkey {
     }
 
     fn throw<W>(&mut self, worryfn: W) -> Option<(Item, usize)>
-    where W: Fn(u128) -> u128 {
+    where
+        W: Fn(u128) -> u128,
+    {
         self.items.pop_front().and_then(|Item(worry)| {
             self.inspections += 1;
             let worry = self.operation.perform(worry);
@@ -338,8 +348,14 @@ Monkey 3:
 
         let worryfn = |w| w / 3;
 
-        assert_eq!(monkey.throw(worryfn).expect("expected throw"), (Item(2080), 1));
-        assert_eq!(monkey.throw(worryfn).expect("expected throw"), (Item(1200), 3));
+        assert_eq!(
+            monkey.throw(worryfn).expect("expected throw"),
+            (Item(2080), 1)
+        );
+        assert_eq!(
+            monkey.throw(worryfn).expect("expected throw"),
+            (Item(1200), 3)
+        );
         assert!(monkey.throw(worryfn).is_none());
         assert_eq!(monkey.inspections, 2);
     }
@@ -414,7 +430,9 @@ Monkey 3:
     fn test_long_play_keep_away() {
         let mut monkeys = read_monkeys(INPUT);
 
-        let monkey_business = play_keep_away(&mut monkeys, 10_000, |w| w);
+        let lcm: u128 = monkeys.iter().map(|m| &m.test).map(|t| t.divisor).product();
+
+        let monkey_business = play_keep_away(&mut monkeys, 10_000, |w| w % lcm);
 
         assert_eq!(monkey_business, 2_713_310_158);
     }
