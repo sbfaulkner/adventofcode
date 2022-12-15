@@ -1,8 +1,8 @@
 use std::time::Instant;
 
-pub fn duration<F>(f: F)
+pub fn duration<F>(mut f: F)
 where
-    F: Fn() -> (),
+    F: FnMut() -> (),
 {
     let start = Instant::now();
     f();
