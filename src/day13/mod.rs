@@ -15,6 +15,8 @@ pub fn run(input: impl BufRead) {
 mod tests {
     use super::*;
 
+    const INPUT: &[u8] = b"";
+
     #[test]
     fn test_something() {
         todo!();
