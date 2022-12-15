@@ -1,4 +1,5 @@
 use crate::measure;
+use std::fmt::Display;
 use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
@@ -11,7 +12,12 @@ pub fn run(input: impl BufRead) {
     });
 
     measure::duration(|| {
-        println!("* Part 2: {}", unimplemented!());
+        let cpu = Cpu::new(&program);
+        let mut crt = Crt::new();
+
+        cpu.for_each(|state| crt.draw(state));
+
+        println!("* Part 2:\n{}", crt);
     });
 }
 
@@ -113,6 +119,47 @@ impl From<&str> for Instruction {
             "noop" => Instruction::Noop,
             _ => unimplemented!("unimplemented instruction: {}", instruction),
         }
+    }
+}
+
+const LIT: char = '#';
+const DARK: char = '.';
+
+#[derive(Debug, PartialEq)]
+struct Crt {
+    pixels: [[char; 40]; 6],
+}
+
+impl Crt {
+    fn new() -> Self {
+        Crt {
+            pixels: [[DARK; 40]; 6],
+        }
+    }
+
+    fn draw(&mut self, state: State) {
+        let cycle = state.cycle - 1;
+
+        let x = cycle % 40;
+        let y = cycle / 40;
+
+        if (state.x - 1..=state.x + 1).contains(&(x as i8)) {
+            self.pixels[y][x] = LIT;
+        } else {
+            self.pixels[y][x] = DARK;
+        }
+    }
+}
+
+impl Display for Crt {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        for row in self.pixels.iter() {
+            for pixel in row.iter() {
+                write!(f, "{}", pixel)?;
+            }
+            writeln!(f)?;
+        }
+        Ok(())
     }
 }
 
@@ -364,5 +411,48 @@ noop
 
         let samples = cpu.sample(40, 20);
         assert_eq!(samples, vec![420, 1140, 1800, 2940, 2880, 3960]);
+    }
+
+    #[test]
+    fn test_crt_new() {
+        let crt = Crt::new();
+        assert_eq!(crt.pixels, [[DARK; 40]; 6]);
+    }
+
+    #[test]
+    fn test_crt_draw() {
+        let program = read_program(INPUT);
+        let cpu = Cpu::new(&program);
+        let mut crt = Crt::new();
+
+        cpu.for_each(|state| crt.draw(state));
+
+        let output = crt.to_string();
+        let mut rows = output.lines();
+
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "##..##..##..##..##..##..##..##..##..##.."
+        );
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "###...###...###...###...###...###...###."
+        );
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "####....####....####....####....####...."
+        );
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "#####.....#####.....#####.....#####....."
+        );
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "######......######......######......####"
+        );
+        assert_eq!(
+            rows.next().expect("expected row"),
+            "#######.......#######.......#######....."
+        );
     }
 }
