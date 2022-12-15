@@ -3,20 +3,23 @@ use std::collections::VecDeque;
 use std::io::BufRead;
 
 pub fn run(input: impl BufRead) {
-    let mut monkeys = read_monkeys(input);
+    let monkeys = read_monkeys(input);
 
     measure::duration(|| {
-        println!("* Part 1: {}", play_keep_away(&mut monkeys, 20));
+        let mut monkeys = monkeys.clone();
+        println!("* Part 1: {}", play_keep_away(&mut monkeys, 20, |w| w / 3));
     });
 
     measure::duration(|| {
-        println!("* Part 2: {}", todo!());
+        let mut monkeys = monkeys.clone();
+        println!("* Part 2: {}", play_keep_away(&mut monkeys, 10000, |w| w));
     });
 }
 
-fn play_keep_away(monkeys: &mut Vec<Monkey>, rounds: usize) -> usize {
+fn play_keep_away<W>(monkeys: &mut Vec<Monkey>, rounds: usize, worryfn: W) -> usize
+where W: Fn(u128) -> u128 {
     for _ in 0..rounds {
-        take_turns(monkeys)
+        take_turns(monkeys, &worryfn);
     }
 
     let mut inspections: Vec<usize> = monkeys.iter().map(|m| m.inspections).collect();
@@ -26,16 +29,17 @@ fn play_keep_away(monkeys: &mut Vec<Monkey>, rounds: usize) -> usize {
     inspections.iter().rev().take(2).product()
 }
 
-fn take_turns(monkeys: &mut Vec<Monkey>) {
+fn take_turns<W>(monkeys: &mut Vec<Monkey>, worryfn: W)
+where W: Fn(u128) -> u128 {
     for m in 0..monkeys.len() {
-        while let Some((item, catcher)) = monkeys[m].throw() {
+        while let Some((item, catcher)) = monkeys[m].throw(&worryfn) {
             monkeys[catcher].catch(item);
         }
     }
 }
 
-#[derive(Debug, PartialEq)]
-struct Item(u32);
+#[derive(Clone, Debug, PartialEq)]
+struct Item(u128);
 
 impl From<&str> for Item {
     fn from(s: &str) -> Item {
@@ -43,15 +47,15 @@ impl From<&str> for Item {
     }
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 enum Operation {
-    Multiply(u32),
-    Add(u32),
+    Multiply(u128),
+    Add(u128),
     Square,
 }
 
 impl Operation {
-    fn perform(&self, old: u32) -> u32 {
+    fn perform(&self, old: u128) -> u128 {
         match self {
             Operation::Multiply(n) => old * n,
             Operation::Add(n) => old + n,
@@ -76,8 +80,9 @@ impl From<&str> for Operation {
     }
 }
 
+#[derive(Clone, Debug)]
 struct Test {
-    divisor: u32,
+    divisor: u128,
     if_true: usize,
     if_false: usize,
 }
@@ -118,7 +123,7 @@ impl Test {
         }
     }
 
-    fn perform(&self, worry: u32) -> usize {
+    fn perform(&self, worry: u128) -> usize {
         if worry % self.divisor == 0 {
             self.if_true
         } else {
@@ -127,6 +132,7 @@ impl Test {
     }
 }
 
+#[derive(Clone, Debug)]
 struct Monkey {
     items: VecDeque<Item>,
     operation: Operation,
@@ -172,10 +178,12 @@ impl Monkey {
         })
     }
 
-    fn throw(&mut self) -> Option<(Item, usize)> {
+    fn throw<W>(&mut self, worryfn: W) -> Option<(Item, usize)>
+    where W: Fn(u128) -> u128 {
         self.items.pop_front().and_then(|Item(worry)| {
             self.inspections += 1;
-            let worry = self.operation.perform(worry) / 3;
+            let worry = self.operation.perform(worry);
+            let worry = worryfn(worry);
             let catcher = self.test.perform(worry);
             Some((Item(worry), catcher))
         })
@@ -328,9 +336,11 @@ Monkey 3:
             inspections: 0,
         };
 
-        assert_eq!(monkey.throw().expect("expected throw"), (Item(2080), 1));
-        assert_eq!(monkey.throw().expect("expected throw"), (Item(1200), 3));
-        assert!(monkey.throw().is_none());
+        let worryfn = |w| w / 3;
+
+        assert_eq!(monkey.throw(worryfn).expect("expected throw"), (Item(2080), 1));
+        assert_eq!(monkey.throw(worryfn).expect("expected throw"), (Item(1200), 3));
+        assert!(monkey.throw(worryfn).is_none());
         assert_eq!(monkey.inspections, 2);
     }
 
@@ -355,7 +365,7 @@ Monkey 3:
     fn test_take_turns() {
         let mut monkeys = read_monkeys(INPUT);
 
-        take_turns(&mut monkeys);
+        take_turns(&mut monkeys, |w| w / 3);
 
         assert_eq!(
             monkeys[0].items,
@@ -380,7 +390,7 @@ Monkey 3:
     fn test_play_keep_away() {
         let mut monkeys = read_monkeys(INPUT);
 
-        let monkey_business = play_keep_away(&mut monkeys, 20);
+        let monkey_business = play_keep_away(&mut monkeys, 20, |w| w / 3);
 
         assert_eq!(
             monkeys[0].items,
@@ -398,5 +408,14 @@ Monkey 3:
         assert_eq!(monkeys[3].inspections, 105);
 
         assert_eq!(monkey_business, 10_605);
+    }
+
+    #[test]
+    fn test_long_play_keep_away() {
+        let mut monkeys = read_monkeys(INPUT);
+
+        let monkey_business = play_keep_away(&mut monkeys, 10_000, |w| w);
+
+        assert_eq!(monkey_business, 2_713_310_158);
     }
 }
