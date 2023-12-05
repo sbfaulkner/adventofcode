@@ -33,28 +33,22 @@ module Adventofcode
         7pqrstsixteen
       HEREDOC
 
-      def test_it_expands_spelled_numbers
-        assert_equal '219', Adventofcode::Day01.expand_spelled_numbers('two1nine')
-        assert_equal '8wo3', Adventofcode::Day01.expand_spelled_numbers('eightwothree')
-        assert_equal 'abc123xyz', Adventofcode::Day01.expand_spelled_numbers('abcone2threexyz')
-        assert_equal 'x2ne34', Adventofcode::Day01.expand_spelled_numbers('xtwone3four')
-        assert_equal '49872', Adventofcode::Day01.expand_spelled_numbers('4nineeightseven2')
-        assert_equal 'z1ight234', Adventofcode::Day01.expand_spelled_numbers('zoneight234')
-        assert_equal '7pqrst6teen', Adventofcode::Day01.expand_spelled_numbers('7pqrstsixteen')
+      def test_it_extracts_the_calibration_value_with_spelled_numbers
+        assert_equal 29, Adventofcode::Day01.calibration_value('two1nine', spelled: true)
+        assert_equal 83, Adventofcode::Day01.calibration_value('eightwothree', spelled: true)
+        assert_equal 13, Adventofcode::Day01.calibration_value('abcone2threexyz', spelled: true)
+        assert_equal 24, Adventofcode::Day01.calibration_value('xtwone3four', spelled: true)
+        assert_equal 42, Adventofcode::Day01.calibration_value('4nineeightseven2', spelled: true)
+        assert_equal 14, Adventofcode::Day01.calibration_value('zoneight234', spelled: true)
+        assert_equal 76, Adventofcode::Day01.calibration_value('7pqrstsixteen', spelled: true)
       end
 
-      def test_it_extracts_the_calibration_value_expanding_spelled_numbers
-        assert_equal 29, Adventofcode::Day01.calibration_value('two1nine', expand_spelled_numbers: true)
-        assert_equal 83, Adventofcode::Day01.calibration_value('eightwothree', expand_spelled_numbers: true)
-        assert_equal 13, Adventofcode::Day01.calibration_value('abcone2threexyz', expand_spelled_numbers: true)
-        assert_equal 24, Adventofcode::Day01.calibration_value('xtwone3four', expand_spelled_numbers: true)
-        assert_equal 42, Adventofcode::Day01.calibration_value('4nineeightseven2', expand_spelled_numbers: true)
-        assert_equal 14, Adventofcode::Day01.calibration_value('zoneight234', expand_spelled_numbers: true)
-        assert_equal 76, Adventofcode::Day01.calibration_value('7pqrstsixteen', expand_spelled_numbers: true)
+      def test_it_extracts_ambiguous_values_with_spelled_numbers
+        assert_equal 12, Adventofcode::Day01.calibration_value('oneeightwo', spelled: true)
       end
 
-      def test_it_sums_the_calibration_values_expanding_spelled_numbers
-        assert_equal 281, Adventofcode::Day01.sum(INPUT2, expand_spelled_numbers: true)
+      def test_it_sums_the_calibration_values_with_spelled_numbers
+        assert_equal 281, Adventofcode::Day01.sum(INPUT2, spelled: true)
       end
     end
   end

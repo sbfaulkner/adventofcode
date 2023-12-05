@@ -10,6 +10,8 @@ GEM
     json (2.7.0)
     language_server-protocol (3.17.0.3)
     minitest (5.20.0)
+    minitest-focus (1.4.0)
+      minitest (>= 4, < 6)
     parallel (1.23.0)
     parser (3.2.2.4)
       ast (~> 2.4.1)
@@ -41,6 +43,7 @@ PLATFORMS
 DEPENDENCIES
   adventofcode!
   minitest (~> 5.0)
+  minitest-focus
   rake (~> 13.0)
   rubocop (~> 1.21)
 

@@ -19,5 +19,5 @@ require 'adventofcode'
 
 task :day01 do
   puts 'Part 1:', Adventofcode::Day01.sum
-  puts 'Part 2:', Adventofcode::Day01.sum(expand_spelled_numbers: true)
+  puts 'Part 2:', Adventofcode::Day01.sum(spelled: true)
 end

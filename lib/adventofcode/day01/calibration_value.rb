@@ -14,23 +14,27 @@ module Adventofcode
       nine
     ]
 
-    NUMBERS_REGEX = Regexp.new(NUMBERS.join('|'))
+    DIGIT_REGEX = /\d/
+    NUMBERS_REGEX = Regexp.union(NUMBERS)
 
-    def self.sum(input = File.open(INPUT), expand_spelled_numbers: false)
+    def self.sum(input = File.open(INPUT), spelled: false)
       input.each_line.map do |line|
-        Adventofcode::Day01.calibration_value(line, expand_spelled_numbers: expand_spelled_numbers)
+        Adventofcode::Day01.calibration_value(line.chomp, spelled: spelled)
       end.sum
     end
 
-    def self.calibration_value(line, expand_spelled_numbers: false)
-      line = expand_spelled_numbers(line) if expand_spelled_numbers
-      first = line.index(/\d/)
-      last = line.rindex(/\d/)
-      line[first].to_i * 10 + line[last].to_i
+    def self.calibration_value(line, spelled: false)
+      regex = spelled ? Regexp.union(DIGIT_REGEX, NUMBERS_REGEX) : DIGIT_REGEX
+
+      first = line[regex]
+      last_index = line.rindex(regex)
+
+      value(first, spelled: spelled) * 10 + value(line[last_index..], spelled: spelled)
     end
 
-    def self.expand_spelled_numbers(line)
-      line.gsub(NUMBERS_REGEX) { |word| NUMBERS.index(word) + 1 }
+    def self.value(digit, spelled:)
+      digit = digit.sub(NUMBERS_REGEX) { |word| NUMBERS.index(word) + 1 } if spelled
+      digit.to_i
     end
   end
 end
