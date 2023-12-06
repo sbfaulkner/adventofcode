@@ -33,16 +33,16 @@ module Adventofcode
         assert_equal 8, Adventofcode::Day02.sum(INPUT)
       end
 
-      def test_game_minimum
-        minimums = INPUT.each_line.map do |line|
-          Adventofcode::Day02::Game.new(line.chomp).minimum
+      def test_game_minimum_power
+        powers = INPUT.each_line.map do |line|
+          Adventofcode::Day02::Game.new(line.chomp).minimum_power
         end
 
-        assert_equal({ red: 4, green: 2, blue: 6 }, minimums[0])
-        assert_equal({ red: 1, green: 3, blue: 4 }, minimums[1])
-        assert_equal({ red: 20, green: 13, blue: 6 }, minimums[2])
-        assert_equal({ red: 14, green: 3, blue: 15 }, minimums[3])
-        assert_equal({ red: 6, green: 3, blue: 2 }, minimums[4])
+        assert_equal(48, powers[0])
+        assert_equal(12, powers[1])
+        assert_equal(1560, powers[2])
+        assert_equal(630, powers[3])
+        assert_equal(36, powers[4])
       end
     end
   end

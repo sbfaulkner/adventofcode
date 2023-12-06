@@ -36,6 +36,12 @@ module Adventofcode
         @sets.all? { |set| set.possible?(bag) }
       end
 
+      def minimum_power
+        minimum.values.reduce(:*)
+      end
+
+      private
+
       def minimum
         @sets.each_with_object(Hash.new(0)) do |set, minimum|
           set.each do |color, count|
