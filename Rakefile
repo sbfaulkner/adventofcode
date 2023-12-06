@@ -23,6 +23,6 @@ task :day01 do
 end
 
 task :day02 do
-  puts 'Part 1:', Adventofcode::Day02.sum(bag: { red: 12, green: 13, blue: 14 })
-  # puts 'Part 2:', Adventofcode::Day02.sum(spelled: true)
+  puts 'Part 1:', Adventofcode::Day02.sum
+  # puts 'Part 2:', Adventofcode::Day02.sum
 end

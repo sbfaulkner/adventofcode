@@ -4,8 +4,10 @@ module Adventofcode
 
     INPUT = File.join(__dir__, 'day02', 'input.txt')
 
+    BAG = { red: 12, green: 13, blue: 14 }
+
     class Game
-      attr_reader :id, :sets
+      attr_reader :id
 
       class Set
         def initialize(text)
@@ -13,6 +15,10 @@ module Adventofcode
             count, color = cubes.split(' ')
             set[color.to_sym] = count.to_i
           end
+        end
+
+        def each(&block)
+          @set.each(&block)
         end
 
         def possible?(bag)
@@ -26,12 +32,20 @@ module Adventofcode
         @sets = sets.split('; ').map { |set| Set.new(set) }
       end
 
-      def possible?(bag)
+      def possible?(bag = BAG)
         @sets.all? { |set| set.possible?(bag) }
+      end
+
+      def minimum
+        @sets.each_with_object(Hash.new(0)) do |set, minimum|
+          set.each do |color, count|
+            minimum[color] = count if minimum[color] < count
+          end
+        end
       end
     end
 
-    def sum(input = File.open(INPUT), bag:)
+    def sum(input = File.open(INPUT), bag: BAG)
       input.each_line.map do |line|
         game = Adventofcode::Day02::Game.new(line.chomp)
         game.possible?(bag) ? game.id : 0
