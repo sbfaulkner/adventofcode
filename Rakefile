@@ -17,26 +17,34 @@ task default: [:test, :rubocop]
 
 require "adventofcode"
 
+def run(heading, &block)
+  print("#{heading}: ")
+  start_at = Time.now
+  print(yield)
+ensure
+  puts " [#{Time.now - start_at}s]"
+end
+
 desc "Day 1: Trebuchet?!"
 task :day01 do
-  puts "Part 1:", Adventofcode::Day01.sum
-  puts "Part 2:", Adventofcode::Day01.sum(spelled: true)
+  run("Part 1") { Adventofcode::Day01.sum }
+  run("Part 2") { Adventofcode::Day01.sum(spelled: true) }
 end
 
 desc "Day 2: Cube Conundrum"
 task :day02 do
-  puts "Part 1:", Adventofcode::Day02.sum
-  puts "Part 2:", Adventofcode::Day02.sum_of_power
+  run("Part 1") { Adventofcode::Day02.sum }
+  run("Part 2") { Adventofcode::Day02.sum_of_power }
 end
 
 desc "Day 3: Gear Ratios"
 task :day03 do
-  puts "Part 1:", Adventofcode::Day03::Schematic.new.sum
-  puts "Part 2:", Adventofcode::Day03::Schematic.new.sum_gears
+  run("Part 1") { Adventofcode::Day03::Schematic.new.sum }
+  run("Part 2") { Adventofcode::Day03::Schematic.new.sum_gears }
 end
 
 desc "Day 4: Scratchcards"
 task :day04 do
-  puts "Part 1:", Adventofcode::Day04.sum
-  puts "Part 2:", Adventofcode::Day04.count
+  run("Part 1") { Adventofcode::Day04.sum }
+  run("Part 2") { Adventofcode::Day04.count }
 end
