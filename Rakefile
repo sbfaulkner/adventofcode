@@ -38,4 +38,5 @@ end
 desc "Day 4: Scratchcards"
 task :day04 do
   puts "Part 1:", Adventofcode::Day04.sum
+  puts "Part 2:", Adventofcode::Day04.count
 end

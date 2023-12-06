@@ -17,6 +17,10 @@ module Adventofcode
       def test_sum
         assert_equal(13, Adventofcode::Day04.sum(INPUT))
       end
+
+      def test_count
+        assert_equal(30, Adventofcode::Day04.count(INPUT))
+      end
     end
   end
 end
