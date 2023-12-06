@@ -4,7 +4,7 @@ require 'test_helper'
 
 module Adventofcode
   module Day01
-    class TestAdventofcode < Minitest::Test
+    class TestDay01 < Minitest::Test
       INPUT1 = <<~HEREDOC
         1abc2
         pqr3stu8vwx
