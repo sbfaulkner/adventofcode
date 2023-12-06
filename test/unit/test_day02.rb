@@ -44,6 +44,10 @@ module Adventofcode
         assert_equal(630, powers[3])
         assert_equal(36, powers[4])
       end
+
+      def test_game_sun_of_power
+        assert_equal 2286, Adventofcode::Day02.sum_of_power(INPUT)
+      end
     end
   end
 end

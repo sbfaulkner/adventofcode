@@ -57,5 +57,11 @@ module Adventofcode
         game.possible?(bag) ? game.id : 0
       end.sum
     end
+
+    def sum_of_power(input = File.open(INPUT))
+      input.each_line.map do |line|
+        Adventofcode::Day02::Game.new(line.chomp).minimum_power
+      end.sum
+    end
   end
 end

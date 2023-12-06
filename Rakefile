@@ -24,5 +24,5 @@ end
 
 task :day02 do
   puts 'Part 1:', Adventofcode::Day02.sum
-  # puts 'Part 2:', Adventofcode::Day02.sum
+  puts 'Part 2:', Adventofcode::Day02.sum_of_power
 end
