@@ -8,7 +8,8 @@ module Adventofcode
 
     INPUT = File.join(__dir__, "day03", "input.txt")
 
-    NONSYMBOL_REGEX = /[^.\d]/.freeze
+    SYMBOL_REGEX = /[^.\d]/.freeze
+    GEAR = "*"
 
     class Schematic
       def initialize(input = File.open(INPUT))
@@ -18,9 +19,31 @@ module Adventofcode
       def sum
         sum = 0
 
-        scan_part_numbers do |number|
+        scan_part_numbers do |number, _row, _col|
           sum += number.to_i
           next
+        end
+
+        sum
+      end
+
+      def sum_gears
+        potential_gears = Hash.new do |h, k|
+          h[k] = Hash.new do |h2, k2|
+            h2[k2] = []
+          end
+        end
+
+        scan_part_numbers do |number, row, col|
+          potential_gears[row][col] << number if @lines[row][col] == GEAR
+        end
+
+        sum = 0
+
+        potential_gears.each do |_row, cols|
+          cols.each do |_col, parts|
+            sum += parts.reduce(&:*) if parts.length == 2
+          end
         end
 
         sum
@@ -40,22 +63,26 @@ module Adventofcode
 
             if i > 0
               # above
-              block.call(number.to_i) if @lines[i - 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
+              @lines[i - 1][min..max].chars.each_with_index do |c, offset|
+                block.call(number.to_i, i - 1, min + offset) if c =~ SYMBOL_REGEX
+              end
             end
 
             if index > 0
               # before
-              block.call(number.to_i, i, index - 1) if line[index - 1] =~ NONSYMBOL_REGEX
+              block.call(number.to_i, i, index - 1) if line[index - 1] =~ SYMBOL_REGEX
             end
 
             if (index + number.length) < line.length
               # after
-              block.call(number.to_i, i, index + 1) if line[index + number.length] =~ NONSYMBOL_REGEX
+              block.call(number.to_i, i, index + 1) if line[index + number.length] =~ SYMBOL_REGEX
             end
 
-            if i < @lines.length - 1
-              # below
-              block.call(number.to_i) if @lines[i + 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
+            next if i >= @lines.length - 1
+
+            # below
+            @lines[i + 1][min..max].chars.each_with_index do |c, offset|
+              block.call(number.to_i, i + 1, min + offset) if c =~ SYMBOL_REGEX
             end
           end
         end

@@ -32,4 +32,5 @@ end
 desc "Day 3: Gear Ratios"
 task :day03 do
   puts "Part 1:", Adventofcode::Day03::Schematic.new.sum
+  puts "Part 2:", Adventofcode::Day03::Schematic.new.sum_gears
 end
