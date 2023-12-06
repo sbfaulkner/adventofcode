@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 module Adventofcode
   module Day01
     extend self
 
-    INPUT = File.join(__dir__, 'day01', 'input.txt')
+    INPUT = File.join(__dir__, "day01", "input.txt")
 
-    NUMBERS = %w[
-      one
-      two
-      three
-      four
-      five
-      six
-      seven
-      eight
-      nine
+    NUMBERS = [
+      "one",
+      "two",
+      "three",
+      "four",
+      "five",
+      "six",
+      "seven",
+      "eight",
+      "nine",
     ]
 
     DIGIT_REGEX = /\d/

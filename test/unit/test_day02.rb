@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'test_helper'
+require "test_helper"
 
 module Adventofcode
   module Day02
@@ -18,7 +18,7 @@ module Adventofcode
           Adventofcode::Day02::Game.new(line.chomp).id
         end
 
-        assert_equal [1, 2, 3, 4, 5], ids
+        assert_equal([1, 2, 3, 4, 5], ids)
       end
 
       def test_game_possible
@@ -26,11 +26,11 @@ module Adventofcode
           Adventofcode::Day02::Game.new(line.chomp).possible?
         end
 
-        assert_equal [true, true, false, false, true], possible
+        assert_equal([true, true, false, false, true], possible)
       end
 
       def test_sum
-        assert_equal 8, Adventofcode::Day02.sum(INPUT)
+        assert_equal(8, Adventofcode::Day02.sum(INPUT))
       end
 
       def test_game_minimum_power
@@ -46,7 +46,7 @@ module Adventofcode
       end
 
       def test_game_sun_of_power
-        assert_equal 2286, Adventofcode::Day02.sum_of_power(INPUT)
+        assert_equal(2286, Adventofcode::Day02.sum_of_power(INPUT))
       end
     end
   end

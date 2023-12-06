@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module Adventofcode
   module Day02
     extend self
 
-    INPUT = File.join(__dir__, 'day02', 'input.txt')
+    INPUT = File.join(__dir__, "day02", "input.txt")
 
     BAG = { red: 12, green: 13, blue: 14 }
 
@@ -11,8 +13,8 @@ module Adventofcode
 
       class Set
         def initialize(text)
-          @set = text.split(', ').each_with_object(Hash.new(0)) do |cubes, set|
-            count, color = cubes.split(' ')
+          @set = text.split(", ").each_with_object(Hash.new(0)) do |cubes, set|
+            count, color = cubes.split(" ")
             set[color.to_sym] = count.to_i
           end
         end
@@ -27,9 +29,9 @@ module Adventofcode
       end
 
       def initialize(text)
-        game, sets = text.split(': ')
-        @id = game.split(' ').last.to_i
-        @sets = sets.split('; ').map { |set| Set.new(set) }
+        game, sets = text.split(": ")
+        @id = game.split(" ").last.to_i
+        @sets = sets.split("; ").map { |set| Set.new(set) }
       end
 
       def possible?(bag = BAG)

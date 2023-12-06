@@ -34,6 +34,12 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.30.0)
       parser (>= 3.2.1.0)
+    rubocop-minitest (0.33.0)
+      rubocop (>= 1.39, < 2.0)
+    rubocop-rake (0.6.0)
+      rubocop (~> 1.0)
+    rubocop-shopify (2.14.0)
+      rubocop (~> 1.51)
     ruby-progressbar (1.13.0)
     unicode-display_width (2.5.0)
 
@@ -46,6 +52,9 @@ DEPENDENCIES
   minitest-focus
   rake (~> 13.0)
   rubocop (~> 1.21)
+  rubocop-minitest
+  rubocop-rake
+  rubocop-shopify
 
 BUNDLED WITH
    2.4.21
