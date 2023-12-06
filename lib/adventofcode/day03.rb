@@ -12,12 +12,23 @@ module Adventofcode
 
     class Schematic
       def initialize(input = File.open(INPUT))
-        @lines = input.each_line.map(&:chomp).tap { |r| warn("Input has #{r.length} lines") }
+        @lines = input.each_line.map(&:chomp)
       end
 
       def sum
         sum = 0
 
+        scan_part_numbers do |number|
+          sum += number.to_i
+          next
+        end
+
+        sum
+      end
+
+      private
+
+      def scan_part_numbers(&block)
         @lines.each_with_index.each do |line, i|
           scanner = StringScanner.new(line)
           while scanner.scan_until(/(\d+)/)
@@ -27,35 +38,27 @@ module Adventofcode
             min = [0, index - 1].max
             max = [line.length - 1, index + number.length].min
 
-            if index > 0 && line[index - 1] =~ NONSYMBOL_REGEX
-              # before
-              sum += number.to_i
-              next
-            end
-
-            if (index + number.length) < line.length && line[index + number.length] =~ NONSYMBOL_REGEX
-              # after
-              sum += number.to_i
-              next
-            end
-
-            if i > 0 && @lines[i - 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
+            if i > 0
               # above
-              sum += number.to_i
-              next
+              block.call(number.to_i) if @lines[i - 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
             end
 
-            next unless i < @lines.length - 1 && @lines[i + 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
+            if index > 0
+              # before
+              block.call(number.to_i, i, index - 1) if line[index - 1] =~ NONSYMBOL_REGEX
+            end
 
-            # below
-            sum += number.to_i
-            next
+            if (index + number.length) < line.length
+              # after
+              block.call(number.to_i, i, index + 1) if line[index + number.length] =~ NONSYMBOL_REGEX
+            end
 
-            # no match
+            if i < @lines.length - 1
+              # below
+              block.call(number.to_i) if @lines[i + 1][min..max].chars.any? { |c| c =~ NONSYMBOL_REGEX }
+            end
           end
         end
-
-        sum
       end
     end
   end
