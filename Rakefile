@@ -34,3 +34,8 @@ task :day03 do
   puts "Part 1:", Adventofcode::Day03::Schematic.new.sum
   puts "Part 2:", Adventofcode::Day03::Schematic.new.sum_gears
 end
+
+desc "Day 4: Scratchcards"
+task :day04 do
+  puts "Part 1:", Adventofcode::Day04.sum
+end
