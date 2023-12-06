@@ -54,33 +54,37 @@ module Adventofcode
       def scan_part_numbers(&block)
         @lines.each_with_index.each do |line, i|
           scanner = StringScanner.new(line)
+
           while scanner.scan_until(/(\d+)/)
+            # look around each number in the line
             number = scanner.captures[0]
             index = scanner.charpos - number.length
 
             min = [0, index - 1].max
             max = [line.length - 1, index + number.length].min
 
+            # don't try to look above first line
             if i > 0
-              # above
+              # look above current number
               @lines[i - 1][min..max].chars.each_with_index do |c, offset|
                 block.call(number.to_i, i - 1, min + offset) if c =~ SYMBOL_REGEX
               end
             end
 
             if index > 0
-              # before
+              # look before current number
               block.call(number.to_i, i, index - 1) if line[index - 1] =~ SYMBOL_REGEX
             end
 
             if (index + number.length) < line.length
-              # after
-              block.call(number.to_i, i, index + 1) if line[index + number.length] =~ SYMBOL_REGEX
+              # look after current number
+              block.call(number.to_i, i, index + number.length) if line[index + number.length] =~ SYMBOL_REGEX
             end
 
+            # don't try to look below last line
             next if i >= @lines.length - 1
 
-            # below
+            # look below current number
             @lines[i + 1][min..max].chars.each_with_index do |c, offset|
               block.call(number.to_i, i + 1, min + offset) if c =~ SYMBOL_REGEX
             end
