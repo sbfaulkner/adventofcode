@@ -16,10 +16,6 @@ module Adventofcode
           each_entry(@root, &block)
         end
 
-        def find(first, last)
-          find_entry(@root, first, last)
-        end
-
         def insert(first, last, value: nil)
           @root = insert_entry(@root, first, last, value)
         end
@@ -55,10 +51,24 @@ module Adventofcode
             find_entry(entry.left, first, last)
           elsif first > entry.last
             find_entry(entry.right, first, last)
-          elsif first < entry.first || last > entry.last
-            raise NotImplementedError, "find_entry overlap"
+          elsif first < entry.first && last > entry.last
+            [
+              find_entry(entry, first, entry.first - 1),
+              entry,
+              find_entry(entry, entry.last + 1, last),
+            ]
+          elsif first < entry.first
+            [
+              find_entry(entry, first, entry.first - 1),
+              entry,
+            ]
+          elsif last > entry.last
+            [
+              entry,
+              find_entry(entry, entry.last + 1, last),
+            ]
           else
-            entry
+            [Entry.new(first, last, entry.value)]
           end
         end
 

@@ -28,18 +28,31 @@ module Adventofcode
           transformed = Ranges.new
 
           intervals.each do |interval|
-            first = interval.first
-            last = interval.last
-
-            if (mapping = find(first, last))
-              first += mapping.value
-              last += mapping.value
+            transform_each(@root, interval.first, interval.last) do |first, last|
+              transformed.insert(first, last)
             end
-
-            transformed.insert(first, last)
           end
 
           transformed
+        end
+
+        private
+
+        def transform_each(entry, first, last, &block)
+          unless entry
+            block.call(first, last)
+            return
+          end
+
+          if last < entry.first
+            transform_each(entry.left, first, last, &block)
+          elsif first > entry.last
+            transform_each(entry.right, first, last, &block)
+          else
+            transform_each(entry, first, entry.first - 1, &block) if first < entry.first
+            block.call([entry.first, first].max + entry.value, [entry.last, last].min + entry.value)
+            transform_each(entry, entry.last + 1, last, &block) if last > entry.last
+          end
         end
       end
     end
