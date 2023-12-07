@@ -44,6 +44,10 @@ module Adventofcode
       def test_lowest_location
         assert_equal(35, Adventofcode::Day05::Almanac.new(INPUT).lowest_location)
       end
+
+      def test_lowest_location_with_ranges
+        assert_equal(46, Adventofcode::Day05::Almanac.new(INPUT, ranges: true).lowest_location)
+      end
     end
   end
 end

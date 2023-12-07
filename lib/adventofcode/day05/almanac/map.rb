@@ -1,19 +1,15 @@
 # frozen_string_literal: true
 
+require_relative "ranges"
+
 module Adventofcode
   module Day05
     class Almanac
-      class Map
-        Entry = Struct.new(:first, :last, :offset, :left, :right)
-
+      class Map < Ranges
         class << self
           def load(lines)
             new.tap { |map| map.load(lines) }
           end
-        end
-
-        def initialize
-          @map = nil
         end
 
         def load(lines)
@@ -24,40 +20,26 @@ module Adventofcode
 
             dest, src, len = line.split(/ +/).map(&:to_i)
 
-            @map = insert(@map, src, src + len - 1, dest - src)
+            insert(src, src + len - 1, value: dest - src)
           end
         end
 
-        def [](src)
-          get(@map, src)
-        end
+        def transform(intervals)
+          transformed = Ranges.new
 
-        private
+          intervals.each do |interval|
+            first = interval.first
+            last = interval.last
 
-        def get(entry, src)
-          return src unless entry
+            if (mapping = find(first, last))
+              first += mapping.value
+              last += mapping.value
+            end
 
-          if src < entry.first
-            get(entry.left, src)
-          elsif src > entry.last
-            get(entry.right, src)
-          else
-            src + entry.offset
-          end
-        end
-
-        def insert(entry, first, last, offset)
-          return Entry.new(first, last, offset) unless entry
-
-          if last < entry.first
-            entry.left = insert(entry.left, first, last, offset)
-          elsif first > entry.last
-            entry.right = insert(entry.right, first, last, offset)
-          else
-            raise NotImplementedError, "insert into"
+            transformed.insert(first, last)
           end
 
-          entry
+          transformed
         end
       end
     end

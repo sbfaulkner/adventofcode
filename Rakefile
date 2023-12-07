@@ -52,5 +52,5 @@ end
 desc "Day 5: If You Give A Seed A Fertilizer"
 task :day05 do
   run("Part 1") { Adventofcode::Day05::Almanac.new.lowest_location }
-  # run("Part 2") { Adventofcode::Day04.count }
+  run("Part 2") { Adventofcode::Day05::Almanac.new(ranges: true).lowest_location }
 end

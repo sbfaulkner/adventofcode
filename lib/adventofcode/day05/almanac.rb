@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "almanac/map"
+require_relative "almanac/ranges"
 
 module Adventofcode
   module Day05
     class Almanac
-      def initialize(input = File.open(INPUT))
+      def initialize(input = File.open(INPUT), ranges: false)
         lines = input.each_line(chomp: true)
 
         loop do
@@ -15,7 +16,7 @@ module Adventofcode
 
           case key
           when "seeds"
-            @seeds = values.split(/ +/).map(&:to_i)
+            @seeds = seed_ranges(*values.split(/ +/).map(&:to_i), ranges: ranges)
           when "seed-to-soil map"
             @seed_to_soil = Map.load(lines)
           when "soil-to-fertilizer map"
@@ -35,14 +36,28 @@ module Adventofcode
       end
 
       def lowest_location
-        @seeds.map { |seed| @seed_to_soil[seed] }
-          .map { |soil| @soil_to_fertilizer[soil] }
-          .map { |fertilizer| @fertilizer_to_water[fertilizer] }
-          .map { |water| @water_to_light[water] }
-          .map { |light| @light_to_temperature[light] }
-          .map { |temperature| @temperature_to_humidity[temperature] }
-          .map { |humidity| @humidity_to_location[humidity] }
-          .min
+        soil = @seed_to_soil.transform(@seeds)
+        fertilizer = @soil_to_fertilizer.transform(soil)
+        water = @fertilizer_to_water.transform(fertilizer)
+        light = @water_to_light.transform(water)
+        temperature = @light_to_temperature.transform(light)
+        humidity = @temperature_to_humidity.transform(temperature)
+        location = @humidity_to_location.transform(humidity)
+        location.min
+      end
+
+      private
+
+      def seed_ranges(*values, ranges:)
+        seeds = Ranges.new
+
+        if ranges
+          values.each_slice(2) { |first, len| seeds.insert(first, first + len - 1) }
+        else
+          values.each { |seed| seeds.insert(seed, seed) }
+        end
+
+        seeds
       end
     end
   end
