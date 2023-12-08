@@ -56,8 +56,8 @@ module Adventofcode
         # Solving for H:
         # H = (T +/- sqrt(T^2 - 4*D)) / 2
 
-        hmax = ((@time + Math.sqrt(@time**2 - 4 * @distance)) / 2).floor
-        hmin = ((@time - Math.sqrt(@time**2 - 4 * @distance)) / 2).ceil
+        hmax = ((@time + Math.sqrt(@time**2 - 4 * (@distance + 1))) / 2).floor
+        hmin = ((@time - Math.sqrt(@time**2 - 4 * (@distance + 1))) / 2).ceil
 
         hmax - hmin + 1
       end

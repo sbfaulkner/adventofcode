@@ -13,6 +13,10 @@ module Adventofcode
       def test_winners
         assert_equal(288, Adventofcode::Day06::Race.load(INPUT).map(&:winners).reduce(&:*))
       end
+
+      def test_winners_ignoring_whitespace
+        assert_equal(71503, Adventofcode::Day06::Race.load(INPUT, split: false).map(&:winners).reduce(&:*))
+      end
     end
   end
 end
