@@ -6,6 +6,7 @@ require_relative "adventofcode/day02"
 require_relative "adventofcode/day03"
 require_relative "adventofcode/day04"
 require_relative "adventofcode/day05"
+require_relative "adventofcode/day06"
 
 module Adventofcode
   class Error < StandardError; end

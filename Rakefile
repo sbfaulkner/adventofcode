@@ -54,3 +54,9 @@ task :day05 do
   run("Part 1") { Adventofcode::Day05::Almanac.new.lowest_location }
   run("Part 2") { Adventofcode::Day05::Almanac.new(ranges: true).lowest_location }
 end
+
+desc "Day 6: Wait For It"
+task :day06 do
+  run("Part 1") { Adventofcode::Day06::Race.load.map(&:winners).reduce(&:*) }
+  # run("Part 2") { Adventofcode::Day06::Race.load.map(&:winners).reduce(&:*) }
+end
