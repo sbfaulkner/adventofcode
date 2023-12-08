@@ -58,5 +58,5 @@ end
 desc "Day 6: Wait For It"
 task :day06 do
   run("Part 1") { Adventofcode::Day06::Race.load.map(&:winners).reduce(&:*) }
-  # run("Part 2") { Adventofcode::Day06::Race.load.map(&:winners).reduce(&:*) }
+  run("Part 2") { Adventofcode::Day06::Race.load(split: false).map(&:winners).reduce(&:*) }
 end
