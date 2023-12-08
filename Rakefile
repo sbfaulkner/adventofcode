@@ -66,3 +66,9 @@ task :day07 do
   run("Part 1") { Adventofcode::Day07::Camel.total_winnings(Adventofcode::Day07::Camel.load) }
   run("Part 2") { Adventofcode::Day07::Camel.total_winnings(Adventofcode::Day07::Camel.load(jokers: true)) }
 end
+
+desc "Day 8: Haunted Wasteland"
+task :day08 do
+  run("Part 1") { Adventofcode::Day08::Network.load.count }
+  # run("Part 2") { Adventofcode::Day08::Network.load.count }
+end
