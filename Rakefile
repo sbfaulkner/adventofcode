@@ -60,3 +60,9 @@ task :day06 do
   run("Part 1") { Adventofcode::Day06::Race.load.map(&:winners).reduce(&:*) }
   run("Part 2") { Adventofcode::Day06::Race.load(split: false).map(&:winners).reduce(&:*) }
 end
+
+desc "Day 7: Camel Cards"
+task :day07 do
+  run("Part 1") { Adventofcode::Day07::Camel.total_winnings(Adventofcode::Day07::Camel.load) }
+  run("Part 2") { Adventofcode::Day07::Camel.total_winnings(Adventofcode::Day07::Camel.load(jokers: true)) }
+end

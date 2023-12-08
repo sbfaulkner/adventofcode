@@ -20,10 +20,6 @@ module Adventofcode
           @root = insert_entry(@root, first, last, value)
         end
 
-        def to_s
-          each.map { |entry| "#{entry.first}..#{entry.last}" }.join(", ")
-        end
-
         def min
           entry = @root
 

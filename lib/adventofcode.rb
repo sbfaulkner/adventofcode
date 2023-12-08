@@ -1,12 +1,8 @@
 # frozen_string_literal: true
 
 require_relative "adventofcode/version"
-require_relative "adventofcode/day01"
-require_relative "adventofcode/day02"
-require_relative "adventofcode/day03"
-require_relative "adventofcode/day04"
-require_relative "adventofcode/day05"
-require_relative "adventofcode/day06"
+
+Dir[File.join(__dir__, "adventofcode", "day*.rb")].sort.each { |file| require file }
 
 module Adventofcode
   class Error < StandardError; end
