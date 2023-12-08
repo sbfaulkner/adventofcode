@@ -24,22 +24,42 @@ module Adventofcode
       end
 
       def winners
-        count = 0
-        hold = Math.sqrt(@distance).floor
+        # Let T be the total time
+        # Let H be the time holding the button down (ie. time spent building potential velocity)
+        # Let R be the time the button is released (ie. time spent moving at constant velocity)
+        # Let V be the velocity
+        # Let D be the distance
+        #
+        # Basic time/distance/velocity equations:
+        # T = H + R
+        # D = R * V
+        # V = H
+        #
+        # Substituting:
+        # D = (T - H) * H
+        # D = T*H - H^2
+        #
+        # Looks like a quadratic equation...
+        # ax^2 + bx + c = 0
+        #
+        # Rearranging:
+        # H^2 - T*H + D = 0
+        #
+        # x = H
+        # a = 1
+        # b = -T
+        # c = D
+        #
+        # Application of quadratic formula:
+        # x = (-b +/- sqrt(b^2 - 4ac)) / 2a
+        #
+        # Solving for H:
+        # H = (T +/- sqrt(T^2 - 4*D)) / 2
 
-        while hold * (@time - hold) > @distance
-          count += 1
-          hold -= 1
-        end
+        hmax = ((@time + Math.sqrt(@time**2 - 4 * @distance)) / 2).floor
+        hmin = ((@time - Math.sqrt(@time**2 - 4 * @distance)) / 2).ceil
 
-        hold = Math.sqrt(@distance).floor + 1
-
-        while hold * (@time - hold) > @distance
-          count += 1
-          hold += 1
-        end
-
-        count
+        hmax - hmin + 1
       end
     end
   end
