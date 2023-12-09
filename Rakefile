@@ -72,3 +72,9 @@ task :day08 do
   run("Part 1") { Adventofcode::Day08::Network.load.count }
   run("Part 2") { Adventofcode::Day08::Network.load.count_all }
 end
+
+desc "Day 9: Mirage Maintenance"
+task :day09 do
+  run("Part 1") { Adventofcode::Day09::History.load.map(&:next).sum }
+  # run("Part 2") { Adventofcode::Day09::History.load.map(&:next).sum }
+end
