@@ -35,27 +35,27 @@ module Adventofcode
         block&.call(self)
       end
 
-      def each(&block)
-        return enum_for(:each) unless block_given?
+      def count
+        steps = 0
 
         node = "AAA"
 
         while node != "ZZZ"
-          @instructions.each_char do |c|
-            case c
-            when "L"
-              dest = @nodes[node].left
-            when "R"
-              dest = @nodes[node].right
-            end
+          instruction = @instructions[steps % @instructions.length]
 
-            block.call(node, dest)
-
-            node = dest
-
-            break if node == "ZZZ"
+          case instruction
+          when "L"
+            node = @nodes[node].left
+          when "R"
+            node = @nodes[node].right
           end
+
+          steps += 1
+
+          break if node == "ZZZ"
         end
+
+        steps
       end
     end
   end
