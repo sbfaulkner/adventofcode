@@ -70,5 +70,5 @@ end
 desc "Day 8: Haunted Wasteland"
 task :day08 do
   run("Part 1") { Adventofcode::Day08::Network.load.count }
-  run("Part 2") { Adventofcode::Day08::Network.load.count }
+  run("Part 2") { Adventofcode::Day08::Network.load.count_all }
 end

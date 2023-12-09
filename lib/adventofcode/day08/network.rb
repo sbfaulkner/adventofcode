@@ -36,11 +36,19 @@ module Adventofcode
       end
 
       def count
+        count_from("AAA", to: /\AZZZ\z/)
+      end
+
+      def count_all
+        @nodes.keys.grep(/A\z/).map { |node| count_from(node, to: /Z\z/) }.reduce { |a, e| a.lcm(e) }
+      end
+
+      private
+
+      def count_from(node, to:)
         steps = 0
 
-        node = "AAA"
-
-        while node != "ZZZ"
+        until node.match?(to)
           instruction = @instructions[steps % @instructions.length]
 
           case instruction
@@ -52,7 +60,7 @@ module Adventofcode
 
           steps += 1
 
-          break if node == "ZZZ"
+          break if node.match?(to)
         end
 
         steps
