@@ -76,5 +76,5 @@ end
 desc "Day 9: Mirage Maintenance"
 task :day09 do
   run("Part 1") { Adventofcode::Day09::History.load.map(&:next).sum }
-  # run("Part 2") { Adventofcode::Day09::History.load.map(&:next).sum }
+  run("Part 2") { Adventofcode::Day09::History.load.map(&:previous).sum }
 end

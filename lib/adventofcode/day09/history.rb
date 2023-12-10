@@ -17,11 +17,19 @@ module Adventofcode
       end
 
       def next
-        @expanded.last << 0
-        (@expanded.length - 1).times.reverse_each do |i|
-          @expanded[i - 1] << @expanded[i - 1].last + @expanded[i].last
+        @expanded.last.push(0)
+        (@expanded.length - 2).downto(0) do |i|
+          @expanded[i].push(@expanded[i].last + @expanded[i + 1].last)
         end
         @expanded.first.last
+      end
+
+      def previous
+        @expanded.last.unshift(0)
+        (@expanded.length - 2).downto(0) do |i|
+          @expanded[i].unshift(@expanded[i].first - @expanded[i + 1].first)
+        end
+        @expanded.first.first
       end
     end
   end
