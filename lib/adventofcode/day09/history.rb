@@ -12,28 +12,16 @@ module Adventofcode
       end
 
       def initialize(*values)
-        @values = values
-        @expanded = Hash.new do |rows, r|
-          rows[r] = Hash.new do |row, c|
-            max = rows[0].length - r
-
-            row[c] = if c == max
-              if row[c - 1] == 0
-                0
-              else
-                row[c - 1] + rows[r + 1][c - 1]
-              end
-            else
-              rows[r - 1][c + 1] - rows[r - 1][c]
-            end
-          end
-        end
-
-        values.each_with_index { |value, index| @expanded[0][index] = value }
+        @expanded = [values.dup]
+        @expanded << @expanded.last.each_cons(2).map { |a, b| b - a } until @expanded.last.all?(&:zero?)
       end
 
       def next
-        @expanded[0][@expanded[0].length]
+        @expanded.last << 0
+        (@expanded.length - 1).times.reverse_each do |i|
+          @expanded[i - 1] << @expanded[i - 1].last + @expanded[i].last
+        end
+        @expanded.first.last
       end
     end
   end
