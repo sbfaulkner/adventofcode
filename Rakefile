@@ -78,3 +78,8 @@ task :day09 do
   run("Part 1") { Adventofcode::Day09::History.load.map(&:next).sum }
   run("Part 2") { Adventofcode::Day09::History.load.map(&:previous).sum }
 end
+
+desc "Day 10: Pipe Maze"
+task :day10 do
+  run("Part 1") { Adventofcode::Day10::Pipe.load.furthest }
+end
