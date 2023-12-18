@@ -82,4 +82,5 @@ end
 desc "Day 10: Pipe Maze"
 task :day10 do
   run("Part 1") { Adventofcode::Day10::Pipe.load.furthest }
+  run("Part 2") { Adventofcode::Day10::Pipe.load.enclosed }
 end

@@ -75,6 +75,51 @@ module Adventofcode
         @path.length / 2
       end
 
+      def enclosed
+        # ray from point to exterior
+        # if it intersects the path an odd number of times, it's enclosed
+        # first optimization...
+        # reduce points considered to those within the bounding box of the path
+        # likely optimization...
+        # draw the ray towards whichever side (of the bounding box) is closest
+        # possible optimization...
+        # if it hits a point known to be enclosed (or not) - it is as well
+        # possible optimization...
+        # flood fill areas known to be enclosed (or not)
+
+        enclosed = 0
+
+        @lines.each_with_index do |line, y|
+          line.each_char.with_index do |_tile, x|
+            # not enclosed if it's on the path
+            next if @path.include?([x, y])
+
+            line[x] = GROUND # treat junk as ground
+
+            intersections = 0
+
+            previous = nil
+
+            y.times do |i|
+              next unless @path.include?([x, y - i - 1])
+
+              tile = get_at(x, y - i - 1)
+              next if tile == GROUND || tile == VERTICAL_PIPE
+
+              intersections += 1 if tile == HORIZONTAL_PIPE ||
+                (tile == SOUTH_AND_EAST_BEND && previous == NORTH_AND_WEST_BEND) ||
+                (tile == SOUTH_AND_WEST_BEND && previous == NORTH_AND_EAST_BEND)
+
+              previous = tile
+            end
+
+            enclosed += 1 if intersections.odd?
+          end
+        end
+
+        enclosed
+      end
+
       private
 
       NORTH_FACING = [VERTICAL_PIPE, NORTH_AND_EAST_BEND, NORTH_AND_WEST_BEND]
