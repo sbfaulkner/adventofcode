@@ -18,6 +18,8 @@ module Adventofcode
       SOUTH_AND_WEST_BEND = "7"
       SOUTH_AND_EAST_BEND = "F"
       GROUND = "."
+      INSIDE = "I"
+      OUTSIDE = "O"
 
       NORTH = [0, -1]
       EAST = [1, 0]
@@ -31,6 +33,10 @@ module Adventofcode
         @ymax = @height - 1
         @xmax = @width - 1
 
+        @state = Hash.new do |lines, y|
+          lines[y] = {}
+        end
+
         @pipes = Array.new(@height * @width)
 
         @start = find_starting_point
@@ -40,9 +46,12 @@ module Adventofcode
         @path = []
 
         until @path.first == pos
+          x, y = pos
+          @state[y][x] = @lines[y][x]
+
           case get_at(*pos)
           when STARTING_POINT
-            # all four directions are possible, but only two will be valid
+            # already resolved to a pipe
             raise "Unexpected starting point at #{pos}"
           when VERTICAL_PIPE
             next_pos = get_pos(*pos, direction: NORTH)
@@ -89,22 +98,20 @@ module Adventofcode
 
         enclosed = 0
 
-        @lines.each_with_index do |line, y|
-          line.each_char.with_index do |_tile, x|
+        @height.times do |y|
+          @width.times do |x|
             # not enclosed if it's on the path
-            next if @path.include?([x, y])
-
-            line[x] = GROUND # treat junk as ground
+            next if @state[y][x]
 
             intersections = 0
 
             previous = nil
 
             y.times do |i|
-              next unless @path.include?([x, y - i - 1])
+              tile = @state[y - i - 1][x]
+              next unless tile
 
-              tile = get_at(x, y - i - 1)
-              next if tile == GROUND || tile == VERTICAL_PIPE
+              next if tile == VERTICAL_PIPE
 
               intersections += 1 if tile == HORIZONTAL_PIPE ||
                 (tile == SOUTH_AND_EAST_BEND && previous == NORTH_AND_WEST_BEND) ||
@@ -113,7 +120,12 @@ module Adventofcode
               previous = tile
             end
 
-            enclosed += 1 if intersections.odd?
+            if intersections.odd?
+              @state[y][x] = INSIDE
+              enclosed += 1
+            else
+              @state[y][x] = OUTSIDE
+            end
           end
         end
 
