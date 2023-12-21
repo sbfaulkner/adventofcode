@@ -84,3 +84,9 @@ task :day10 do
   run("Part 1") { Adventofcode::Day10::Pipe.load.furthest }
   run("Part 2") { Adventofcode::Day10::Pipe.load.enclosed }
 end
+
+desc "Day 11: Cosmic Expansion"
+task :day11 do
+  run("Part 1") { Adventofcode::Day11::Image.load.expand }
+  run("Part 2") { Adventofcode::Day11::Image.load.expand(rate: 1_000_000) }
+end
