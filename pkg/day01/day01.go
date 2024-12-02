@@ -2,7 +2,6 @@ package day01
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
 	"os"
 	"slices"
@@ -15,16 +14,16 @@ type input struct {
 }
 
 func load(inputPath string) (*input, error) {
-	data, err := os.ReadFile(inputPath)
+	file, err := os.Open(inputPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read input file: %w", err)
+		return nil, fmt.Errorf("failed to open input file: %w", err)
 	}
 
 	input := input{
 		lists: make([][]int, 2),
 	}
 
-	scanner := bufio.NewScanner(bytes.NewReader(data))
+	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
 		line := scanner.Text()
