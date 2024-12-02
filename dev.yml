@@ -9,4 +9,4 @@ up:
 
 commands:
   test:
-    run: go test -v ./...
+    run: make test
