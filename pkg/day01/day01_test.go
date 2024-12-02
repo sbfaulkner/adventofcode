@@ -1,82 +1,39 @@
 package day01
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
-	"os"
-	"slices"
-	"strconv"
-	"strings"
 	"testing"
 )
 
 func TestDay01(t *testing.T) {
 	tests := []struct {
-		inputPath           string
-		wantDistance        int
-		wantSimilarityScore int
+		inputPath      string
+		wantDistance   int
+		wantSimilarity int
 	}{
-		{inputPath: "testdata/example1.txt", wantDistance: 11, wantSimilarityScore: 31},
-		{inputPath: "testdata/input.txt", wantDistance: 1651298, wantSimilarityScore: 21306195},
+		{inputPath: "testdata/example1.txt", wantDistance: 11, wantSimilarity: 31},
+		{inputPath: "testdata/input.txt", wantDistance: 1651298, wantSimilarity: 21306195},
 	}
 
 	for _, test := range tests {
-		input, err := os.ReadFile(test.inputPath)
+		input, err := load(test.inputPath)
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		lists := make([][]int, 2)
-
-		scanner := bufio.NewScanner(bytes.NewReader(input))
-		for scanner.Scan() {
-			line := scanner.Text()
-			fields := strings.Fields(line)
-
-			for f, field := range fields {
-				id, err := strconv.Atoi(field)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				i, _ := slices.BinarySearch(lists[f], id)
-				lists[f] = slices.Insert(lists[f], i, id)
-			}
-		}
-
 		t.Run(fmt.Sprintf("Part 1: %s", test.inputPath), func(t *testing.T) {
-			totalDistance := 0
+			distance := input.distance()
 
-			for i, id := range lists[0] {
-				distance := id - lists[1][i]
-				if distance < 0 {
-					totalDistance -= distance
-				} else {
-					totalDistance += distance
-				}
-			}
-
-			if totalDistance != test.wantDistance {
-				t.Errorf("totalDistance: got %d, want %d", totalDistance, test.wantDistance)
+			if distance != test.wantDistance {
+				t.Errorf("distance: got %d, want %d", distance, test.wantDistance)
 			}
 		})
 
 		t.Run(fmt.Sprintf("Part 2: %s", test.inputPath), func(t *testing.T) {
-			locationCounts := make(map[int]int)
+			similarity := input.similarity()
 
-			for _, id := range lists[1] {
-				locationCounts[id]++
-			}
-
-			similarityScore := 0
-
-			for _, id := range lists[0] {
-				similarityScore += id * locationCounts[id]
-			}
-
-			if similarityScore != test.wantSimilarityScore {
-				t.Errorf("similarityScore: got %d, want %d", similarityScore, test.wantSimilarityScore)
+			if similarity != test.wantSimilarity {
+				t.Errorf("similarity: got %d, want %d", similarity, test.wantSimilarity)
 			}
 		})
 	}
