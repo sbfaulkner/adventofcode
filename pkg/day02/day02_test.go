@@ -7,11 +7,12 @@ import (
 
 func TestDay02(t *testing.T) {
 	tests := []struct {
-		inputPath string
-		wantSafe  int
+		inputPath            string
+		wantSafe             int
+		wantSafeWithDampener int
 	}{
-		{inputPath: "testdata/example1.txt", wantSafe: 2},
-		{inputPath: "testdata/input.txt", wantSafe: 534},
+		{inputPath: "testdata/example1.txt", wantSafe: 2, wantSafeWithDampener: 4},
+		{inputPath: "testdata/input.txt", wantSafe: 534, wantSafeWithDampener: 577},
 	}
 
 	for _, test := range tests {
@@ -25,6 +26,14 @@ func TestDay02(t *testing.T) {
 
 			if safe != test.wantSafe {
 				t.Errorf("safe: got %d, want %d", safe, test.wantSafe)
+			}
+		})
+
+		t.Run(fmt.Sprintf("Part 2: %s", test.inputPath), func(t *testing.T) {
+			safe := input.safeWithDampener()
+
+			if safe != test.wantSafeWithDampener {
+				t.Errorf("safeWithDampener: got %d, want %d", safe, test.wantSafeWithDampener)
 			}
 		})
 	}
