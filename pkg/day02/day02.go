@@ -17,6 +17,7 @@ func load(inputPath string) (*input, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to open input file: %w", err)
 	}
+	defer file.Close()
 
 	input := input{
 		reports: [][]int{},
