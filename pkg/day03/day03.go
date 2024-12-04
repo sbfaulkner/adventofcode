@@ -8,16 +8,28 @@ import (
 	"strconv"
 )
 
-type input struct {
-	args [][]int
+const (
+	MUL = iota
+	DO
+	DONT
+)
+
+var INSTRUCTIONS = map[string]int{
+	"do":    DO,
+	"don't": DONT,
+	"mul":   MUL,
 }
 
-var reMUL = regexp.MustCompile(`mul\((\d+),(\d+)\)`)
+type input struct {
+	instructions []int
+}
+
+var reINSTRUCTION = regexp.MustCompile(`(do|don't|mul)\((?:(\d+),(\d+))?\)`)
 
 func scanMatches(data []byte, atEOF bool) (advance int, token []byte, err error) {
 	start := 0
 
-	loc := reMUL.FindIndex(data[start:])
+	loc := reINSTRUCTION.FindIndex(data[start:])
 	if loc == nil {
 		return start, nil, nil
 	}
@@ -36,35 +48,64 @@ func load(inputPath string) (*input, error) {
 	scanner.Split(scanMatches)
 
 	input := input{
-		args: make([][]int, 0),
+		instructions: make([]int, 0),
 	}
 
 	for scanner.Scan() {
 		text := scanner.Text()
 
-		matches := reMUL.FindStringSubmatch(text)
+		matches := reINSTRUCTION.FindStringSubmatch(text)
 
-		s := matches[1:]
-		args := make([]int, len(s))
+		instructions := make([]int, 1, len(matches)-1)
+		instructions[0] = INSTRUCTIONS[matches[1]]
 
-		for i, v := range s {
-			args[i], err = strconv.Atoi(v)
-			if err != nil {
-				return nil, fmt.Errorf("failed to convert operand %s to int: %w", v, err)
+		for _, m := range matches[2:] {
+			if m == "" {
+				break
 			}
+
+			a, err := strconv.Atoi(m)
+			if err != nil {
+				return nil, fmt.Errorf("failed to convert operand %s to int: %w", m, err)
+			}
+
+			instructions = append(instructions, a)
 		}
 
-		input.args = append(input.args, args)
+		input.instructions = append(input.instructions, instructions...)
 	}
 
 	return &input, nil
 }
 
-func (i *input) sumOfProducts() int {
+func (i *input) process(extensions ...int) int {
+	enabled := true
 	sum := 0
 
-	for _, args := range i.args {
-		sum += args[0] * args[1]
+	extensionMap := make(map[int]bool, len(extensions)+1)
+	extensionMap[MUL] = true
+
+	for _, e := range extensions {
+		extensionMap[e] = true
+	}
+
+	for pc := 0; pc < len(i.instructions); pc++ {
+		if !extensionMap[i.instructions[pc]] {
+			continue
+		}
+
+		switch i.instructions[pc] {
+		case DO:
+			enabled = true
+		case DONT:
+			enabled = false
+		case MUL:
+			if enabled {
+				sum += i.instructions[pc+1] * i.instructions[pc+2]
+			}
+
+			pc += 2
+		}
 	}
 
 	return sum
