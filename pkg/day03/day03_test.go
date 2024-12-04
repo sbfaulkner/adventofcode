@@ -1,41 +1,89 @@
 package day03
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestDay03(t *testing.T) {
-	tests := []struct {
-		inputPath            string
-		wantResult           int
-		wantWithConditionals int
-	}{
-		{inputPath: "testdata/example1.txt", wantResult: 161, wantWithConditionals: 161},
-		{inputPath: "testdata/example2.txt", wantResult: 161, wantWithConditionals: 48},
-		{inputPath: "testdata/input.txt", wantResult: 189600467, wantWithConditionals: 107069718},
+func TestDay03Part1Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	for _, test := range tests {
-		input, err := load(test.inputPath)
-		if err != nil {
-			t.Fatal(err)
-		}
+	want := 161
+	got := input.process()
 
-		t.Run(fmt.Sprintf("Part 1: %s", test.inputPath), func(t *testing.T) {
-			result := input.process()
+	if got != want {
+		t.Errorf("process: got %d, want %d", got, want)
+	}
+}
 
-			if result != test.wantResult {
-				t.Errorf("process: got %d, want %d", result, test.wantResult)
-			}
-		})
+func TestDay03Part1Example2(t *testing.T) {
+	input, err := load("testdata/example2.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		t.Run(fmt.Sprintf("Part 2: %s", test.inputPath), func(t *testing.T) {
-			result := input.process(DO, DONT)
+	want := 161
+	got := input.process()
 
-			if result != test.wantWithConditionals {
-				t.Errorf("process (with conditionals): got %d, want %d", result, test.wantWithConditionals)
-			}
-		})
+	if got != want {
+		t.Errorf("process: got %d, want %d", got, want)
+	}
+}
+
+func TestDay03Part1(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 189600467
+	got := input.process()
+
+	if got != want {
+		t.Errorf("process: got %d, want %d", got, want)
+	}
+}
+
+func TestDay03Part2Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 161
+	got := input.process(DO, DONT)
+
+	if got != want {
+		t.Errorf("process (with conditionals): got %d, want %d", got, want)
+	}
+}
+
+func TestDay03Part2Example2(t *testing.T) {
+	input, err := load("testdata/example2.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 48
+	got := input.process(DO, DONT)
+
+	if got != want {
+		t.Errorf("process (with conditionals): got %d, want %d", got, want)
+	}
+}
+
+func TestDay03Part2(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 107069718
+	got := input.process(DO, DONT)
+
+	if got != want {
+		t.Errorf("process (with conditionals): got %d, want %d", got, want)
 	}
 }

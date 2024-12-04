@@ -1,40 +1,61 @@
 package day02
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestDay02(t *testing.T) {
-	tests := []struct {
-		inputPath            string
-		wantSafe             int
-		wantSafeWithDampener int
-	}{
-		{inputPath: "testdata/example1.txt", wantSafe: 2, wantSafeWithDampener: 4},
-		{inputPath: "testdata/input.txt", wantSafe: 534, wantSafeWithDampener: 577},
+func TestDay02Part1Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	for _, test := range tests {
-		input, err := load(test.inputPath)
-		if err != nil {
-			t.Fatal(err)
-		}
+	want := 2
+	got := input.safe()
 
-		t.Run(fmt.Sprintf("Part 1: %s", test.inputPath), func(t *testing.T) {
-			safe := input.safe()
+	if got != want {
+		t.Errorf("safe: got %d, want %d", got, want)
+	}
+}
 
-			if safe != test.wantSafe {
-				t.Errorf("safe: got %d, want %d", safe, test.wantSafe)
-			}
-		})
+func TestDay02Part1(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		t.Run(fmt.Sprintf("Part 2: %s", test.inputPath), func(t *testing.T) {
-			safe := input.safeWithDampener()
+	want := 534
+	got := input.safe()
 
-			if safe != test.wantSafeWithDampener {
-				t.Errorf("safeWithDampener: got %d, want %d", safe, test.wantSafeWithDampener)
-			}
-		})
+	if got != want {
+		t.Errorf("safe: got %d, want %d", got, want)
+	}
+}
+
+func TestDay02Part2Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 4
+	got := input.safeWithDampener()
+
+	if got != want {
+		t.Errorf("safeWithDampener: got %d, want %d", got, want)
+	}
+}
+
+func TestDay02Part2(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 577
+	got := input.safeWithDampener()
+
+	if got != want {
+		t.Errorf("safeWithDampener: got %d, want %d", got, want)
 	}
 }

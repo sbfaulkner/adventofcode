@@ -1,40 +1,61 @@
 package day01
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestDay01(t *testing.T) {
-	tests := []struct {
-		inputPath      string
-		wantDistance   int
-		wantSimilarity int
-	}{
-		{inputPath: "testdata/example1.txt", wantDistance: 11, wantSimilarity: 31},
-		{inputPath: "testdata/input.txt", wantDistance: 1651298, wantSimilarity: 21306195},
+func TestDay01Part1Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	for _, test := range tests {
-		input, err := load(test.inputPath)
-		if err != nil {
-			t.Fatal(err)
-		}
+	want := 11
+	got := input.distance()
 
-		t.Run(fmt.Sprintf("Part 1: %s", test.inputPath), func(t *testing.T) {
-			distance := input.distance()
+	if got != want {
+		t.Errorf("distance: got %d, want %d", got, want)
+	}
+}
 
-			if distance != test.wantDistance {
-				t.Errorf("distance: got %d, want %d", distance, test.wantDistance)
-			}
-		})
+func TestDay01Part1(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
 
-		t.Run(fmt.Sprintf("Part 2: %s", test.inputPath), func(t *testing.T) {
-			similarity := input.similarity()
+	want := 1651298
+	got := input.distance()
 
-			if similarity != test.wantSimilarity {
-				t.Errorf("similarity: got %d, want %d", similarity, test.wantSimilarity)
-			}
-		})
+	if got != want {
+		t.Errorf("distance: got %d, want %d", got, want)
+	}
+}
+
+func TestDay01Part2Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 31
+	got := input.similarity()
+
+	if got != want {
+		t.Errorf("similarity: got %d, want %d", got, want)
+	}
+}
+
+func TestDay01Part2(t *testing.T) {
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 21306195
+	got := input.similarity()
+
+	if got != want {
+		t.Errorf("similarity: got %d, want %d", got, want)
 	}
 }
