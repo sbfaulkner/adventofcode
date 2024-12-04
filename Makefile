@@ -12,7 +12,7 @@ BINARY_NAME=adventofcode
 all: test
 
 test:
-	$(GOTEST) -v ./...
+	$(GOTEST) -count=1 ./...
 
 clean:
 	$(GOCLEAN)
