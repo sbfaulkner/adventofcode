@@ -1,0 +1,29 @@
+require "minitest/autorun"
+require "minitest/focus"
+require "minitest/reporters"
+
+Minitest::Reporters.use!
+
+require_relative "day<%= sprintf("%02d", day) %>"
+
+class Day06Test < Minitest::Test
+  def test_part1_example1
+    input = Day<%= sprintf("%02d", day) %>.new("testdata/example1.txt")
+    assert_equal(0, input.part1) # TODO: Update with actual expected value
+  end
+
+  def test_part1
+    input = Day<%= sprintf("%02d", day) %>.new("testdata/input.txt")
+    assert_equal(0, input.part1) # TODO: Update with actual expected value
+  end
+
+  def test_part2_example1
+    input = Day<%= sprintf("%02d", day) %>.new("testdata/example1.txt")
+    assert_equal(0, input.part2) # TODO: Update with actual expected value
+  end
+
+  def test_part2
+    input = Day<%= sprintf("%02d", day) %>.new("testdata/input.txt")
+    assert_equal(0, input.part2) # TODO: Update with actual expected value
+  end
+end

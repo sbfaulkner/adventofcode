@@ -1,0 +1,65 @@
+package day<%= sprintf("%02d", day) %>
+
+import (
+	"testing"
+)
+
+func TestDay<%= sprintf("%02d", day) %>Part1Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 0 // TODO: Update with actual expected value
+	got := input.part1()
+
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}
+
+func TestDay<%= sprintf("%02d", day) %>Part1(t *testing.T) {
+	t.Skip("TODO: Implement")
+
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 0 // TODO: Update with actual expected value
+	got := input.part1()
+
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}
+
+func TestDay<%= sprintf("%02d", day) %>Part2Example1(t *testing.T) {
+	input, err := load("testdata/example1.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 0 // TODO: Update with actual expected value
+	got := input.part2()
+
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}
+
+func TestDay<%= sprintf("%02d", day) %>Part2(t *testing.T) {
+	t.Skip("TODO: Implement")
+
+	input, err := load("testdata/input.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	want := 0 // TODO: Update with actual expected value
+	got := input.part2()
+
+	if got != want {
+		t.Errorf("got %d, want %d", got, want)
+	}
+}

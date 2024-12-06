@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "erb"
+require "fileutils"
+
+def usage
+  puts "Usage: #{$0} DAY"
+  puts "  DAY: day number (1-25)"
+  exit 1
+end
+
+# Validate arguments
+usage if ARGV.length != 1
+
+day = ARGV[0].to_i
+usage if day < 1 || day > 25
+
+# Create the day directory
+day_dir = File.expand_path("../pkg/day#{sprintf('%02d', day)}", __dir__)
+FileUtils.mkdir_p(day_dir)
+
+# Copy testdata folder
+FileUtils.cp_r(File.expand_path("../template/testdata", __dir__), day_dir)
+
+# Process ERB templates
+Dir[File.expand_path("../template/*.erb", __dir__)].each do |template_path|
+  # Get the base filename without .erb
+  basename = File.basename(template_path, ".erb")
+
+  # Read the template
+  template = File.read(template_path)
+
+  # Create ERB object with trimming
+  erb = ERB.new(template, trim_mode: "-")
+
+  # Render the template
+  output = erb.result(binding)
+
+  # Write the output file
+  output_path = File.join(day_dir, basename.sub(/day/, "day#{sprintf('%02d', day)}"))
+  File.write(output_path, output)
+end
+
+puts "Generated files for day #{day} in #{day_dir}"

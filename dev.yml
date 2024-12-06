@@ -12,3 +12,7 @@ commands:
     run: |
       make test
       bin/rake test
+  generate:
+    run: |
+      [ -z "$1" ] && echo "Usage: dev generate DAY" && exit 1
+      bin/rake generate[$1]
